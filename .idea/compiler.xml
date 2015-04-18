@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="seed-aop" />
+        <module name="seed-base" />
+        <module name="seed-configuration-web" />
+        <module name="seed-database" />
+        <module name="seed-extra" />
+        <module name="seed-mvc" />
+        <module name="seed-mvc-server" />
+        <module name="seed-mvc-support" />
+        <module name="seed-template" />
+        <module name="Seed-Template" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Seed" target="1.5" />
+      <module name="Seed-Aop" target="1.5" />
+      <module name="seed-aop" target="1.5" />
+      <module name="Seed-Base" target="1.5" />
+      <module name="seed-base" target="1.5" />
+      <module name="seed-configuration-web" target="1.5" />
+      <module name="Seed-Configuration-Web" target="1.5" />
+      <module name="Seed-Database" target="1.5" />
+      <module name="seed-database" target="1.5" />
+      <module name="seed-extra" target="1.5" />
+      <module name="Seed-Extra" target="1.5" />
+      <module name="seed-mvc" target="1.5" />
+      <module name="Seed-MVC" target="1.5" />
+      <module name="Seed-MVC-Server" target="1.5" />
+      <module name="seed-mvc-server" target="1.5" />
+      <module name="seed-mvc-support" target="1.5" />
+      <module name="seed-template" target="1.5" />
+      <module name="Seed-Template" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

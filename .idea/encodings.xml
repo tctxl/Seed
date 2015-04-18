@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedNettyInitializer.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/After.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Before.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Controller.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/RequestBody.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Router.java" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
