@@ -1,9 +1,9 @@
-package com.opdar.framework.web.common;
+﻿package com.opdar.framework.web.common;
 
 /**
  * Created by 俊帆 on 2015/4/15.
  */
-public enum HTTP_RESPONSE {
+public enum HttpResponseCode {
     CODE_100(100)  //（继续） 请求者应当继续提出请求。 服务器返回此代码表示已收到请求的第一部分，正在等待其余部分。
     , CODE_101(101)   //（切换协议） 请求者已要求服务器切换协议，服务器已确认并准备切换。
     , CODE_200(200)   //（成功）  服务器已成功处理了请求。 通常，这表示服务器提供了请求的网页。
@@ -47,11 +47,11 @@ public enum HTTP_RESPONSE {
     private int code;
     private String content="";
 
-    HTTP_RESPONSE(int code){
+    HttpResponseCode(int code){
         this.code = code;
     }
 
-    HTTP_RESPONSE(int code,String content){
+    HttpResponseCode(int code, String content){
         this.code = code;
         this.content = content;
     }
