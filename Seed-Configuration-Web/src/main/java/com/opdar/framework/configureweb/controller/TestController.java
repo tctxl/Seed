@@ -19,7 +19,7 @@ public class TestController {
     @Router
     public String router2(String testParam,TestBean bean){
         i++;
-        return "this is /test/router2";
+        return "this is /test/router2  testParam : "+testParam;
     }
 
     @Router("index")
