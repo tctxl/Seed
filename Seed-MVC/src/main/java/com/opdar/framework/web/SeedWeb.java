@@ -232,16 +232,13 @@ public class SeedWeb {
             String res = testRouter(routerName.replace("/public", ""));
             String contentType = new MimetypesFileTypeMap().getContentType(res);
             InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(publicDir + res);
-            try {
-                System.out.println("markSupported() : "+file.markSupported());
-                JarURLConnection.guessContentTypeFromStream(file);
-            } catch (IOException e) {
-                System.out.println("directory!!");
+            View fileView = new FileView(file,contentType);
+            byte[] data = fileView.renderView();
+            if(data == null){
+                fileView = new ErrorView(HttpResponseCode.CODE_404);
+                data = fileView.renderView();
             }
-            URL jarRes = Thread.currentThread().getContextClassLoader().getResource(publicDir + res);
-            System.out.println("jarRes : "+JarURLConnection.getFileNameMap().getContentTypeFor(publicDir+res));
-            FileView fileView = new FileView(file,contentType);
-            seedResponse.write(fileView.renderView(), fileView.contentType(), fileView.getCode());
+            seedResponse.write(data, fileView.contentType(), fileView.getCode());
         }else{
             View v = executeLogic(routerName, request);
             if(v == null){

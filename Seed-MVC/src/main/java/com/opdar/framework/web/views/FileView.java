@@ -53,11 +53,11 @@ public class FileView implements View{
                 if (file != null)
                     file.close();
                 if(out != null)out.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 // TODO Auto-generated catch block
             }
         }
-        return new ErrorView(HttpResponseCode.CODE_404).renderView();
+        return null;
     }
 
     public String contentType() {
