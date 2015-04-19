@@ -1,6 +1,7 @@
 package com.opdar.framework.server.supports.netty;
 
 import com.opdar.framework.server.base.IConfig;
+import com.opdar.framework.server.supports.UriUtil;
 import com.opdar.framework.web.SeedWeb;
 import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.common.SeedRequest;
@@ -38,30 +39,6 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
         web.setHttpConvert(JSONConvert.class);
     }
 
-    private void executeUri(SeedRequest request,String query){
-        if(query != null){
-            int i = query.indexOf("&");
-            String[] p1s = null;
-            if(i != -1){
-                p1s = query.split("&");
-            }else{
-                p1s = new String[]{query};
-            }
-            for(String s :p1s){
-                i = s.indexOf("=");
-                String[] p2s = null;
-                if(i!=-1){
-                    p2s = s.split("=");
-                    if(p2s.length >1){
-                        String key = p2s[0];
-                        String value = p2s[1];
-                        request.setValue(key,value);
-                    }
-                }
-            }
-        }
-    }
-
     private void executePostValues(SeedRequest request,HttpPostRequestDecoder decoder){
         List<InterfaceHttpData> params = decoder.getBodyHttpDatas();
         for(InterfaceHttpData data :params){
@@ -91,7 +68,7 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
                         request.setHeader(header.getKey(),header.getValue());
                     }
                     request.setMethod(req.getMethod().name());
-                    executeUri(request, uri.getQuery());
+                    UriUtil.executeUri(request, uri.getQuery());
                     web.execute(uri.getPath(),request,response);
                 }
             }catch (Exception e){
