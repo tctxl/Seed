@@ -55,6 +55,7 @@ public class ServletSupport extends DefaultSupport implements javax.servlet.Filt
             web.scanController(ServletSupport.config.get(IConfig.CONTROLLER_PATH));
             web.setWebHtml(ServletSupport.config.get(IConfig.PAGES));
             web.setWebPublic(ServletSupport.config.get(IConfig.PUBLIC));
+            web.setDefaultPages(ServletSupport.config.get(IConfig.DEFAULT_PAGES));
         }
         web.setHttpConvert(JSONConvert.class);
     }
