@@ -231,8 +231,20 @@ public class SeedWeb {
             String publicDir = SeedWeb.WEB_PUBLIC.replace(".", "/");
             String res = testRouter(routerName.replace("/public", ""));
             String contentType = new MimetypesFileTypeMap().getContentType(res);
-            InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(publicDir + res);
-            View fileView = new FileView(file,contentType);
+            new MimetypesFileTypeMap();
+            URL file = Thread.currentThread().getContextClassLoader().getResource(publicDir + res);
+            View fileView = null;
+            if(file.getProtocol().equals("file")){
+                if(new File(file.getPath()).isDirectory()){
+                    fileView = new ErrorView(HttpResponseCode.CODE_404);
+                }
+            }
+            try {
+                if(fileView == null)
+                fileView = new FileView((InputStream) file.getContent(),contentType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             byte[] data = fileView.renderView();
             if(data == null){
                 fileView = new ErrorView(HttpResponseCode.CODE_404);
