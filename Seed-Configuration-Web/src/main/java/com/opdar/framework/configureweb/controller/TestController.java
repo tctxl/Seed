@@ -22,9 +22,9 @@ public class TestController {
         return "this is /test/router2";
     }
 
-    @Router("hehehe")
-    public String routerRender(String testParam, TestBean bean){
+    @Router("index")
+    public HtmlView routerRender(String testParam, TestBean bean){
         TestBean bean1 = new TestBean();
-        return "hehe";
+        return new HtmlView("index.html");
     }
 }

@@ -1,7 +1,6 @@
 package com.opdar.framework.web.views;
 
-import com.opdar.framework.web.SeedWeb;
-import com.opdar.framework.web.common.HTTP_RESPONSE;
+import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.*;
@@ -58,7 +57,7 @@ public class FileView implements View{
                 // TODO Auto-generated catch block
             }
         }
-        return new ErrorView(HTTP_RESPONSE.CODE_404).renderView();
+        return new ErrorView(HttpResponseCode.CODE_404).renderView();
     }
 
     public String contentType() {

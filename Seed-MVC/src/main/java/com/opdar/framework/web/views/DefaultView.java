@@ -1,6 +1,6 @@
 package com.opdar.framework.web.views;
 
-import com.opdar.framework.web.common.HTTP_RESPONSE;
+import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.UnsupportedEncodingException;
@@ -34,6 +34,6 @@ public class DefaultView implements View {
     }
 
     public int getCode() {
-        return HTTP_RESPONSE.CODE_200.getCode();
+        return HttpResponseCode.CODE_200.getCode();
     }
 }

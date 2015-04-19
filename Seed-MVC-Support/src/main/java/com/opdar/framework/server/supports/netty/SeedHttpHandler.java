@@ -2,7 +2,7 @@ package com.opdar.framework.server.supports.netty;
 
 import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.web.SeedWeb;
-import com.opdar.framework.web.common.HTTP_RESPONSE;
+import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.common.SeedRequest;
 import com.opdar.framework.web.common.SeedResponse;
 import com.opdar.framework.web.converts.JSONConvert;
@@ -97,7 +97,7 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
             }catch (Exception e){
                 //400
                 if(response!=null)
-                    response.write("response code 400".getBytes(),"text/html", HTTP_RESPONSE.CODE_400.getCode());
+                    response.write("response code 400".getBytes(),"text/html", HttpResponseCode.CODE_400.getCode());
             } finally{
                 if(response!=null && !response.isWrite())
                     response.writeSuccess();

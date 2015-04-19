@@ -7,6 +7,7 @@ import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.asm.Type;
 import com.opdar.framework.utils.ParamsUtil;
+import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.Controller;
 import com.opdar.framework.web.anotations.RequestBody;
 import com.opdar.framework.web.anotations.Router;
@@ -17,13 +18,17 @@ import com.opdar.framework.web.interfaces.View;
 import com.opdar.framework.web.views.DefaultView;
 import com.opdar.framework.web.views.ErrorView;
 import com.opdar.framework.web.views.FileView;
-import com.opdar.framework.web.views.HtmlView;
+import com.sun.javaws.jnl.JARDesc;
+import com.sun.javaws.jnl.ResourcesDesc;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.*;
+import java.util.jar.JarFile;
 
 /**
  * Created by Jeffrey on 2015/4/10.
@@ -227,6 +232,14 @@ public class SeedWeb {
             String res = testRouter(routerName.replace("/public", ""));
             String contentType = new MimetypesFileTypeMap().getContentType(res);
             InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(publicDir + res);
+            try {
+                System.out.println("markSupported() : "+file.markSupported());
+                JarURLConnection.guessContentTypeFromStream(file);
+            } catch (IOException e) {
+                System.out.println("directory!!");
+            }
+            URL jarRes = Thread.currentThread().getContextClassLoader().getResource(publicDir + res);
+            System.out.println("jarRes : "+JarURLConnection.getFileNameMap().getContentTypeFor(publicDir+res));
             FileView fileView = new FileView(file,contentType);
             seedResponse.write(fileView.renderView(), fileView.contentType(), fileView.getCode());
         }else{
@@ -268,7 +281,7 @@ public class SeedWeb {
                     try {
                         params = execLogicRequestBody(routerName,router,request);
                     } catch (ParamUnSupportException e) {
-                        return new ErrorView(HTTP_RESPONSE.CODE_415);
+                        return new ErrorView(HttpResponseCode.CODE_415);
                     }
                 }else{
                     params = execLogicNormal(routerName, request.getValues(), router);
@@ -285,7 +298,7 @@ public class SeedWeb {
                 return new DefaultView(result);
             }
         }
-        return new ErrorView(HTTP_RESPONSE.CODE_404);
+        return new ErrorView(HttpResponseCode.CODE_404);
     }
 
     

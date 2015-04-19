@@ -1,7 +1,7 @@
 package com.opdar.framework.web.views;
 
 import com.alibaba.fastjson.JSON;
-import com.opdar.framework.web.common.HTTP_RESPONSE;
+import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 /**
@@ -24,6 +24,6 @@ public class JSONView implements View {
     }
 
     public int getCode() {
-        return HTTP_RESPONSE.CODE_200.getCode();
+        return HttpResponseCode.CODE_200.getCode();
     }
 }
