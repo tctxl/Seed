@@ -4,6 +4,7 @@ import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 
 /**
  * Created by 俊帆 on 2015/4/16.
@@ -49,14 +50,10 @@ public class FileView implements View{
     }
 
     public byte[] renderView() {
-        BufferedInputStream bis = null;
         try {
-            bis = new BufferedInputStream(file);
-            byte[] buffer = new byte[1024];
-            while(bis.read(buffer) != -1){
-                if(fileReadListener != null){
-                    fileReadListener.read(buffer, contentType(), getCode());
-                }
+            byte[] buffer = new byte[file.available()];
+            if(fileReadListener != null){
+                fileReadListener.read(buffer, contentType(), getCode());
             }
         } catch (Exception e) {
             if(fileReadListener!=null)
@@ -65,7 +62,6 @@ public class FileView implements View{
             try {
                 if (file != null)
                     file.close();
-                if(bis != null)bis.close();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
             }

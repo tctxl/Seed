@@ -18,6 +18,7 @@ import java.util.Map;
 public class SeedTemplateParser {
     private static final char LEFT_BUCKET = '{';
     private static final char RIGHT_BUCKET = '}';
+    //不转移输出
     private static final char NUMBER_SIGN = '#';
     public SeedTemplateParser(File file,Map<String,Object> dataModels) throws IOException {
         this(new FileInputStream(file),dataModels);
@@ -37,8 +38,10 @@ public class SeedTemplateParser {
 
     public static void main(String[] args) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("test","hehehe");
-        new SeedTemplateParser("<div>{{test}}</div>",map);
+        Map<String, Object> map2 = new HashMap<String,Object>();
+        map2.put("testvalue","223");
+        map.put("test",map2);
+        new SeedTemplateParser("<div>{{test.testvalue}}</div>",map);
     }
 
     private static final class Status{

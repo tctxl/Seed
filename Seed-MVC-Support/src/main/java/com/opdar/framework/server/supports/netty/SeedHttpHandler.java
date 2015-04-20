@@ -74,11 +74,13 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
                 }
             }catch (Exception e){
                 //400
-                if(response!=null)
-                    response.write("response code 400".getBytes(),"text/html", HttpResponseCode.CODE_400.getCode());
+                if(response!=null) {
+                    response.write("response code 400".getBytes(), "text/html", HttpResponseCode.CODE_400.getCode());
+                    response.flush();
+                }
             } finally{
-                if(response!=null && !response.isWrite())
-                    response.writeSuccess();
+//                if(response!=null && !response.isWrite())
+//                    response.writeSuccess();
             }
         }
     }

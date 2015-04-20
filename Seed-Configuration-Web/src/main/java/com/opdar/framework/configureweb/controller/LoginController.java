@@ -10,12 +10,13 @@ import com.opdar.framework.web.views.HtmlView;
  * Site:opdar.com
  * QQ:362116120
  */
-@Controller(value = "/login/",prefix = "sed")
+@Controller(value = "/login/", prefix = "sed")
 public class LoginController {
 
     @Router
-    public HtmlView index(){
-        return new HtmlView("index.html");
+    public String index(String test) {
+        return "true";
     }
-    
+
+
 }

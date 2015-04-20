@@ -18,13 +18,14 @@ public class TestController {
 
     @Router
     public String router2(String testParam,TestBean bean){
-        i++;
+        synchronized (TestController.class){
+            i++;
+        }
         return "this is /test/router2  testParam : "+testParam;
     }
 
     @Router("index")
-    public HtmlView routerRender(String testParam, TestBean bean){
-        TestBean bean1 = new TestBean();
-        return new HtmlView("index.html");
+    public String routerRender(String testParam, TestBean bean){
+        return String.valueOf(i);
     }
 }

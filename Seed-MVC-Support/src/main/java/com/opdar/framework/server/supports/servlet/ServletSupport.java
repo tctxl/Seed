@@ -63,6 +63,11 @@ public class ServletSupport extends DefaultSupport  {
                     }
                 }
 
+                public void writeAndFlush(byte[] content, String contentType, int responseCode) {
+                    write(content,contentType,responseCode);
+                    flush();
+                }
+
                 public void flush() {
                     try {
                         res.flushBuffer();

@@ -242,10 +242,11 @@ public class SeedWeb {
         createRouterArgsMapped();
     }
 
+    private static final Map<String,String> contentTypes = new HashMap<String, String>();
 
     public void execute(String routerName, SeedRequest request, final IResponse response) {
         defaultAop.before();
-        SeedResponse seedResponse = (SeedResponse) response;
+        final SeedResponse seedResponse = (SeedResponse) response;
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
         for(Iterator<String> it = SeedWeb.publicPaths.keySet().iterator();it.hasNext();){
@@ -259,57 +260,63 @@ public class SeedWeb {
         FileView.FileReadListener fileReadListener = new FileView.FileReadListener() {
             @Override
             public void read(byte[] bytes,String contentType,int responseCode) {
-                response.write(bytes,contentType,responseCode);
+                seedResponse.write(bytes,contentType,responseCode);
             }
 
             @Override
             public void catchException(Throwable throwable) {
                 ErrorView error = new ErrorView(HttpResponseCode.CODE_404);
-                response.write(error.renderView(),error.contentType(),error.getCode());
+                seedResponse.write(error.renderView(),error.contentType(),error.getCode());
             }
 
             @Override
             public void close() {
-                response.flush();
+                seedResponse.flush();
             }
         };
 
+        View view = null;
         if (publicPath != null) {
             String res = Utils.testRouter(routerName.replace(publicPath.getMapping(), ""));
-            String contentType = new MimetypesFileTypeMap().getContentType(res);
-            View fileView = null;
+            String contentType = "text/html";
+            if(contentTypes.containsKey(res)){
+                contentType = contentTypes.get(res);
+            }else{
+                contentType =  new MimetypesFileTypeMap().getContentType(res);
+                contentTypes.put(res,contentType);
+            }
             if(publicPath.getPathType() == 1){
-                URL file = publicPath.getResource(res);
-                if (file.getProtocol().equals("file")) {
-                    if (new File(file.getPath()).isDirectory()) {
-                        fileView = new ErrorView(HttpResponseCode.CODE_404);
-                    }
-                }
+//                URL file = publicPath.getResource(res);
+//                if (file.getProtocol().equals("file")) {
+//                    if (new File(file.getPath()).isDirectory()) {
+//                        view = new ErrorView(HttpResponseCode.CODE_404);
+//                    }
+//                }
                 try {
-                    if (fileView == null)
-                        fileView = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
+                    if (view == null)
+                        view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            byte[] data = fileView.renderView();
-            if (data == null) {
-                fileView = new ErrorView(HttpResponseCode.CODE_404);
-                data = fileView.renderView();
+            byte[] data = view.renderView();
+            if (data == null && !(view instanceof FileView)) {
+                view = new ErrorView(HttpResponseCode.CODE_404);
+                data = view.renderView();
+                seedResponse.write(data, view.contentType(), view.getCode());
+                seedResponse.flush();
             }
-            seedResponse.write(data, fileView.contentType(), fileView.getCode());
-            seedResponse.flush();
         } else {
-            View v = executeLogic(routerName, request);
-            if (v == null) {
+            view = executeLogic(routerName, request);
+            if (view == null) {
                 //return void;
                 seedResponse.writeSuccess();
             } else {
-                if(v instanceof HtmlView){
-                    ((HtmlView) v).setFileReadListener(fileReadListener).renderView();
+                if(view instanceof HtmlView){
+                    ((HtmlView) view).setFileReadListener(fileReadListener).renderView();
                 }else{
-                    byte[] result = v.renderView();
-                    seedResponse.write(result, v.contentType(), v.getCode());
+                    byte[] result = view.renderView();
+                    seedResponse.write(result, view.contentType(), view.getCode());
                     seedResponse.flush();
                 }
             }
@@ -401,7 +408,6 @@ public class SeedWeb {
 
     private Object[] execLogicNormal(String routerName, Map<String, String> values, SeedRouter router) {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
-
         HashMap<String, ClassBean> mapped = argsMapped.get(routerName.toUpperCase());
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
