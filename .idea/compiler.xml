@@ -35,7 +35,7 @@
         <module name="Seed-Template" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.6">
       <module name="Seed" target="1.6" />
       <module name="seed-aop" target="1.6" />
       <module name="seed-base" target="1.6" />
