@@ -21,30 +21,30 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.0.21.Final</version>
+            <version>4.0.27.Final</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.2.10.v20150310</version>
+            <version>8.1.16.v20140903</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.2.10.v20150310</version>
+            <version>8.1.16.v20140903</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-continuation</artifactId>
-            <version>9.2.10.v20150310</version>
+            <version>8.1.16.v20140903</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jsp</artifactId>
-            <version>9.2.10.v20150310</version>
+            <version>8.1.16.v20140903</version>
         </dependency>
 
         <dependency>

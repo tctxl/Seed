@@ -9,17 +9,26 @@ import java.io.*;
  * Created by 俊帆 on 2015/4/16.
  */
 public class FileView implements View{
+    private FileReadListener fileReadListener;
     private  String contentType = "text/html";
     private InputStream file;
     public FileView(String file){
         this(new File(file));
     }
-    public FileView(InputStream file){
-        this(file,"text/html");
+
+    public FileView(InputStream file,FileReadListener fileReadListener){
+        this(file,"text/html",fileReadListener);
     }
-    public FileView(InputStream file,String contentType){
+    public interface FileReadListener{
+        void read(byte[] bytes,String contentType,int responseCode);
+        void catchException(Throwable throwable);
+        void close();
+    }
+
+    public FileView(InputStream file,String contentType,FileReadListener fileReadListener){
         this.file = file;
         this.contentType = contentType;
+        this.fileReadListener = fileReadListener;
     }
 
     public FileView(File file){
@@ -40,22 +49,28 @@ public class FileView implements View{
     }
 
     public byte[] renderView() {
-        ByteArrayOutputStream out = null;
+        BufferedInputStream bis = null;
         try {
-            out = new ByteArrayOutputStream();
-            byte[] buffer = new byte[file.available()];
-            file.read(buffer);
-            out.write(buffer);
-            return buffer;
+            bis = new BufferedInputStream(file);
+            byte[] buffer = new byte[1024];
+            while(bis.read(buffer) != -1){
+                if(fileReadListener != null){
+                    fileReadListener.read(buffer, contentType(), getCode());
+                }
+            }
         } catch (Exception e) {
+            if(fileReadListener!=null)
+                fileReadListener.catchException(e);
         } finally {
             try {
                 if (file != null)
                     file.close();
-                if(out != null)out.close();
+                if(bis != null)bis.close();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
             }
+            if(fileReadListener!=null)
+                fileReadListener.close();
         }
         return null;
     }

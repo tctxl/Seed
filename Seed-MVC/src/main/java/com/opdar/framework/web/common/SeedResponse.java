@@ -43,4 +43,9 @@ public class SeedResponse implements IResponse {
     public void write(byte[] content, String contentType, int responseCode) {
         response.write(content,contentType,responseCode);
     }
+
+    @Override
+    public void flush() {
+        response.flush();
+    }
 }

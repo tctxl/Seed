@@ -27,6 +27,7 @@ public class SeedSession implements IResponse {
     public ChannelFuture writeResult(String content,String contentType,int responseCode){
         return writeResult(content.getBytes(), contentType, responseCode);
     }
+
     public ChannelFuture writeResult(final byte[] content,String contentType,int responseCode){
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(responseCode), Unpooled.wrappedBuffer(content));
         response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
@@ -35,7 +36,15 @@ public class SeedSession implements IResponse {
     }
 
     public void write(byte[] content, String contentType, int responseCode) {
-        writeResult(content,contentType,responseCode);
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(responseCode), Unpooled.wrappedBuffer(content));
+        response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
+        response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
+        ctx.write(content);
+    }
+
+    public void flush() {
+        ctx.flush();
+        ctx.close();
     }
 
 

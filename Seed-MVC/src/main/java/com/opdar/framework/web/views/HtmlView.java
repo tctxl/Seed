@@ -10,13 +10,20 @@ import java.io.*;
  */
 public class HtmlView implements View{
     private String htmlFile;
+    private FileView.FileReadListener fileReadListener;
+
     public HtmlView(String htmlFile){
         this.htmlFile = htmlFile;
     }
 
+    public HtmlView setFileReadListener(FileView.FileReadListener fileReadListener){
+        this.fileReadListener = fileReadListener;
+        return this;
+    }
+
     public byte[] renderView() {
         InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(SeedWeb.WEB_HTML_PATH.concat("/").concat(htmlFile));
-        return new FileView(file).renderView();
+        return new FileView(file,fileReadListener).renderView();
     }
 
     public String contentType() {

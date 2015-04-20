@@ -1,5 +1,6 @@
-package com.opdar.framework.configureweb.base;
+package com.opdar.framework.configureweb;
 
+import com.opdar.framework.configureweb.base.Config;
 import com.opdar.framework.server.base.DefaultConfig;
 import com.opdar.framework.server.supports.jetty.JettySupport;
 

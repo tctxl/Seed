@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.Servlet;
 import java.util.EnumSet;
 
 /**
@@ -27,7 +28,8 @@ public class JettySupport extends ServletSupport {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         EnumSet<DispatcherType> types = EnumSet.allOf(DispatcherType.class);
-        context.addFilter(ServletSupport.class,"/*", types);
+        context.addServlet(SeedServlet.class, "/*");
+//        context.addFilter(ServletSupport.class,"/*", types);
         server.setHandler(context);
         try {
             server.start();
