@@ -69,6 +69,11 @@ public class SeedPath {
         return null;
     }
 
+    public File getFilePath(String file){
+        file = Utils.testRouter(file);
+        return new File(System.getProperty("seed.root"),path+file);
+    }
+
     public URL getResource(String file){
         file = Utils.testRouter(file.replace(mapping,""));
         return Thread.currentThread().getContextClassLoader().getResource(path+file);

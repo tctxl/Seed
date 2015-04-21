@@ -15,10 +15,10 @@ import com.opdar.framework.web.views.HtmlView;
 public class TestController {
 
     private static int i=0;
-
+    private static Object object = new Object();
     @Router
     public String router2(String testParam,TestBean bean){
-        synchronized (TestController.class){
+        synchronized (object){
             i++;
         }
         return "this is /test/router2  testParam : "+testParam;

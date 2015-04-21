@@ -252,7 +252,7 @@ public class SeedWeb {
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
         int pNameIndex = -1;
-        if((pNameIndex = routerName.indexOf("/")) != -1){
+        if((pNameIndex = routerName.indexOf("/",1)) != -1){
             String publicPathKey = routerName.substring(0,pNameIndex);
             if(SeedWeb.publicPaths.containsKey(publicPathKey))
                 publicPath = SeedWeb.publicPaths.get(publicPathKey);
@@ -285,17 +285,14 @@ public class SeedWeb {
                 contentType =  new MimetypesFileTypeMap().getContentType(res);
                 contentTypes.put(res,contentType);
             }
-            if(publicPath.getPathType() == 1){
-                URL file = publicPath.getResource(res);
-                if (file.getProtocol().equals("file")) {
-                    if (new File(file.getPath()).isDirectory()) {
-                        view = new ErrorView(HttpResponseCode.CODE_404);
+            try {
+                if (view == null){
+                    if(publicPath.getPathType() == 1){
+                        view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
+                    }else{
+                        view = new FileView(publicPath.getFilePath(res),contentType,fileReadListener);
                     }
                 }
-            }
-            try {
-                if (view == null)
-                    view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
             } catch (IOException e) {
                 e.printStackTrace();
             }

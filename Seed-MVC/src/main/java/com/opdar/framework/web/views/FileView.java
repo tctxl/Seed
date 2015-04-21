@@ -1,10 +1,12 @@
 package com.opdar.framework.web.views;
 
+import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by 俊帆 on 2015/4/16.
@@ -12,7 +14,7 @@ import java.nio.ByteBuffer;
 public class FileView implements View{
     private FileReadListener fileReadListener;
     private  String contentType = "text/html";
-    private InputStream file;
+    private byte[] file;
     public FileView(String file){
         this(new File(file));
     }
@@ -27,45 +29,55 @@ public class FileView implements View{
     }
 
     public FileView(InputStream file,String contentType,FileReadListener fileReadListener){
-        this.file = file;
+        try {
+            this.file = Utils.is2byte(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.contentType = contentType;
         this.fileReadListener = fileReadListener;
     }
 
     public FileView(File file){
-        try {
-            this.file = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        this(file,"text/html");
     }
 
     public FileView(File file,String contentType){
+        this(file,contentType,null);
+    }
+
+    public FileView(File file,String contentType,FileReadListener fileReadListener){
+        ByteArrayOutputStream baos = null;
+        RandomAccessFile raf = null;
         try {
-            this.file = new FileInputStream(file);
+            raf = new RandomAccessFile(file,"r");
+            baos = new ByteArrayOutputStream();
+            this.file = baos.toByteArray();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if(baos!=null)
+                    baos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         this.contentType = contentType;
+        this.fileReadListener = fileReadListener;
     }
 
     public byte[] renderView() {
         try {
-            byte[] buffer = new byte[file.available()];
-            file.read(buffer);
             if(fileReadListener != null){
-                fileReadListener.read(buffer, contentType(), getCode());
+                fileReadListener.read(file, contentType(), getCode());
             }
         } catch (Exception e) {
             if(fileReadListener!=null)
                 fileReadListener.catchException(e);
         } finally {
-            try {
-                if (file != null)
-                    file.close();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-            }
             if(fileReadListener!=null)
                 fileReadListener.close();
         }

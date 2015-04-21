@@ -7,27 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="abb2bb81-bf14-46c4-bdbc-e166198f6541" name="Default" comment="修复content-type识别">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/public" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/public/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/IResponse.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/IResponse.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed.iml" afterPath="$PROJECT_DIR$/Seed.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java" afterPath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedNettyInitializer.java" afterPath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedNettyInitializer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedResponse.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java" afterPath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Template/src/main/java/com/opdar/framework/template/SeedTemplateParser.java" afterPath="$PROJECT_DIR$/Seed-Template/src/main/java/com/opdar/framework/template/SeedTemplateParser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletSupport.java" afterPath="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletSupport.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/index.html" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Aop/seed-aop.iml" afterPath="$PROJECT_DIR$/Seed-Aop/seed-aop.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Base/seed-base.iml" afterPath="$PROJECT_DIR$/Seed-Base/seed-base.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/pom.xml" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Database/seed-database.iml" afterPath="$PROJECT_DIR$/Seed-Database/seed-database.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Extra/seed-extra.iml" afterPath="$PROJECT_DIR$/Seed-Extra/seed-extra.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC-Support/seed-mvc-support.iml" afterPath="$PROJECT_DIR$/Seed-MVC-Support/seed-mvc-support.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/seed-mvc.iml" afterPath="$PROJECT_DIR$/Seed-MVC/seed-mvc.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Template/seed-template.iml" afterPath="$PROJECT_DIR$/Seed-Template/seed-template.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="6044808a-45eb-4696-90f2-eccff687ddbd" name="Failed commit: Default" comment="增加静态资源渲染路径&#10;增加html渲染路径" />
@@ -68,83 +59,124 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="LoginController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-              <folding>
-                <element signature="e#440#441#0" expanded="true" />
-                <element signature="e#469#470#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="17" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
-              <folding>
-                <element signature="e#426#427#0" expanded="true" />
-                <element signature="e#462#463#0" expanded="true" />
-                <element signature="e#536#537#0" expanded="true" />
-                <element signature="e#591#592#0" expanded="true" />
-                <element signature="e#2149#2150#0" expanded="true" />
-                <element signature="e#2183#2184#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1943463">
-              <caret line="13" column="21" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
-              <folding>
-                <element signature="e#748#749#0" expanded="true" />
-                <element signature="e#788#789#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HtmlView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/HtmlView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
-              <folding>
-                <element signature="e#348#349#0" expanded="true" />
-                <element signature="e#388#389#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SeedWeb.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="296" column="41" selection-start-line="296" selection-start-column="41" selection-end-line="296" selection-end-column="41" />
+              <caret line="292" column="100" selection-start-line="292" selection-start-column="100" selection-end-line="292" selection-end-column="100" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1376#1396#0" expanded="true" />
-                <element signature="e#1478#1495#0" expanded="true" />
-                <element signature="e#1601#1639#0" expanded="true" />
-                <element signature="e#1736#1772#0" expanded="true" />
-                <element signature="e#1852#1873#0" expanded="true" />
-                <element signature="e#1944#1952#0" expanded="true" />
-                <element signature="e#2075#2093#0" expanded="true" />
-                <element signature="e#7396#7397#0" expanded="true" />
-                <element signature="e#7459#7460#0" expanded="true" />
-                <element signature="e#7514#7515#0" expanded="true" />
-                <element signature="e#7563#7564#0" expanded="true" />
-                <element signature="e#10860#10876#0" expanded="true" />
-                <element signature="e#18379#18396#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#12240#12241#0" expanded="false" />
+                <element signature="e#12292#12293#0" expanded="false" />
+                <element signature="e#20113#20114#0" expanded="false" />
+                <element signature="e#20178#20179#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileView.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.53743017">
+              <caret line="53" column="47" selection-start-line="53" selection-start-column="47" selection-end-line="53" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SeedSession.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="53" column="9" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SeedPath.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="72" column="38" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#812#813#0" expanded="false" />
+                <element signature="e#850#851#0" expanded="false" />
+                <element signature="e#882#883#0" expanded="false" />
+                <element signature="e#913#914#0" expanded="false" />
+                <element signature="e#958#959#0" expanded="false" />
+                <element signature="e#998#999#0" expanded="false" />
+                <element signature="e#1029#1030#0" expanded="false" />
+                <element signature="e#1056#1057#0" expanded="false" />
+                <element signature="e#1096#1097#0" expanded="false" />
+                <element signature="e#1128#1129#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SeedHttpHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="netty.support.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleChannelInboundHandler.class" pinned="false" current-in-tab="false">
+        <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/SimpleChannelInboundHandler.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractChannelHandlerContext.class" pinned="false" current-in-tab="false">
+        <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/AbstractChannelHandlerContext.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="288" column="17" selection-start-line="288" selection-start-column="17" selection-end-line="288" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessageToMessageDecoder.class" pinned="false" current-in-tab="false">
+        <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/handler/codec/MessageToMessageDecoder.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -171,7 +203,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/NettySupport.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/ChatInitializer.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/CometHandler.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/SheySession.java" />
@@ -198,14 +229,11 @@
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/HTTP_RESPONSE.java" />
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/HttpResponseCode.java" />
         <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/base/Config.java" />
-        <option value="$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java" />
         <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/test/java/com/opdar/framework/configureweb/ServletConfig.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/jetty/JettySupport.java" />
-        <option value="$PROJECT_DIR$/Seed-Configuration-Web/pom.xml" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/pom.xml" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/DefaultSupport.java" />
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/HtmlView.java" />
-        <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties" />
         <option value="$PROJECT_DIR$/Seed-Template/src/main/java/com/opdar/framework/template/SeedTemplateParser.java" />
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/interfaces/View.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java" />
@@ -215,13 +243,17 @@
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedResponse.java" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletSupport.java" />
         <option value="$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" />
-        <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java" />
         <option value="E:/maven/settings.xml" />
         <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
+        <option value="$PROJECT_DIR$/Seed-Configuration-Web/pom.xml" />
         <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java" />
+        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Injection.java" />
+        <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java" />
+        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java" />
+        <option value="$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties" />
+        <option value="$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java" />
+        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
+        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java" />
       </list>
     </option>
   </component>
@@ -287,7 +319,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
+    <option name="width" value="1932" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -329,6 +361,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -344,72 +377,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed-MVC" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed-MVC" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="trunk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seed-MVC" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -509,7 +476,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -542,8 +513,30 @@
               <option name="myItemId" value="configureweb" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="base" />
+              <option name="myItemId" value="Seed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed-Configuration-Web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -583,7 +576,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Seed-Aop" />
+              <option name="myItemId" value="Seed-Configuration-Web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configureweb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -597,11 +610,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Seed-Aop" />
+              <option name="myItemId" value="Seed-Configuration-Web" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configureweb" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -609,7 +634,6 @@
       </pane>
       <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -630,7 +654,7 @@
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="E:/ASKDR2.3.0" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="aspect.path.notification.shown" value="true" />
   </component>
@@ -642,10 +666,11 @@
       <recent name="E:\Seed\Seed-Base\src\main\java\com\opdar\framework\asm" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Seed\trunk\Seed-Configuration-Web\src\main\resources\com\opdar\framework\configureweb\public\" />
+      <recent name="E:\Seed\trunk\Seed-Configuration-Web\src\main\public" />
       <recent name="E:\Seed\trunk\Seed-Configuration-Web\src\main\resources\com\opdar\framework\configureweb\pages" />
       <recent name="E:\Seed\com\opdar\framework\aop\base" />
       <recent name="E:\Seed\com\opdar" />
-      <recent name="E:\Seed" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.opdar.framework.configureweb" />
@@ -653,133 +678,12 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.opdar.framework.web.anotations" />
       <recent name="com.opdar.framework.web.views" />
       <recent name="com.opdar.framework.web.common" />
       <recent name="com.opdar.framework.server.supports" />
       <recent name="com.opdar.framework.aop" />
-      <recent name="com.opdar.framework.web.anotations" />
     </key>
-  </component>
-  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
-    <UpdatedFiles>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Updated from server" />
-        <option name="myStatusName" value="Changed on server" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="CHANGED_ON_SERVER" />
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated" />
-          <option name="myStatusName" value="Changed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UPDATED" />
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\pom.xml</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Created" />
-          <option name="myStatusName" value="Created" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CREATED" />
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java\com</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java\com\opdar</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java\com\opdar\framework</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java\com\opdar\framework\configureweb</PATH>
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\test\java\com\opdar\framework\configureweb\ServletConfig.java</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Deleted" />
-          <option name="myStatusName" value="Deleted" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="true" />
-          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-          <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\src\main\java\com\opdar\framework\configureweb\base\ServletConfig.java</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Restored" />
-          <option name="myStatusName" value="Will be restored" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="RESTORED" />
-        </FILE-GROUP>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Modified" />
-        <option name="myStatusName" value="Modified" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MODIFIED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Skipped" />
-        <option name="myStatusName" value="Skipped" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SKIPPED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with conflicts" />
-        <option name="myStatusName" value="Will be merged with conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_CONFLICTS" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with tree conflicts" />
-        <option name="myStatusName" value="Merged with tree conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with property conflicts" />
-        <option name="myStatusName" value="Will be merged with property conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged" />
-        <option name="myStatusName" value="Will be merged" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED" />
-        <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Configuration-Web\seed-configuration-web.iml</PATH>
-        <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-Database\seed-database.iml</PATH>
-        <PATH vcs="svn" revision="14">E:\Seed\trunk\Seed-MVC-Support\seed-mvc-support.iml</PATH>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Not in repository" />
-        <option name="myStatusName" value="Not in repository" />
-        <option name="mySupportsDeletion" value="true" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="UNKNOWN" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally added" />
-        <option name="myStatusName" value="Locally added" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_ADDED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally removed" />
-        <option name="myStatusName" value="Locally removed" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_REMOVED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Switched" />
-        <option name="myStatusName" value="Switched" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SWITCHED" />
-      </FILE-GROUP>
-    </UpdatedFiles>
   </component>
   <component name="RunManager" selected="Application.Config">
     <configuration default="false" name="Config" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -1298,6 +1202,8 @@
       <workItem from="1429337588493" duration="62000" />
       <workItem from="1429337652678" duration="4991000" />
       <workItem from="1429347364494" duration="45259000" />
+      <workItem from="1429580394090" duration="12530000" />
+      <workItem from="1429614414727" duration="1388000" />
     </task>
     <task id="LOCAL-00001" summary="中文编码问题">
       <created>1429184229559</created>
@@ -1335,11 +1241,17 @@
       <option name="project" value="LOCAL" />
       <updated>1429408968491</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="优化静态资源访问">
+      <created>1429609507048</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1429609507048</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="229574000" />
+    <option name="totallyTimeSpent" value="243492000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1351,34 +1263,34 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1932" height="1056" extended-state="1" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32900432" sideWeight="0.4978678" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3225108" sideWeight="0.30613333" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3560606" sideWeight="0.64" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33546665" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33511493" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2099567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3452381" sideWeight="0.36446592" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30026665" sideWeight="0.49393415" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30037412" sideWeight="0.49393415" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924962" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32575756" sideWeight="0.47987118" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="ASM" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33762747" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29361245" sideWeight="0.50606585" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3560606" sideWeight="0.36" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3560606" sideWeight="0.36" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3225108" sideWeight="0.30613333" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34415585" sideWeight="0.36446592" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32575756" sideWeight="0.47987118" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1400,14 +1312,15 @@
     <MESSAGE value="修复content-type识别" />
     <MESSAGE value="HttpResponseCode修改" />
     <MESSAGE value="修复返回404的content-type" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复返回404的content-type" />
+    <MESSAGE value="优化静态资源访问" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化静态资源访问" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="243" />
+      <option name="time" value="267" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1416,103 +1329,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/DefaultSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26855123">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar!/javax/servlet/http/HttpServletRequest.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34750462">
-          <caret line="56" column="11" selection-start-line="56" selection-start-column="11" selection-end-line="56" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/test/java/com/opdar/framework/configureweb/ServletConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="19" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/jetty/JettySupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/javax/servlet/http/HttpServletResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23144877">
-          <caret line="52" column="17" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar!/javax/servlet/http/HttpServletResponseWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36572438">
-          <caret line="59" column="28" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
-          <folding>
-            <element signature="e#1867#1868#0" expanded="false" />
-            <element signature="e#1924#1925#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar!/javax/servlet/http/HttpServlet.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49168208">
-          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#9417#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar!/javax/servlet/http/HttpServletResponse.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.125693">
-          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/ChannelFutureListener.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38632163">
-          <caret line="15" column="6" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-          <folding>
-            <element signature="e#348#493#0" expanded="true" />
-            <element signature="e#492#493#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/ChannelHandlerContext.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.34750462">
           <caret line="81" column="18" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1520,11 +1340,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
-          <folding>
-            <element signature="e#1080#1081#0" expanded="true" />
-            <element signature="e#1121#1122#0" expanded="true" />
-            <element signature="e#1280#1295#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1532,7 +1347,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33271718">
           <caret line="33" column="12" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1540,7 +1354,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.38262478">
           <caret line="58" column="70" selection-start-line="58" selection-start-column="69" selection-end-line="59" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1548,7 +1361,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21072088">
           <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1556,15 +1368,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8428835">
           <caret line="35" column="20" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.06713781">
-          <caret line="2" column="35" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1572,15 +1375,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3621908">
           <caret line="18" column="18" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/handler/codec/MessageToMessageDecoder.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.2">
-          <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1588,7 +1382,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-7.52">
           <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1596,7 +1389,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33215547">
           <caret line="84" column="29" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1604,7 +1396,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33215547">
           <caret line="234" column="28" selection-start-line="234" selection-start-column="28" selection-end-line="234" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1612,7 +1403,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33215547">
           <caret line="88" column="15" selection-start-line="88" selection-start-column="15" selection-end-line="88" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1620,7 +1410,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.42144176">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1628,7 +1417,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.03512015">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1636,15 +1424,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="134" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1652,7 +1431,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.43639576">
           <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1660,7 +1438,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.50353354">
           <caret line="22" column="48" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1668,7 +1445,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16784452">
           <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1676,59 +1452,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="48" column="64" selection-start-line="48" selection-start-column="64" selection-end-line="48" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="71" column="25" selection-start-line="71" selection-start-column="25" selection-end-line="71" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/aop/SeedInvoke.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.6.0_45/src.zip!/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46643108">
-          <caret line="95" column="28" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/SimpleChannelInboundHandler.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.24">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/AbstractChannelHandlerContext.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.2">
-          <caret line="294" column="0" selection-start-line="294" selection-start-column="0" selection-end-line="294" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1740,19 +1463,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/seed-aop.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Seed.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1760,7 +1474,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1768,20 +1481,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="2" column="64" selection-start-line="2" selection-start-column="64" selection-end-line="2" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/images/999232.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33568904">
-          <caret line="40" column="30" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1789,7 +1488,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.9805654">
           <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1798,82 +1496,231 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
           <folding>
-            <element signature="e#348#349#0" expanded="true" />
-            <element signature="e#388#389#0" expanded="true" />
+            <element signature="e#348#349#0" expanded="false" />
+            <element signature="e#388#389#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/images/999232.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/base/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23498233">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/aop/SeedInvoke.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="63" selection-start-line="76" selection-start-column="63" selection-end-line="76" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="50" selection-start-line="27" selection-start-column="50" selection-end-line="27" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Aop/seed-aop.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="20" selection-start-line="52" selection-start-column="20" selection-end-line="52" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Before.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39514732">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/After.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39514732">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.6.0_45/src.zip!/java/lang/annotation/ElementType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34142116">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53710246">
+          <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Injection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36925796">
+          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5650558">
+          <caret line="16" column="44" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.6.0_45/src.zip!/java/io/RandomAccessFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33215547">
+          <caret line="179" column="11" selection-start-line="179" selection-start-column="11" selection-end-line="179" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/ChannelInboundHandlerAdapter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.2">
+          <caret line="31" column="16" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/handler/codec/MessageToMessageDecoder.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="16" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/AbstractChannelHandlerContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="288" column="17" selection-start-line="288" selection-start-column="17" selection-end-line="288" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.6.0_45/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33215547">
+          <caret line="1731" column="45" selection-start-line="1731" selection-start-column="45" selection-end-line="1731" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0371025">
-          <caret line="59" column="23" selection-start-line="59" selection-start-column="23" selection-end-line="59" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="72" column="38" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
           <folding>
-            <element signature="e#1109#1110#0" expanded="true" />
-            <element signature="e#1136#1137#0" expanded="true" />
-            <element signature="e#1176#1177#0" expanded="true" />
-            <element signature="e#1208#1209#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#812#813#0" expanded="false" />
+            <element signature="e#850#851#0" expanded="false" />
+            <element signature="e#882#883#0" expanded="false" />
+            <element signature="e#913#914#0" expanded="false" />
+            <element signature="e#958#959#0" expanded="false" />
+            <element signature="e#998#999#0" expanded="false" />
+            <element signature="e#1029#1030#0" expanded="false" />
+            <element signature="e#1056#1057#0" expanded="false" />
+            <element signature="e#1096#1097#0" expanded="false" />
+            <element signature="e#1128#1129#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/resources/com/opdar/framework/configureweb/base/netty.support.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedHttpHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.27.Final/netty-all-4.0.27.Final.jar!/io/netty/channel/SimpleChannelInboundHandler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33215547">
+          <caret line="15" column="76" selection-start-line="15" selection-start-column="58" selection-end-line="15" selection-end-column="76" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="296" column="41" selection-start-line="296" selection-start-column="41" selection-end-line="296" selection-end-column="41" />
+          <caret line="292" column="100" selection-start-line="292" selection-start-column="100" selection-end-line="292" selection-end-column="100" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1376#1396#0" expanded="true" />
-            <element signature="e#1478#1495#0" expanded="true" />
-            <element signature="e#1601#1639#0" expanded="true" />
-            <element signature="e#1736#1772#0" expanded="true" />
-            <element signature="e#1852#1873#0" expanded="true" />
-            <element signature="e#1944#1952#0" expanded="true" />
-            <element signature="e#2075#2093#0" expanded="true" />
-            <element signature="e#7396#7397#0" expanded="true" />
-            <element signature="e#7459#7460#0" expanded="true" />
-            <element signature="e#7514#7515#0" expanded="true" />
-            <element signature="e#7563#7564#0" expanded="true" />
-            <element signature="e#10860#10876#0" expanded="true" />
-            <element signature="e#18379#18396#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#12240#12241#0" expanded="false" />
+            <element signature="e#12292#12293#0" expanded="false" />
+            <element signature="e#20113#20114#0" expanded="false" />
+            <element signature="e#20178#20179#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/netty/SeedSession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="53" column="9" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/FileView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="17" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
-          <folding>
-            <element signature="e#426#427#0" expanded="true" />
-            <element signature="e#462#463#0" expanded="true" />
-            <element signature="e#536#537#0" expanded="true" />
-            <element signature="e#591#592#0" expanded="true" />
-            <element signature="e#2149#2150#0" expanded="true" />
-            <element signature="e#2183#2184#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/LoginController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
-          <folding>
-            <element signature="e#440#441#0" expanded="true" />
-            <element signature="e#469#470#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1943463">
-          <caret line="13" column="21" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
-          <folding>
-            <element signature="e#748#749#0" expanded="true" />
-            <element signature="e#788#789#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.53743017">
+          <caret line="53" column="47" selection-start-line="53" selection-start-column="47" selection-end-line="53" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1943,7 +1790,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Seed</last-edited>
+          <last-edited>seed-configuration-web</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
