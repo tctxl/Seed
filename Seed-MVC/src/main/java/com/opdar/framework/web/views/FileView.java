@@ -52,6 +52,7 @@ public class FileView implements View{
     public byte[] renderView() {
         try {
             byte[] buffer = new byte[file.available()];
+            file.read(buffer);
             if(fileReadListener != null){
                 fileReadListener.read(buffer, contentType(), getCode());
             }

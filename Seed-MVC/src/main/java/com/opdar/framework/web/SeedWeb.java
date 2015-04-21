@@ -49,6 +49,8 @@ public class SeedWeb {
     static{
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
+        File seedRoot = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getParentFile();
+        System.setProperty("seed.root",seedRoot.getAbsolutePath());
     }
 
     private static final SeedAop defaultAop = new SeedAop() {
@@ -249,14 +251,12 @@ public class SeedWeb {
         final SeedResponse seedResponse = (SeedResponse) response;
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
-        for(Iterator<String> it = SeedWeb.publicPaths.keySet().iterator();it.hasNext();){
-            String publicPathKey = it.next().toUpperCase();
-            if(routerName.indexOf(publicPathKey) == 0){
+        int pNameIndex = -1;
+        if((pNameIndex = routerName.indexOf("/")) != -1){
+            String publicPathKey = routerName.substring(0,pNameIndex);
+            if(SeedWeb.publicPaths.containsKey(publicPathKey))
                 publicPath = SeedWeb.publicPaths.get(publicPathKey);
-                break;
-            }
         }
-
         FileView.FileReadListener fileReadListener = new FileView.FileReadListener() {
             @Override
             public void read(byte[] bytes,String contentType,int responseCode) {
@@ -286,18 +286,18 @@ public class SeedWeb {
                 contentTypes.put(res,contentType);
             }
             if(publicPath.getPathType() == 1){
-//                URL file = publicPath.getResource(res);
-//                if (file.getProtocol().equals("file")) {
-//                    if (new File(file.getPath()).isDirectory()) {
-//                        view = new ErrorView(HttpResponseCode.CODE_404);
-//                    }
-//                }
-                try {
-                    if (view == null)
-                        view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                URL file = publicPath.getResource(res);
+                if (file.getProtocol().equals("file")) {
+                    if (new File(file.getPath()).isDirectory()) {
+                        view = new ErrorView(HttpResponseCode.CODE_404);
+                    }
                 }
+            }
+            try {
+                if (view == null)
+                    view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             byte[] data = view.renderView();
             if (data == null && !(view instanceof FileView)) {

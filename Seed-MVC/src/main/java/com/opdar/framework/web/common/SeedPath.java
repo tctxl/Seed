@@ -2,9 +2,7 @@ package com.opdar.framework.web.common;
 
 import com.opdar.framework.utils.Utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -60,7 +58,11 @@ public class SeedPath {
     public InputStream getResourceAsStream(String file) throws FileNotFoundException {
         file = Utils.testRouter(file);
         if(pathType == 0){
-            return new FileInputStream(path+file);
+            File f = new File(System.getProperty("seed.root"),path+file);
+            if(!f.exists()){
+                return null;
+            }
+            return new FileInputStream(f);
         }else if(pathType == 1){
             return Thread.currentThread().getContextClassLoader().getResourceAsStream(path+file);
         }
