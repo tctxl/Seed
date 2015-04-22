@@ -3,7 +3,6 @@ package com.opdar.framework.configureweb.controller;
 import com.opdar.framework.configureweb.beans.TestBean;
 import com.opdar.framework.web.anotations.Controller;
 import com.opdar.framework.web.anotations.Router;
-import com.opdar.framework.web.views.HtmlView;
 
 /**
  * Created by Jeffrey on 2015/4/10.
