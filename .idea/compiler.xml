@@ -26,6 +26,8 @@
         <module name="seed-aop" />
         <module name="seed-base" />
         <module name="seed-configuration-web" />
+        <module name="Seed-Configuration-Web-Plugin" />
+        <module name="Seed-Configuration-Web-Tomcat" />
         <module name="seed-database" />
         <module name="seed-extra" />
         <module name="seed-mvc" />
@@ -40,6 +42,8 @@
       <module name="seed-aop" target="1.6" />
       <module name="seed-base" target="1.6" />
       <module name="seed-configuration-web" target="1.6" />
+      <module name="Seed-Configuration-Web-Plugin" target="1.6" />
+      <module name="Seed-Configuration-Web-Tomcat" target="1.6" />
       <module name="seed-database" target="1.6" />
       <module name="seed-extra" target="1.6" />
       <module name="seed-mvc" target="1.6" />

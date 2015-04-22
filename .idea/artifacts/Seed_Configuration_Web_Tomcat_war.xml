@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Seed-Configuration-Web-Tomcat:war">
+    <output-path>$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/target</output-path>
+    <root id="archive" name="seed-webapp.war">
+      <element id="artifact" artifact-name="Seed-Configuration-Web-Tomcat:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -17,7 +17,7 @@ import com.opdar.framework.web.views.HtmlView;
 public class LoginController {
 
     @Router
-    public HtmlView index(@RequestBody TestBean testBean) {
+    public HtmlView index(String test1,TestBean test) {
         return new HtmlView("INDEX.HTML");
     }
 

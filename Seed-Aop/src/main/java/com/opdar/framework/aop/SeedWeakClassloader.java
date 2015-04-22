@@ -5,6 +5,8 @@ import com.opdar.framework.asm.*;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 
 /**
@@ -13,9 +15,14 @@ import java.util.HashMap;
  * Site:opdar.com
  * QQ:362116120
  */
-public class SeedWeakClassloader extends ClassLoader implements Opcodes
+public class SeedWeakClassloader extends URLClassLoader implements Opcodes
 {
     private static HashMap<String, java.lang.reflect.Type> types = new HashMap<String, java.lang.reflect.Type>();
+
+    public SeedWeakClassloader(URL[] urls, ClassLoader parent) {
+        super(urls, parent);
+    }
+
     public Class<?> definedClass(String sig){
         String className = null;
         byte[] code = new byte[0];
@@ -41,7 +48,7 @@ public class SeedWeakClassloader extends ClassLoader implements Opcodes
         if(types.containsKey(sig)){
             type = types.get(sig);
         }else{
-            SeedWeakClassloader classloader = new SeedWeakClassloader();
+            SeedWeakClassloader classloader = new SeedWeakClassloader(new URL[]{},Thread.currentThread().getContextClassLoader());
             WeakReference<SeedWeakClassloader> classLoaderWr = new WeakReference<SeedWeakClassloader>(classloader);
             classloader = null;
             try {

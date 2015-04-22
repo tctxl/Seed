@@ -22,27 +22,13 @@ import java.util.*;
  * Site:opdar.com
  * QQ:362116120
  */
-public class SeedInvoke implements Opcodes
+public class SeedInvoke extends URLClassLoader implements Opcodes
 {
     private static String _iter = SeedExcuteItrf.class.getName().replaceAll("\\.", "/");
     private static HashMap<Class<?>,ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
-
+    static SeedInvoke loader = new SeedInvoke();
     public SeedInvoke() {
-    }
-
-    /** URLClassLoader的addURL方法 */
-    private static Method defineClassMethod = getDefineClassMethod();
-
-    /** 初始化方法 */
-    private static final Method getDefineClassMethod() {
-        try {
-            Method defineClass =  ClassLoader.class.getDeclaredMethod("defineClass", new Class[]{String.class, byte[].class, int.class, int.class});
-            defineClass.setAccessible(true);
-            return defineClass;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        super(new URL[]{},Thread.currentThread().getContextClassLoader());
     }
 
     public static HashMap<Class<?>, ClassBean> getBeanSymbols() {
@@ -351,14 +337,8 @@ public class SeedInvoke implements Opcodes
          * 从文件加载类
          */
         Class seedClass = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-        try {
-            seedClass = (Class) defineClassMethod.invoke(classLoader,new Object[]{className.replace("/","."),code,0,code.length});
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
+        synchronized (SeedInvoke.class){
+            seedClass = loader.defineClass(className.replace("/","."),code,0,code.length);
         }
         return seedClass;
     }

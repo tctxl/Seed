@@ -1,0 +1,37 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Seed-Configuration-Web-Tomcat:war exploded">
+    <output-path>$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/target/seed-webapp</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Seed-Configuration-Web-Tomcat" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="seed-base-0.1.0.jar">
+            <element id="module-output" name="seed-base" />
+          </element>
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.1.46" />
+          <element id="archive" name="seed-aop-0.1.0.jar">
+            <element id="module-output" name="seed-aop" />
+          </element>
+          <element id="archive" name="seed-mvc-0.1.0.jar">
+            <element id="module-output" name="seed-mvc" />
+          </element>
+          <element id="archive" name="seed-mvc-support-0.1.0.jar">
+            <element id="module-output" name="seed-mvc-support" />
+          </element>
+          <element id="archive" name="seed-configuration-web-0.1.0.jar">
+            <element id="module-output" name="seed-configuration-web" />
+          </element>
+          <element id="archive" name="seed-database-0.1.0.jar">
+            <element id="module-output" name="seed-database" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/target/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="Seed-Configuration-Web-Tomcat/web/Web" />
+    </root>
+  </artifact>
+</component>

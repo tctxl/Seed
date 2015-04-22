@@ -412,8 +412,9 @@ public class SeedWeb {
             HashMap<String, Integer> sorts = new HashMap<String, Integer>();
             sorts.putAll(router.getMethodInfo().getArgsSort());
             ClassBean classBean = mapped.get(key);
-            if (classBean == null) {
-                if (sorts.containsKey(key))
+            Type type = router.getMethodInfo().getArgs()[router.getMethodInfo().getArgsSort().get(key)];
+            if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName())) ) {
+                if (sorts.containsKey(key) )
                     params[sorts.get(key)] = (values.get(key));
                 continue;
             }
@@ -426,10 +427,7 @@ public class SeedWeb {
                         break;
                     }
                 }
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (Exception e){
             }
         }
         return params;

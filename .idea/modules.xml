@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Seed.iml" filepath="$PROJECT_DIR$/Seed.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Seed-Configuration-Web-Plugin/Seed-Configuration-Web-Plugin.iml" filepath="$PROJECT_DIR$/Seed-Configuration-Web-Plugin/Seed-Configuration-Web-Plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/Seed-Configuration-Web-Tomcat.iml" filepath="$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/Seed-Configuration-Web-Tomcat.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Aop/seed-aop.iml" filepath="$PROJECT_DIR$/Seed-Aop/seed-aop.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Base/seed-base.iml" filepath="$PROJECT_DIR$/Seed-Base/seed-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" filepath="$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" />
