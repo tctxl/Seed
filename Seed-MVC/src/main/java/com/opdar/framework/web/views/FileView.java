@@ -54,15 +54,12 @@ public class FileView implements View{
             raf.read(buffer);
             this.file = buffer;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
         }finally {
             try {
                 if(raf != null)
                     raf.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         this.contentType = contentType;

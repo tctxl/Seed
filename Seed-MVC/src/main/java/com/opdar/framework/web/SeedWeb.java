@@ -49,8 +49,10 @@ public class SeedWeb {
     static{
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
-        File seedRoot = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getParentFile();
-        System.setProperty("seed.root",seedRoot.getAbsolutePath());
+        System.setProperty("seed.root",SeedWeb.class.getResource("/").getPath());
+    }
+
+    public SeedWeb(){
     }
 
     private static final SeedAop defaultAop = new SeedAop() {
@@ -379,7 +381,6 @@ public class SeedWeb {
         }
         return new ErrorView(HttpResponseCode.CODE_404);
     }
-
 
     private Object[] execLogicRequestBody(String routerName, SeedRouter router, SeedRequest request) throws ParamUnSupportException {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];

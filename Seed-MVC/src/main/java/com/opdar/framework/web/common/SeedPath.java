@@ -4,6 +4,7 @@ import com.opdar.framework.utils.Utils;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Enumeration;
 
 /**
  * Created by Jeffrey on 2015/4/20.
