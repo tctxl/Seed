@@ -6,14 +6,15 @@ import com.opdar.framework.asm.*;
 import com.opdar.framework.asm.signature.SignatureReader;
 import com.opdar.framework.asm.signature.SignatureVisitor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.net.*;
+import java.util.*;
 
 /**
  * Created by Jeffrey on 2015/4/8.
@@ -21,11 +22,28 @@ import java.util.Map;
  * Site:opdar.com
  * QQ:362116120
  */
-public class SeedInvoke extends ClassLoader implements Opcodes
+public class SeedInvoke implements Opcodes
 {
     private static String _iter = SeedExcuteItrf.class.getName().replaceAll("\\.", "/");
-    private static SeedInvoke loader = new SeedInvoke();
     private static HashMap<Class<?>,ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
+
+    public SeedInvoke() {
+    }
+
+    /** URLClassLoader的addURL方法 */
+    private static Method defineClassMethod = getDefineClassMethod();
+
+    /** 初始化方法 */
+    private static final Method getDefineClassMethod() {
+        try {
+            Method defineClass =  ClassLoader.class.getDeclaredMethod("defineClass", new Class[]{String.class, byte[].class, int.class, int.class});
+            defineClass.setAccessible(true);
+            return defineClass;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static HashMap<Class<?>, ClassBean> getBeanSymbols() {
         return beanSymbols;
@@ -332,10 +350,16 @@ public class SeedInvoke extends ClassLoader implements Opcodes
         /*
          * 从文件加载类
          */
-        Class seedClass = loader.defineClass(className.replace("/","."),
-                code,
-                0,
-                code.length);
+        Class seedClass = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        try {
+            seedClass = (Class) defineClassMethod.invoke(classLoader,new Object[]{className.replace("/","."),code,0,code.length});
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
         return seedClass;
     }
 
