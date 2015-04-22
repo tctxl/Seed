@@ -47,20 +47,20 @@ public class FileView implements View{
     }
 
     public FileView(File file,String contentType,FileReadListener fileReadListener){
-        ByteArrayOutputStream baos = null;
+        byte[] buffer = new byte[(int) file.length()];
         RandomAccessFile raf = null;
         try {
             raf = new RandomAccessFile(file,"r");
-            baos = new ByteArrayOutputStream();
-            this.file = baos.toByteArray();
+            raf.read(buffer);
+            this.file = buffer;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
             try {
-                if(baos!=null)
-                    baos.close();
+                if(raf != null)
+                    raf.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
