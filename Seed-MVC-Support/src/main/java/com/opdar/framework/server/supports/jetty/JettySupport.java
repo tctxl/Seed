@@ -2,8 +2,10 @@ package com.opdar.framework.server.supports.jetty;
 
 import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.server.base.ISupport;
+import com.opdar.framework.server.supports.servlet.SeedServlet;
 import com.opdar.framework.server.supports.servlet.ServletSupport;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import javax.servlet.DispatcherType;
@@ -25,11 +27,12 @@ public class JettySupport extends ServletSupport {
         if(p != null)
             port = Integer.valueOf(p);
         Server server = new Server(Integer.parseInt(p));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS){
+
+        };
+        context.addEventListener(new ServletSupport());
         context.setContextPath("/");
-        EnumSet<DispatcherType> types = EnumSet.allOf(DispatcherType.class);
         context.addServlet(SeedServlet.class, "/*");
-//        context.addFilter(ServletSupport.class,"/*", types);
         server.setHandler(context);
         try {
             server.start();
