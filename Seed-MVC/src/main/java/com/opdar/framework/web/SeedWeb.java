@@ -53,6 +53,15 @@ public class SeedWeb {
     }
 
     public SeedWeb(){
+
+    }
+
+    public void destory(){
+        for(Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator();it.hasNext();){
+            Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>> entry = it.next();
+            entry.getValue().remove();
+            controllerObjects.remove(entry.getKey());
+        }
     }
 
     private static final SeedAop defaultAop = new SeedAop() {

@@ -55,6 +55,6 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+        SeedServlet.web.destory();
     }
 }
