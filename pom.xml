@@ -18,6 +18,8 @@
         <module>Seed-Base</module>
         <module>Seed-Template</module>
         <module>Seed-Configuration-Web</module>
+        <module>Seed-Configuration-Web-Tomcat</module>
+        <module>Seed-Configuration-Web-Plugin</module>
     </modules>
 
     <!-- test aop-->
