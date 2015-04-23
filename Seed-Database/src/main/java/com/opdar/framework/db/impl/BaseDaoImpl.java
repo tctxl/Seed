@@ -412,8 +412,6 @@ public class BaseDaoImpl<T> implements IDao<T> {
                     } catch (SQLException e2) {
                         e2.printStackTrace();
                     }
-
-
                 }
             }
         } catch (Exception e) {
