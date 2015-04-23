@@ -8,7 +8,7 @@ import com.opdar.framework.db.anotations.Table;
  * Site:opdar.com
  * QQ:362116120
  */
-@Table("test_ihygeia_login.t_users")
+@Table("test.t_users")
 public class UserEntity {
     private String tid;
 
