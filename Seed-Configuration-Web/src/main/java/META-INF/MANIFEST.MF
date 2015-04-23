@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: com.opdar.framework.configureweb.base.base.Config
+Built-By: 俊帆
+Created-By: IntelliJ IDEA
+Build-Jdk: 1.6.0_45
 

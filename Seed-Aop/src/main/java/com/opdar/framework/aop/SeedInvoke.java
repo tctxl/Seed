@@ -22,26 +22,26 @@ import java.util.*;
  * Site:opdar.com
  * QQ:362116120
  */
-public class SeedInvoke extends URLClassLoader implements Opcodes
-{
+public class SeedInvoke extends URLClassLoader implements Opcodes {
     private static String _iter = SeedExcuteItrf.class.getName().replaceAll("\\.", "/");
-    private static HashMap<Class<?>,ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
+    private static HashMap<Class<?>, ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
     static SeedInvoke loader = new SeedInvoke();
+
     public SeedInvoke() {
-        super(new URL[]{},Thread.currentThread().getContextClassLoader());
+        super(new URL[]{}, Thread.currentThread().getContextClassLoader());
     }
 
     public static HashMap<Class<?>, ClassBean> getBeanSymbols() {
         return beanSymbols;
     }
 
-    public static void init(final Class<?> clz){
-        if(beanSymbols.containsKey(clz))return;
+    public static void init(final Class<?> clz) {
+        if (beanSymbols.containsKey(clz)) return;
         ClassReader cr = null;
         ClassBean cb = null;
         beanSymbols.put(clz, cb = new ClassBean());
         try {
-            String clzName = clz.getName().replace(".","/").concat(".class");
+            String clzName = clz.getName().replace(".", "/").concat(".class");
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(clzName);
             cr = new ClassReader(is);
         } catch (IOException e) {
@@ -89,7 +89,9 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                 methodInfo.setAccess(access);
                 return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc,
                         signature, exceptions)) {
-                    Map<Integer,ClassBean.AnotationInfo> paramAnnotations = new HashMap<Integer, ClassBean.AnotationInfo>();
+                    Map<Integer, ClassBean.AnotationInfo> paramAnnotations = new HashMap<Integer, ClassBean.AnotationInfo>();
+
+                    private Label label;
 
                     @Override
                     public void visitParameter(String name, int access) {
@@ -101,7 +103,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                         final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
                         anotationInfo.setDesc(desc);
                         anotationInfo.setType(Type.getType(desc));
-                        paramAnnotations.put(parameter,anotationInfo);
+                        paramAnnotations.put(parameter, anotationInfo);
                         return new AnnotationVisitor(ASM4) {
                             @Override
                             public void visit(String name, Object value) {
@@ -113,33 +115,42 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                             }
                         };
                     }
+
+                    @Override
+                    public void visitLineNumber(int line, Label start) {
+                        super.visitLineNumber(line, start);
+                        if (label == null) label = start;
+                    }
+
                     @Override
                     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-                        if(index>0){
-                            ClassBean.MethodInfo.LocalVar var = new ClassBean.MethodInfo.LocalVar();
-                            var.setName(name);
-                            if(paramAnnotations.containsKey(index-1)){
-                                var.setAnnotations(paramAnnotations.get(index-1));
-                            }
-                            methodInfo.setArgsSort(name);
-                            var.setDesc(desc);
-                            final LinkedList<String> signatureTypes = new LinkedList<String>();
-                            var.setSignatureTypes(signatureTypes);
-                            if(signature != null){
-                                var.setSignature(signature);
-                                SignatureReader signatureReader = new SignatureReader(signature);
-                                signatureReader.accept(new SignatureVisitor(ASM4) {
-                                    @Override
-                                    public void visitClassType(String name) {
-                                        signatureTypes.add(0, name);
-                                        super.visitClassType(name);
-                                    }
-                                });
-                            }
+                        if (index > 0) {
+                            if (label != null && label == start) {
+                                ClassBean.MethodInfo.LocalVar var = new ClassBean.MethodInfo.LocalVar();
+                                var.setName(name);
+                                if (paramAnnotations.containsKey(index - 1)) {
+                                    var.setAnnotations(paramAnnotations.get(index - 1));
+                                }
+                                methodInfo.setArgsSort(name);
+                                var.setDesc(desc);
+                                final LinkedList<String> signatureTypes = new LinkedList<String>();
+                                var.setSignatureTypes(signatureTypes);
+                                if (signature != null) {
+                                    var.setSignature(signature);
+                                    SignatureReader signatureReader = new SignatureReader(signature);
+                                    signatureReader.accept(new SignatureVisitor(ASM4) {
+                                        @Override
+                                        public void visitClassType(String name) {
+                                            signatureTypes.add(0, name);
+                                            super.visitClassType(name);
+                                        }
+                                    });
+                                }
 
-                            var.setType(Type.getType(desc));
-                            var.setIndex(index);
-                            methodInfo.setLocalVars(var);
+                                var.setType(Type.getType(desc));
+                                var.setIndex(index);
+                                methodInfo.setLocalVars(var);
+                            }
                         }
                         super.visitLocalVariable(name, desc, signature, start, end, index);
                     }
@@ -195,19 +206,19 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
         cb.setSeedClz(defineClz);
     }
 
-    public static Class<?> definedClass(Class<?> clazz){
+    public static Class<?> definedClass(Class<?> clazz) {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        String className = String.format("com/opdar/framework/invoke/__Seed_T_%s_Copy_%s",clazz.getName().replace(".","_"),Thread.currentThread().getId());
+        String className = String.format("com/opdar/framework/invoke/__Seed_T_%s_Copy_%s", clazz.getName().replace(".", "_"), Thread.currentThread().getId());
         ClassBean c = beanSymbols.get(clazz);
         c.setClassName(className);
-        String typeName = clazz.getName().replace(".","/");
+        String typeName = clazz.getName().replace(".", "/");
         c.setTypeName(typeName);
         cw.visit(c.getVersion(),
                 ACC_PUBLIC + ACC_SUPER,
                 className,
                 null,
                 typeName,
-                new String[] {_iter});
+                new String[]{_iter});
         MethodVisitor mv = null;
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -238,8 +249,8 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
             mv.visitLabel(l1);
             mv.visitLineNumber(10, l1);
 
-            for(ClassBean.FieldInfo fieldInfo:c.getField()){
-                if(Modifier.isStatic(fieldInfo.getAccess())){
+            for (ClassBean.FieldInfo fieldInfo : c.getField()) {
+                if (Modifier.isStatic(fieldInfo.getAccess())) {
                     continue;
                 }
                 mv.visitLdcInsn(fieldInfo.getName());
@@ -252,10 +263,10 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                 mv.visitLineNumber(ln, l3);
                 mv.visitVarInsn(ALOAD, 3);
                 mv.visitVarInsn(ALOAD, 2);
-                mv.visitTypeInsn(CHECKCAST, fieldInfo.getType().getClassName().replace(".","/"));
+                mv.visitTypeInsn(CHECKCAST, fieldInfo.getType().getClassName().replace(".", "/"));
                 mv.visitFieldInsn(PUTFIELD, typeName, fieldInfo.getName(), fieldInfo.getDesc());
                 mv.visitLabel(l2);
-                ln+=2;
+                ln += 2;
                 mv.visitLineNumber(ln, l2);
                 ln++;
             }
@@ -284,10 +295,10 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                 mv.visitLabel(l2);
                 mv.visitLineNumber(++ln, l2);
             }
-            for(ClassBean.MethodInfo methodInfo:c.getMethods()) {
+            for (ClassBean.MethodInfo methodInfo : c.getMethods()) {
                 if (methodInfo.getName().equals("<init>")) continue;
 
-                if(Modifier.isStatic(methodInfo.getAccess())){
+                if (Modifier.isStatic(methodInfo.getAccess())) {
                     continue;
                 }
                 mv.visitLdcInsn(methodInfo.getName());
@@ -300,7 +311,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                 mv.visitLineNumber(++ln, l3);
                 mv.visitVarInsn(ALOAD, 3);
 
-                for(int i =0;i<methodInfo.getArgs().length;i++){
+                for (int i = 0; i < methodInfo.getArgs().length; i++) {
                     mv.visitVarInsn(ALOAD, 2);
                     mv.visitIntInsn(BIPUSH, i);
                     mv.visitInsn(AALOAD);
@@ -314,13 +325,13 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
                             mv.visitTypeInsn(CHECKCAST, type.getInternalName());
                             break;
                         default:
-                            mv.visitTypeInsn(CHECKCAST, type.getClassName().replace(".","/"));
+                            mv.visitTypeInsn(CHECKCAST, type.getClassName().replace(".", "/"));
                             break;
                     }
                 }
 
                 mv.visitMethodInsn(INVOKEVIRTUAL, typeName, methodInfo.getName(), methodInfo.getDesc(), false);
-                if(Type.getType(methodInfo.getDesc()).getReturnType().getSort() != Type.VOID){
+                if (Type.getType(methodInfo.getDesc()).getReturnType().getSort() != Type.VOID) {
                     mv.visitVarInsn(ASTORE, 4);
                 }
                 mv.visitLabel(l2);
@@ -337,23 +348,22 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
          * 从文件加载类
          */
         Class seedClass = null;
-        synchronized (SeedInvoke.class){
-            seedClass = loader.defineClass(className.replace("/","."),code,0,code.length);
+        synchronized (SeedInvoke.class) {
+            seedClass = loader.defineClass(className.replace("/", "."), code, 0, code.length);
         }
         return seedClass;
     }
 
-    public static SeedExcuteItrf buildObject(Class clazz) throws Exception
-    {
+    public static SeedExcuteItrf buildObject(Class clazz) throws Exception {
         SeedExcuteItrf obj = null;
-        if(!beanSymbols.containsKey(clazz)){
+        if (!beanSymbols.containsKey(clazz)) {
             init(clazz);
         }
         obj = (SeedExcuteItrf) beanSymbols.get(clazz).getSeedClz().newInstance();
         return obj;
     }
 
-    public static java.lang.reflect.Type getType(){
+    public static java.lang.reflect.Type getType() {
         ClassLoader referent = new ClassLoader() {
 
         };

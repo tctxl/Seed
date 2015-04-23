@@ -175,7 +175,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> UPDATE(Object o) {
+    public IDao<T> UPDATE(T o) {
         clear();
         if (tableName != null) {
             sqlBuilder.append("update ").append(tableName).append(" set ");
@@ -203,7 +203,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> DELETE(Object o) {
+    public IDao<T> DELETE(T o) {
         clear();
         return this;
     }
@@ -296,16 +296,12 @@ public class BaseDaoImpl<T> implements IDao<T> {
     @Override
     public String getSimpleTableName(Class<?> clz) {
         String tableName = getTableName(clz);
-        tableName = tableName.replace(prefix,"");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < tableName.length(); i++) {
-            char c = tableName.charAt(i);
-            if(i == 0 || i==1)stringBuilder.append(c);
-            else if (Character.isUpperCase(c)) {
-                stringBuilder.append(c);
-            }
+        int index = -1;
+        if((index= tableName.lastIndexOf(".")) != -1){
+            tableName = tableName.substring(index+1);
         }
-        return stringBuilder.toString();
+        tableName = tableName.replace(prefix,"");
+        return tableName;
     }
 
     @Override
@@ -385,19 +381,18 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
                                         Class type = field.getType();
                                         if (PrimaryUtil.isPrimary(field.getType())) {
-                                            object.invokeMethod("set" + Utils.testField(fieldName), PrimaryUtil.cast(result, type));
+                                            object.invokeMethod("set".concat(Utils.testField(fieldName)), PrimaryUtil.cast(result, type));
                                         } else {
                                             if (baseDatabase.getConverts().containsKey(type)) {
                                                 Convert convert = baseDatabase.getConverts().get(type);
-                                                object.invokeMethod("set" + Utils.testField(fieldName), convert.reconvert(result));
+                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), convert.reconvert(result));
                                             } else if (type.isEnum()) {
                                                 Convert convert = baseDatabase.getConverts().get(Enum.class);
-                                                object.invokeMethod("set" + Utils.testField(fieldName), convert.reconvert(type, result));
+                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), convert.reconvert(type, result));
                                             } else {
-                                                object.invokeMethod("set" + Utils.testField(fieldName), result);
+                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), result);
                                             }
                                         }
-
                                         values.add((T) object);
                                     } catch (SQLException e2) {
                                         e2.printStackTrace();

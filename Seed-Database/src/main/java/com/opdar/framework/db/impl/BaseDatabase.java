@@ -38,7 +38,11 @@ public class BaseDatabase implements IDatabase {
     }
 
     public <T> IDao<T> getDao(Class<T> cls) {
-        return new BaseDaoImpl<T>(dataSource, cls, this);
+        IDao<T> dao = null;
+        dao = DaoMap.get(cls);
+        if (dao == null)
+            DaoMap.put(cls, dao = new BaseDaoImpl<T>(dataSource, cls, this));
+        return dao;
     }
 
     @Override

@@ -17,8 +17,8 @@ public interface IDao<T>{
     IDao<T> clearMapper();
     IDao<T> INSERT(T o);
     void JOIN(Join join,String tableName,String synx);
-    IDao<T> UPDATE(Object o);
-    IDao<T> DELETE(Object o);
+    IDao<T> UPDATE(T o);
+    IDao<T> DELETE(T o);
     IDao<T> SELECT();
     IWhere<T> WHERE(String name, String value);
     IWhere<T> WHERE(IWhere where);

@@ -6,6 +6,7 @@ import com.opdar.framework.aop.SeedWeakClassloader;
 import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.asm.Type;
+import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.Controller;
@@ -19,6 +20,10 @@ import com.opdar.framework.web.views.DefaultView;
 import com.opdar.framework.web.views.ErrorView;
 import com.opdar.framework.web.views.FileView;
 import com.opdar.framework.web.views.HtmlView;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import sun.awt.image.URLImageSource;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -36,6 +41,7 @@ import java.util.*;
  */
 public class SeedWeb {
 
+    private final Log log = LogFactory.getLog("SeedWeb");
     //所有路由
     private static final HashMap<String, SeedRouter> routers = new HashMap<String, SeedRouter>();
     private static final HashMap<String, Integer> controllerSort = new HashMap<String, Integer>();
@@ -44,20 +50,21 @@ public class SeedWeb {
     private static final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
     private static final HashSet<String> defaultPages = new HashSet<String>();
     public static String WEB_HTML_PATH = "";
-    public static final HashMap<String,SeedPath> publicPaths = new HashMap<String, SeedPath>();
+    public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
 
-    static{
+    static {
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
-        System.setProperty("seed.root",SeedWeb.class.getResource("/").getPath());
+        System.setProperty("seed.root", SeedWeb.class.getResource("/").getPath());
     }
 
-    public SeedWeb(){
-
+    public SeedWeb() {
+        log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
     }
 
-    public void destory(){
-        for(Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator();it.hasNext();){
+    public void destory() {
+        log.debug("destory all threadlocal!");
+        for (Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>> entry = it.next();
             entry.getValue().remove();
             controllerObjects.remove(entry.getKey());
@@ -76,21 +83,24 @@ public class SeedWeb {
 
     /**
      * 页面名称分号分割
+     *
      * @param pages
      */
-    public void setDefaultPages(String pages){
-        if(pages !=null && pages.trim().length()>0){
+    public void setDefaultPages(String pages) {
+        if (pages != null && pages.trim().length() > 0) {
             int index = pages.indexOf(";");
-            if(index == -1){
+            if (index == -1) {
                 defaultPages.add(pages.toUpperCase());
-            }else{
+
+            } else {
                 String[] ps = pages.split(";");
-                for(int i=0;i<ps.length;i++){
+                for (int i = 0; i < ps.length; i++) {
                     String p = ps[i].trim();
-                    if(p.length() > 0)
+                    if (p.length() > 0)
                         defaultPages.add(p.toUpperCase());
                 }
             }
+            log.debug("Default Page : ".concat(defaultPages.toString()));
         }
     }
 
@@ -255,7 +265,7 @@ public class SeedWeb {
         createRouterArgsMapped();
     }
 
-    private static final Map<String,String> contentTypes = new HashMap<String, String>();
+    private static final Map<String, String> contentTypes = new HashMap<String, String>();
 
     public void execute(String routerName, SeedRequest request, final IResponse response) {
         defaultAop.before();
@@ -263,21 +273,21 @@ public class SeedWeb {
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
         int pNameIndex = -1;
-        if((pNameIndex = routerName.indexOf("/",1)) != -1){
-            String publicPathKey = routerName.substring(0,pNameIndex);
-            if(SeedWeb.publicPaths.containsKey(publicPathKey))
+        if ((pNameIndex = routerName.indexOf("/", 1)) != -1) {
+            String publicPathKey = routerName.substring(0, pNameIndex);
+            if (SeedWeb.publicPaths.containsKey(publicPathKey))
                 publicPath = SeedWeb.publicPaths.get(publicPathKey);
         }
         FileView.FileReadListener fileReadListener = new FileView.FileReadListener() {
             @Override
-            public void read(byte[] bytes,String contentType,int responseCode) {
-                seedResponse.write(bytes,contentType,responseCode);
+            public void read(byte[] bytes, String contentType, int responseCode) {
+                seedResponse.write(bytes, contentType, responseCode);
             }
 
             @Override
             public void catchException(Throwable throwable) {
                 ErrorView error = new ErrorView(HttpResponseCode.CODE_404);
-                seedResponse.write(error.renderView(),error.contentType(),error.getCode());
+                seedResponse.write(error.renderView(), error.contentType(), error.getCode());
             }
 
             @Override
@@ -290,18 +300,18 @@ public class SeedWeb {
         if (publicPath != null) {
             String res = Utils.testRouter(routerName.replace(publicPath.getMapping(), ""));
             String contentType = "text/html";
-            if(contentTypes.containsKey(res)){
+            if (contentTypes.containsKey(res)) {
                 contentType = contentTypes.get(res);
-            }else{
-                contentType =  new MimetypesFileTypeMap().getContentType(res);
-                contentTypes.put(res,contentType);
+            } else {
+                contentType = new MimetypesFileTypeMap().getContentType(res);
+                contentTypes.put(res, contentType);
             }
             try {
-                if (view == null){
-                    if(publicPath.getPathType() == 1){
+                if (view == null) {
+                    if (publicPath.getPathType() == 1) {
                         view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
-                    }else{
-                        view = new FileView(publicPath.getFilePath(res),contentType,fileReadListener);
+                    } else {
+                        view = new FileView(publicPath.getFilePath(res), contentType, fileReadListener);
                     }
                 }
             } catch (IOException e) {
@@ -320,9 +330,9 @@ public class SeedWeb {
                 //return void;
                 seedResponse.writeSuccess();
             } else {
-                if(view instanceof HtmlView){
+                if (view instanceof HtmlView) {
                     ((HtmlView) view).setFileReadListener(fileReadListener).renderView();
-                }else{
+                } else {
                     byte[] result = view.renderView();
                     seedResponse.write(result, view.contentType(), view.getCode());
                     seedResponse.flush();
@@ -337,17 +347,17 @@ public class SeedWeb {
         if (routers.containsKey(routerName.toUpperCase())) {
             router = routers.get(routerName.toUpperCase());
         }
-        if(router == null){
-            for(String p:defaultPages){
-                String testP = Utils.testRouter(routerName.toUpperCase())+Utils.testRouter(p);
-                if(routers.containsKey(testP)){
+        if (router == null) {
+            for (String p : defaultPages) {
+                String testP = Utils.testRouter(routerName.toUpperCase()) + Utils.testRouter(p);
+                if (routers.containsKey(testP)) {
                     router = routers.get(testP);
                     routerName = testP;
                     break;
                 }
             }
         }
-        if(router !=null){
+        if (router != null) {
             int index = controllerSort.get(router.getClassBean().getSeedClz().getName());
             ThreadLocal<SeedExcuteItrf> threadLocal = null;
             if (controllerObjects.containsKey(index)) {
@@ -422,8 +432,8 @@ public class SeedWeb {
             sorts.putAll(router.getMethodInfo().getArgsSort());
             ClassBean classBean = mapped.get(key);
             Type type = router.getMethodInfo().getArgs()[router.getMethodInfo().getArgsSort().get(key)];
-            if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName())) ) {
-                if (sorts.containsKey(key) )
+            if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName()))) {
+                if (sorts.containsKey(key))
                     params[sorts.get(key)] = (values.get(key));
                 continue;
             }
@@ -436,7 +446,7 @@ public class SeedWeb {
                         break;
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
             }
         }
         return params;
@@ -460,12 +470,35 @@ public class SeedWeb {
 
     public void setWebPublic(String webPublic) {
         Map<String, String> values = Utils.spliteParams(webPublic);
-        for(Iterator<String> it = values.keySet().iterator();it.hasNext();){
+        for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             String value = values.get(key);
-            SeedPath path = new SeedPath(key,value);
-            publicPaths.put(key.toUpperCase(),path);
+            SeedPath path = new SeedPath(key, value);
+            publicPaths.put(key.toUpperCase(), path);
         }
     }
 
+    public void setDatabase(String activeRecord, String driver, String jdbcUrl, String userName, String passWord) {
+        try{
+            Class.forName(driver);
+            if(Integer.parseInt(activeRecord) == 1){
+                HikariConfig config = new HikariConfig();
+                config.setJdbcUrl(jdbcUrl);
+                config.setDriverClassName(driver);
+                config.setUsername(userName);
+                config.setPassword(passWord);
+                config.setConnectionTestQuery("select 1");
+                config.setConnectionTimeout(3000);
+                config.setIdleTimeout(600000);
+                config.setMaxLifetime(1800000);
+                config.setMaximumPoolSize(50);
+                config.setMinimumIdle(100);
+                HikariDataSource hikariDataSource = new HikariDataSource(config);
+                BaseDatabase database = new BaseDatabase(hikariDataSource);
+                Context.add(database);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
