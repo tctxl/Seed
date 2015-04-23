@@ -345,7 +345,11 @@ public class SeedInvoke extends URLClassLoader implements Opcodes
 
     public static SeedExcuteItrf buildObject(Class clazz) throws Exception
     {
-        SeedExcuteItrf obj = (SeedExcuteItrf) beanSymbols.get(clazz).getSeedClz().newInstance();
+        SeedExcuteItrf obj = null;
+        if(!beanSymbols.containsKey(clazz)){
+            init(clazz);
+        }
+        obj = (SeedExcuteItrf) beanSymbols.get(clazz).getSeedClz().newInstance();
         return obj;
     }
 

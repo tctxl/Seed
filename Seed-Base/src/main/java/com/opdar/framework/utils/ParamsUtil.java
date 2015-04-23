@@ -1,21 +1,16 @@
 package com.opdar.framework.utils;
 
-import com.opdar.framework.asm.*;
-import com.opdar.framework.utils.FieldModel;
-import com.opdar.framework.asm.*;
-import com.opdar.framework.utils.MethodModel;
+import com.opdar.framework.asm.Type;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -123,166 +118,6 @@ public class ParamsUtil {
                 }
             }
         }
-    }
-
-    public static Set<FieldModel> getField(final Object obj) {
-        return getField(obj,true);
-    }
-
-    public static Set<FieldModel> getField(Class<?> tClass) {
-        try {
-            return getField(tClass.newInstance(),false);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static Set<FieldModel> getField(final Object obj, final boolean ignoreNull) {
-        ClassReader cr = null;
-        final Class<?> clz = obj.getClass();
-        try {
-            String clzName = clz.getName().replace(".","/").concat(".class");
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(clzName);
-            cr = new ClassReader(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        final Set<FieldModel> fields = new HashSet<FieldModel>();
-        cr.accept(new ClassVisitor(Opcodes.ASM4) {
-
-            @Override
-            public void visit(int version, int access, String name,
-                              String signature, String superName, String[] interfaces) {
-                // TODO Auto-generated method stub
-                super.visit(version, access, name, signature, superName, interfaces);
-            }
-
-            @Override
-            public FieldVisitor visitField(int access, String name,
-                                           String desc, String signature, Object value) {
-                // TODO Auto-generated method stub
-                try {
-                    Type type = Type.getType(desc);
-                    if(type.getSort() >1 &&type.getSort()<9 || type.getSort() == 10 ){
-                        Field field = clz.getDeclaredField(name);
-                        field.setAccessible(true);
-                        Object value2 = field.get(obj);
-                        FieldModel fieldModel = null;
-                        if(value2 != null && ignoreNull){
-                            fieldModel = new FieldModel();
-                            fieldModel.setName(name);
-                            fieldModel.setField(field);
-                            fieldModel.setType(type);
-                            fieldModel.setValue(value2);
-                        }else if(value !=null && ignoreNull){
-                            fieldModel = new FieldModel();
-                            fieldModel.setName(name);
-                            fieldModel.setField(field);
-                            fieldModel.setType(type);
-                            fieldModel.setValue(value);
-                        }else if(!ignoreNull){
-                            fieldModel = new FieldModel();
-                            fieldModel.setName(name);
-                            fieldModel.setField(field);
-                            fieldModel.setType(type);
-                        }
-                        if(fieldModel != null){
-                            fields.add(fieldModel);
-                        }
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                return super.visitField(access, name, desc, signature, value);
-            }
-        }, 0);
-        return fields;
-    }
-
-    public static HashMap<String, MethodModel> getMethodWithClass(final Class<?> clz) {
-        ClassReader cr = null;
-        try {
-            String clzName = clz.getName().replace(".","/").concat(".class");
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(clzName);
-            cr = new ClassReader(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        final HashMap<String, MethodModel> models = new HashMap<String, MethodModel>();
-        cr.accept(new ClassVisitor(Opcodes.ASM4) {
-            @Override
-            public MethodVisitor visitMethod(final int access,
-                                             final String name, final String desc,
-                                             final String signature, final String[] exceptions) {
-                Method[] methods = clz.getDeclaredMethods();
-                final Type[] args = Type.getArgumentTypes(desc);
-                Method m = null;
-                for(Method method:methods){
-                    if(name.equals(method.getName()) && sameType(args, method.getParameterTypes())){
-                        m = method;
-                        break;
-                    }
-                }
-                if(m == null)return null;
-                final MethodModel methodModel = new MethodModel();
-                methodModel.setMethodName(name);
-                methodModel.setArgs(args);
-                if (Modifier.isStatic(m.getModifiers())) {
-                    methodModel.setStaticMethod();
-                }
-                models.put(name,methodModel);
-                MethodVisitor v = super.visitMethod(access, name, desc,
-                        signature, exceptions);
-                return new MethodVisitor(Opcodes.ASM4, v) {
-
-                    private Type paramType;
-                    @Override
-                    public AnnotationVisitor visitAnnotation(String desc,
-                                                             boolean visible) {
-                        // TODO Auto-generated method stub
-                        Type type = Type.getType(desc);
-                        methodModel.setAnotation(type);
-                        return super.visitAnnotation(desc, visible);
-                    }
-
-                    @Override
-                    public void visitLocalVariable(String name, String desc,
-                                                   String signature, Label start, Label end, int index) {
-                        int i = index - 1;
-                        if (methodModel.isStaticMethod()) {
-                            i = index;
-                        }
-                        if (i >= 0 && i < args.length) {
-                            if(paramType != null){
-                                methodModel.addParamAnoatations(name,paramType);
-                                paramType = null;
-                            }
-                            Type type = Type.getType(desc);
-                            methodModel.setParams(name);
-                        }
-                        super.visitLocalVariable(name, desc, signature, start,
-                                end, index);
-                    }
-                    @Override
-                    public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-                        Type type = Type.getType(desc);
-                        paramType = type;
-                        return super.visitParameterAnnotation(parameter, desc, visible);
-                    }
-
-                };
-            }
-        }, 0);
-        return models;
     }
 
     private static boolean sameType(Type[] types, Class<?>[] clazzes) {

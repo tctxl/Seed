@@ -3,6 +3,7 @@ package com.opdar.framework.db.interfaces;
 import com.opdar.framework.db.impl.Join;
 
 import java.lang.reflect.Type;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -13,30 +14,27 @@ import java.util.List;
  */
 public interface IDao<T>{
     IDao<T> addMapper(String mapper);
-
     IDao<T> clearMapper();
-
-    public IDao<T> INSERT(Object o);
-
+    IDao<T> INSERT(T o);
     void JOIN(Join join,String tableName,String synx);
-
-    public IDao<T> UPDATE(Object o);
-    public IDao<T> DELETE(Object o);
-    public IDao<T> SELECT(Class<T> clz);
-    public IWhere<T> WHERE(String name, String value);
-    public IWhere<T> WHERE(IWhere where);
-    public IDao<T> END();
-    public List<T> findAll();
-    public void findEnum(Type enumType);
-    public T findOne();
-    public int status();
-    public String getTableName(Class<?> clz);
-
+    IDao<T> UPDATE(Object o);
+    IDao<T> DELETE(Object o);
+    IDao<T> SELECT();
+    IWhere<T> WHERE(String name, String value);
+    IWhere<T> WHERE(IWhere where);
+    IDao<T> END();
+    List<T> findAll();
+    void findEnum(Type enumType);
+    T findOne();
+    int status();
+    String getTableName(Class<?> clz);
     String getSimpleTableName(Class<?> clz);
 
-    public void excute(String sql);
-    public StringBuilder getSqlBuilder();
+    IDao<T> openTransaction() throws SQLException;
 
-    public void truncateTable();
+    IDao<T> commit() throws SQLException;
 
+    void excute(String sql);
+    StringBuilder getSqlBuilder();
+    void truncateTable();
 }

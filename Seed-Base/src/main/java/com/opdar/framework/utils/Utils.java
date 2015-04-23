@@ -45,6 +45,26 @@ public class Utils {
         return null;
     }
 
+    public static String testField(String field) {
+        if(field.indexOf("is") == 0){
+            field = field.replaceFirst("is","");
+        }
+        if(field.length() < 3){
+            return field;
+        }
+        char c1 = field.charAt(0);
+        char c2 = field.charAt(1);
+        if(Character.isUpperCase(c1)){
+            return field;
+        }
+        if(Character.isLowerCase(c1)&& Character.isUpperCase(c2)){
+            return field;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(Character.toUpperCase(c1)).append(field.substring(1));
+        return stringBuilder.toString();
+    }
+
     public static String testRouter(String router) {
         int i = router.indexOf("/");
         if (i == -1) {

@@ -1,14 +1,15 @@
 package com.opdar.framework.db.impl;
 
+import com.opdar.framework.aop.SeedInvoke;
+import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.db.anotations.Field;
-import com.opdar.framework.db.anotations.NoSelect;
 import com.opdar.framework.db.anotations.Table;
 import com.opdar.framework.db.convert.Convert;
 import com.opdar.framework.db.interfaces.EnumValue;
 import com.opdar.framework.db.interfaces.IDao;
 import com.opdar.framework.db.interfaces.IWhere;
-import com.opdar.framework.utils.FieldModel;
-import com.opdar.framework.utils.ParamsUtil;
+import com.opdar.framework.utils.PrimaryUtil;
+import com.opdar.framework.utils.Utils;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -25,6 +26,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private final BaseDatabase baseDatabase;
     private FieldRule fr = FieldRule.UPPER_R_UNDERLINE;
     private String prefix = "t_";
+    private Connection connection;
 
     public enum FieldRule {
         UPPER_R_UNDERLINE
@@ -37,12 +39,39 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private ArrayList<T> values = new ArrayList<T>();
     private ArrayList<String> mapper = new ArrayList<String>();
     private Class<T> cls;
-
+    private Map<Integer, java.lang.reflect.Field> fields = new HashMap<Integer, java.lang.reflect.Field>();
+    private Map<Integer, String> fieldMapping = new HashMap<Integer, String>();
+    private Map<String, Integer> fieldSort = new HashMap<String, Integer>();
+    private Map<Integer, Class<?>> fieldTyps = new HashMap<Integer, Class<?>>();
+    String tableName = "";
     public BaseDaoImpl(DataSource dataSource, Class<T> cls, BaseDatabase baseDatabase) {
         this.dataSource = dataSource;
         this.sqlBuilder = new StringBuilder();
         this.cls = cls;
         this.baseDatabase = baseDatabase;
+        SeedInvoke.init(cls);
+        java.lang.reflect.Field[] fields = cls.getDeclaredFields();
+        for(int i = 0;i<fields.length;i++){
+            java.lang.reflect.Field field = fields[i];
+            field.setAccessible(true);
+            String fieldName = field.getName();
+            if (fieldName.equals("serialVersionUID")) continue;
+            this.fieldSort.put(fieldName, i);
+            this.fields.put(i,field);
+            Field fieldAnnotation = field.getAnnotation(Field.class);
+            fieldTyps.put(i, field.getType());
+            if (fieldAnnotation != null){
+                if(fieldAnnotation.ignore())
+                    continue;
+                if(fieldAnnotation.value() != null && fieldAnnotation.value().trim().length() > 0){
+                    fieldMapping.put(i,fieldAnnotation.value());
+                    continue;
+                }
+            }else{
+                fieldMapping.put(i,replaceFieldName(fieldName));
+            }
+        }
+        tableName = getTableName(cls);
     }
 
     public String replaceFieldName(String name) {
@@ -94,27 +123,33 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> INSERT(Object o) {
+    public IDao<T> INSERT(T o) {
         clear();
-        Set<FieldModel> values = ParamsUtil.getField(o);
-        String tableName = getTableName(o.getClass());
         if (tableName != null) {
             StringBuilder valueBuilder = new StringBuilder();
             sqlBuilder.append("insert into ");
             sqlBuilder.append(tableName);
             sqlBuilder.append(" (");
-            for (FieldModel fieldModel : values) {
-                Field field = fieldModel.getField().getAnnotation(Field.class);
-                if (field != null && field.ignore()) continue;
-                if (fieldModel.getName().equals("serialVersionUID")) continue;
-                sqlBuilder.append(replaceFieldName(fieldModel.getName()));
-                sqlBuilder.append(",");
-                if (!(fieldModel.getType().getSort() > 1 && fieldModel.getType().getSort() < 9))
-                    valueBuilder.append("'");
-                valueBuilder.append(getValue(fieldModel.getField().getType(), fieldModel.getValue()));
-                if (!(fieldModel.getType().getSort() > 1 && fieldModel.getType().getSort() < 9))
-                    valueBuilder.append("'");
-                valueBuilder.append(",");
+            for (Iterator<Map.Entry<String,Integer>> it = fieldSort.entrySet().iterator();it.hasNext();) {
+                Map.Entry<String, Integer> entry = it.next();
+                String fieldName = entry.getKey();
+                Integer fieldSort = entry.getValue();
+                String dbFieldName = fieldMapping.get(fieldSort);
+                Class<?> fieldType = fieldTyps.get(fieldSort);
+                java.lang.reflect.Field field = fields.get(fieldSort);
+                try {
+                    Object value = field.get(o);
+                    if(value != null){
+                        sqlBuilder.append(dbFieldName);
+                        sqlBuilder.append(",");
+                        valueBuilder.append("'");
+                        valueBuilder.append(value);
+                        valueBuilder.append("'");
+                        valueBuilder.append(",");
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
             sqlBuilder.delete(sqlBuilder.length() - 1, sqlBuilder.length());
             valueBuilder.delete(valueBuilder.length() - 1, valueBuilder.length());
@@ -142,24 +177,27 @@ public class BaseDaoImpl<T> implements IDao<T> {
     @Override
     public IDao<T> UPDATE(Object o) {
         clear();
-        Class<?> clz = o.getClass();
-        Set<FieldModel> values = ParamsUtil.getField(o);
-        String tableName = getTableName(clz);
         if (tableName != null) {
-//            UPDATE T_Message SET MSG_READ =1 WHERE TID = #{value}
             sqlBuilder.append("update ").append(tableName).append(" set ");
-            for (FieldModel fieldModel : values) {
-                if (fieldModel.getName().equals("serialVersionUID")) continue;
-                int sort = fieldModel.getType().getSort();
-                if (fieldModel.getValue() != null) {
-                    if ((sort > 0 && sort < 9) || sort == 10) {
-                        String value = String.valueOf(getValue(fieldModel.getField().getType(), fieldModel.getValue()));
-                        sqlBuilder.append(replaceFieldName(fieldModel.getName())).append("=").append("'").append(value).append("'");
-                    }
+            StringBuilder values = new StringBuilder();
+            for (Iterator<Map.Entry<String,Integer>> it = fieldSort.entrySet().iterator();it.hasNext();) {
+                Map.Entry<String, Integer> entry = it.next();
+                Integer fieldSort = entry.getValue();
+                String dbFieldName = fieldMapping.get(fieldSort);
+                java.lang.reflect.Field field = fields.get(fieldSort);
+                try {
+                    Object value = field.get(o);
+                    values.append(dbFieldName).append("=").append("'").append(value).append("'").append(",");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
-                sqlBuilder.append(",");
             }
-            sqlBuilder.delete(sqlBuilder.length() - 1, sqlBuilder.length());
+            if(values.length() > 0 ){
+                values.delete(values.length() - 1, values.length());
+                sqlBuilder.append(values);
+            }else{
+                clear();
+            }
         }
         return this;
     }
@@ -171,39 +209,31 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao SELECT(Class<T> clz) {
+    public IDao SELECT() {
         clear();
-//        SELECT * FROM 表名�?
-        String tableName = getTableName(clz);
         if (tableName != null) {
             sqlBuilder.append("select  ");
             for(String map:mapper){
                 sqlBuilder.append(map).append(" ,");
             }
-            String simpleTableName = getSimpleTableName(clz)+".";
-            if (EnumValue.class.isAssignableFrom(clz)) {
-                String baseName = clz.getSimpleName().toLowerCase();
+            String simpleTableName = getSimpleTableName(cls)+".";
+            if (EnumValue.class.isAssignableFrom(cls)) {
+                String baseName = cls.getSimpleName().toLowerCase();
                 String enumName = replaceFieldName(baseName.concat("Name"));
                 String enumValue = replaceFieldName(baseName.concat("Value "));
                 sqlBuilder.append(simpleTableName+enumName).append(",").append(simpleTableName+enumValue);
             } else {
-                Set<FieldModel> values = ParamsUtil.getField(clz);
-                for (FieldModel fieldModel : values) {
-                    if (fieldModel.getName().equals("serialVersionUID")) continue;
-                    Field field = fieldModel.getField().getAnnotation(Field.class);
-                    NoSelect noSelect = fieldModel.getField().getAnnotation(NoSelect.class);
-                    if (field != null && field.ignore()) {
-                        continue;
-                    }
-                    if(noSelect!=null && noSelect.value())continue;
-
-                    sqlBuilder.append(simpleTableName + replaceFieldName(fieldModel.getName()));
+                for (Iterator<Map.Entry<String,Integer>> it = fieldSort.entrySet().iterator();it.hasNext();) {
+                    Map.Entry<String, Integer> entry = it.next();
+                    Integer fieldSort = entry.getValue();
+                    String dbFieldName = fieldMapping.get(fieldSort);
+                    sqlBuilder.append(simpleTableName + dbFieldName);
                     sqlBuilder.append(",");
                 }
             }
             sqlBuilder.delete(sqlBuilder.length() - 1, sqlBuilder.length());
             sqlBuilder.append(" from ");
-            sqlBuilder.append(tableName).append(" ").append(getSimpleTableName(clz));
+            sqlBuilder.append(tableName).append(" ").append(getSimpleTableName(cls));
         }
         return this;
     }
@@ -259,7 +289,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     @Override
     public String getTableName(Class<?> clz) {
         Table table = clz.getAnnotation(Table.class);
-        String defaultTableName = prefix + clz.getSimpleName().replace("Entity", "").replace("Pojo", "").replace("Dto", "");
+        String defaultTableName = prefix + clz.getSimpleName().toUpperCase().replace("ENTITY", "").replace("POJO", "").replace("DTO", "").replace("BEAN","");
         return table != null ? table.value() : defaultTableName;
     }
 
@@ -279,19 +309,39 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
+    public IDao<T> openTransaction() throws SQLException {
+        connection = dataSource.getConnection();
+        connection.setAutoCommit(false);
+        return this;
+    }
+
+    @Override
+    public IDao<T> commit() throws SQLException {
+        if(connection!=null){
+            connection.commit();
+            connection.close();
+            connection = null;
+        }
+        return this;
+    }
+
+    @Override
     public void excute(String sql) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            connection = dataSource.getConnection();
+            if(this.connection !=null){
+                connection = this.connection;
+            }else{
+                connection = dataSource.getConnection();
+            }
             statement = connection.createStatement();
             boolean ret = statement.execute(sql);
             lastUpdateCount = statement.getUpdateCount();
             if (ret) {
                 values.clear();
                 resultSet = statement.getResultSet();
-
                 if (EnumValue.class.isAssignableFrom(cls)) {
                     ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
                     int count = resultSetMetaData.getColumnCount();
@@ -320,51 +370,57 @@ public class BaseDaoImpl<T> implements IDao<T> {
                         values.add((T) convert.reconvert(value));
                     }
                 } else {
-                    Set<FieldModel> sets = ParamsUtil.getField(cls);
-                    while (resultSet.next()) {
-                        Object obj = cls.newInstance();
-                        for (FieldModel field : sets) {
+                    try {
+                        while (resultSet.next()) {
                             try {
-                                String result = resultSet.getString(replaceFieldName(field.getName()));
-                                if (isPrimary(field)) {
-                                    field.getField().set(obj, Integer.valueOf(result));
-                                } else {
-                                    Class type = field.getField().getType();
+                                SeedExcuteItrf object = SeedInvoke.buildObject(cls);
+                                for (Iterator<Map.Entry<String,Integer>> it = fieldSort.entrySet().iterator();it.hasNext();) {
+                                    try {
+                                        Map.Entry<String, Integer> entry = it.next();
+                                        String fieldName = entry.getKey();
+                                        Integer fieldSort = entry.getValue();
+                                        String dbFieldName = fieldMapping.get(fieldSort);
+                                        String result = resultSet.getString(dbFieldName);
+                                        java.lang.reflect.Field field = fields.get(fieldSort);
 
-                                    if (baseDatabase.getConverts().containsKey(type)) {
-                                        Convert convert = baseDatabase.getConverts().get(type);
-                                        field.getField().set(obj, convert.reconvert(result));
-                                    } else if (type.isEnum()) {
-                                        Convert convert = baseDatabase.getConverts().get(Enum.class);
-                                        field.getField().set(obj, convert.reconvert(type, result));
-                                    } else {
-                                        field.getField().set(obj, result);
+                                        Class type = field.getType();
+                                        if (PrimaryUtil.isPrimary(field.getType())) {
+                                            object.invokeMethod("set" + Utils.testField(fieldName), PrimaryUtil.cast(result, type));
+                                        } else {
+                                            if (baseDatabase.getConverts().containsKey(type)) {
+                                                Convert convert = baseDatabase.getConverts().get(type);
+                                                object.invokeMethod("set" + Utils.testField(fieldName), convert.reconvert(result));
+                                            } else if (type.isEnum()) {
+                                                Convert convert = baseDatabase.getConverts().get(Enum.class);
+                                                object.invokeMethod("set" + Utils.testField(fieldName), convert.reconvert(type, result));
+                                            } else {
+                                                object.invokeMethod("set" + Utils.testField(fieldName), result);
+                                            }
+                                        }
+
+                                        values.add((T) object);
+                                    } catch (SQLException e2) {
+                                        e2.printStackTrace();
+                                    } catch (Exception e2) {
+                                        e2.printStackTrace();
                                     }
                                 }
-
-                            } catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
-                                // TODO: handle exception
+                            } catch (Exception e2) {
+                                e2.printStackTrace();
                             }
                         }
-                        values.add((T) obj);
+                    } catch (SQLException e2) {
+                        e2.printStackTrace();
                     }
+
+
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InstantiationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
         } finally {
             try {
-                if (connection != null)
+                if (this.connection==null && connection != null)
                     connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -382,10 +438,6 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 e.printStackTrace();
             }
         }
-    }
-
-    private boolean isPrimary(FieldModel fieldModel) {
-        return fieldModel.getType().getSort() > 0 && fieldModel.getType().getSort() < 9;
     }
 
 }
