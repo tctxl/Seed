@@ -17,6 +17,10 @@
           <element id="archive" name="seed-mvc-0.1.0.jar">
             <element id="module-output" name="seed-mvc" />
           </element>
+          <element id="library" level="project" name="Maven: com.zaxxer:HikariCP-java6:2.3.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.5" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.19.0-GA" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.35" />
           <element id="archive" name="seed-mvc-support-0.1.0.jar">
             <element id="module-output" name="seed-mvc-support" />
           </element>
@@ -26,10 +30,11 @@
           <element id="archive" name="seed-database-0.1.0.jar">
             <element id="module-output" name="seed-database" />
           </element>
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/target/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/target/seed-webapp/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="Seed-Configuration-Web-Tomcat/web/Web" />
     </root>

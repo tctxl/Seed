@@ -30,7 +30,7 @@ public class TomcatConfig extends DefaultConfig {
 
     @Override
     public void onCreate() {
-
+        System.out.println("onCreate!");
     }
 
     @Override

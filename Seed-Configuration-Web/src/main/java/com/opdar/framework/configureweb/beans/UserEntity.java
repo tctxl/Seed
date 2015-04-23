@@ -10,13 +10,13 @@ import com.opdar.framework.db.anotations.Table;
  */
 @Table("test.t_users")
 public class UserEntity {
-    private String tid;
+    private Integer tid;
 
-    public String getTid() {
+    public Integer getTid() {
         return tid;
     }
 
-    public void setTid(String tid) {
+    public void setTid(Integer tid) {
         this.tid = tid;
     }
 }

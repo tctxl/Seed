@@ -55,7 +55,10 @@ public class SeedWeb {
     static {
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
-        System.setProperty("seed.root", SeedWeb.class.getResource("/").getPath());
+        String seedRoot = System.getProperty("seed.root");
+        if(seedRoot == null){
+            System.setProperty("seed.root", SeedWeb.class.getResource("/").getPath());
+        }
     }
 
     public SeedWeb() {
@@ -303,7 +306,7 @@ public class SeedWeb {
             if (contentTypes.containsKey(res)) {
                 contentType = contentTypes.get(res);
             } else {
-                contentType = new MimetypesFileTypeMap().getContentType(res);
+                contentType = new MimetypesFileTypeMap().getContentType(res.toLowerCase());
                 contentTypes.put(res, contentType);
             }
             try {
@@ -447,6 +450,7 @@ public class SeedWeb {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return params;

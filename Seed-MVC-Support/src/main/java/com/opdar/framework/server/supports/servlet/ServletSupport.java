@@ -1,6 +1,5 @@
 package com.opdar.framework.server.supports.servlet;
 
-import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.server.base.ISupport;
 import com.opdar.framework.server.exceptions.NoConfigException;
@@ -9,6 +8,7 @@ import com.opdar.framework.web.converts.JSONConvert;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
 
 /**
  * Created by shiju_000 on 2015/4/8.
@@ -25,6 +25,7 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         if(ServletSupport.config == null){
+            System.setProperty("seed.root",new File(servletContextEvent.getServletContext().getRealPath("/")).getAbsolutePath());
             String config = servletContextEvent.getServletContext().getInitParameter("config");
             try {
                 IConfig tempConfig = (IConfig) Class.forName(config).newInstance();
@@ -44,6 +45,7 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
                 e.printStackTrace();
             }
         }else{
+            ServletSupport.config.onCreate();
             SeedServlet.web.scanController(ServletSupport.config.get(IConfig.CONTROLLER_PATH));
             SeedServlet.web.setWebHtml(ServletSupport.config.get(IConfig.PAGES));
             SeedServlet.web.setWebPublic(ServletSupport.config.get(IConfig.PUBLIC));
@@ -58,11 +60,12 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
             SeedServlet.web.setDatabase(activeRecord,driver,jdbcUrl,userName,passWord);
         }
         SeedServlet.web.setHttpConvert(JSONConvert.class);
-
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        if(ServletSupport.config !=null)
+            ServletSupport.config.onDestory();
         SeedServlet.web.destory();
     }
 }

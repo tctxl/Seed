@@ -85,6 +85,7 @@ public class SeedServlet extends GenericServlet {
             UriUtil.executeUri(request, queryString);
             web.execute(path,request,response);
         }catch (Exception e){
+            e.printStackTrace();
             //400
             if(response!=null)
                 response.write(HttpResponseCode.CODE_400.getContent().getBytes(),"text/html", HttpResponseCode.CODE_400.getCode());
