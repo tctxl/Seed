@@ -12,19 +12,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DaoMap {
 
-    private static ConcurrentHashMap<Class<?>,IDao> concurrentHashMap = new ConcurrentHashMap<Class<?>,IDao>();
+    private static ConcurrentHashMap<Class<?>,ThreadLocal<IDao>> concurrentHashMap = new ConcurrentHashMap<Class<?>,ThreadLocal<IDao>>();
 
     public static IDao get(Class<?> cls){
-        IDao dao = null;
         if(concurrentHashMap.containsKey(cls)){
-            dao = concurrentHashMap.get(cls);
+            ThreadLocal<IDao> dao = concurrentHashMap.get(cls);
+            return dao.get();
         }
-        return dao;
+        return null;
     }
 
     public static IDao put(Class<?> cls,IDao dao){
         if(!concurrentHashMap.containsKey(cls)){
-            dao = concurrentHashMap.put(cls, dao);
+            ThreadLocal tdao = new ThreadLocal<IDao>();
+            tdao.set(dao);
+            concurrentHashMap.put(cls, tdao);
         }
         return dao;
     }

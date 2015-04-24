@@ -9,9 +9,7 @@ import com.opdar.framework.asm.Type;
 import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.Utils;
-import com.opdar.framework.web.anotations.Controller;
-import com.opdar.framework.web.anotations.RequestBody;
-import com.opdar.framework.web.anotations.Router;
+import com.opdar.framework.web.anotations.*;
 import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.exceptions.ParamUnSupportException;
 import com.opdar.framework.web.interfaces.HttpConvert;
@@ -47,6 +45,10 @@ public class SeedWeb {
     //所有路由
     private static final HashMap<String, SeedRouter> routers = new HashMap<String, SeedRouter>();
     private static final HashMap<String, Integer> controllerSort = new HashMap<String, Integer>();
+    private static final HashMap<Integer, Class<?>> controllerAfters = new HashMap<Integer, Class<?>>();
+    private static final HashMap<Integer, Class<?>> controllerBefores = new HashMap<Integer, Class<?>>();
+    private static final HashMap<String, Class<?>> routerAfters = new HashMap<String, Class<?>>();
+    private static final HashMap<String, Class<?>> routerBefores = new HashMap<String, Class<?>>();
     private static final HashMap<Integer, ThreadLocal<SeedExcuteItrf>> controllerObjects = new HashMap<Integer, ThreadLocal<SeedExcuteItrf>>();
     private static final HashMap<String, HashMap<String, ClassBean>> argsMapped = new HashMap<String, HashMap<String, ClassBean>>();
     private static final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
@@ -71,23 +73,15 @@ public class SeedWeb {
     }
 
     public void destory() {
+        System.out.println("destory all threadlocal!");
         log.debug("destory all threadlocal!");
         for (Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>> entry = it.next();
             entry.getValue().remove();
+            System.out.println("remove!");
             controllerObjects.remove(entry.getKey());
         }
     }
-
-    private static final SeedAop defaultAop = new SeedAop() {
-        public void before() {
-
-        }
-
-        public void after() {
-
-        }
-    };
 
     /**
      * 页面名称分号分割
@@ -211,7 +205,7 @@ public class SeedWeb {
     }
 
     public void setParser(HttpParser parser){
-        parsers.put(parser.getContentType(),parser);
+        parsers.put(parser.getContentType(), parser);
     }
     public HttpParser getParser(String contentType){
         if(parsers.containsKey(contentType))
@@ -235,10 +229,23 @@ public class SeedWeb {
         for (Class<?> c : controllersClz) {
             SeedInvoke.init(c);
             ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
+            Type controllerAfter = null;
+            Type controllerBefore = null;
+            int sort = controllerSort.size();
             for (ClassBean.AnotationInfo anotationInfo : classBean.getAnotations()) {
                 boolean isController = anotationInfo.getType().getClassName().equals(Controller.class.getName());
+                boolean isAfter = anotationInfo.getType().getClassName().equals(After.class.getName());
+                boolean isBefore = anotationInfo.getType().getClassName().equals(Before.class.getName());
+                if (isAfter){
+                    controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
+                    continue;
+                }
+                if (isBefore){
+                    controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
+                    continue;
+                }
                 if (isController) {
-                    controllerSort.put(classBean.getSeedClz().getName(), controllerSort.size());
+                    controllerSort.put(classBean.getSeedClz().getName(), sort);
                     List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
                     String controllerRouter = "";
                     if (anotations.size() > 0) {
@@ -254,28 +261,71 @@ public class SeedWeb {
                     }
                     List<ClassBean.MethodInfo> methods = classBean.getMethods();
                     for (ClassBean.MethodInfo methodInfo : methods) {
+                        String routerName = null;
+                        Type after = null , before = null;
                         for (ClassBean.AnotationInfo methodAnotation : methodInfo.getAnotations()) {
                             boolean isRouter = methodAnotation.getType().getClassName().equals(Router.class.getName());
-                            if (isRouter) {
-                                String routerName = methodInfo.getName();
-                                if (methodAnotation.getValue().size() > 0) {
-                                    ClassBean.AnotationInfo.AnotationValue routerValue = methodAnotation.getValue().get(0);
-                                    if (!routerValue.getValue().equals("")) {
-                                        routerName = routerValue.getValue().toString();
-                                    }
+                            boolean isRouterAfter = methodAnotation.getType().getClassName().equals(After.class.getName());
+                            boolean isRouterBefore = methodAnotation.getType().getClassName().equals(Before.class.getName());
+                            if(isRouterAfter){
+                                after = (Type) methodAnotation.getValue().get(0).getValue();
+                                continue;
+                            }
+                            if (isRouterBefore){
+                                before = (Type) methodAnotation.getValue().get(0).getValue();
+                                continue;
+                            }
+                            routerName = methodInfo.getName();
+                            if (methodAnotation.getValue().size() > 0) {
+                                ClassBean.AnotationInfo.AnotationValue routerValue = methodAnotation.getValue().get(0);
+                                if (!routerValue.getValue().equals("")) {
+                                    routerName = routerValue.getValue().toString();
                                 }
+                            }
+                            String router = Utils.testRouter(controllerRouter).concat(Utils.testRouter(routerName));
 
-                                String router = Utils.testRouter(controllerRouter).concat(Utils.testRouter(routerName));
+                            if (isRouter) {
                                 SeedRouter seedRouter = new SeedRouter();
                                 seedRouter.setClassBean(classBean);
                                 seedRouter.setMethodInfo(methodInfo);
                                 seedRouter.setRouterName(routerName.concat(prefixName));
                                 routers.put(router.toUpperCase().concat(prefixName), seedRouter);
-                                break;
                             }
                         }
+                            if (after != null){
+                                try {
+                                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(after.getClassName());
+                                    routerAfters.put(routerName, clz);
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if (before != null){
+                                try {
+                                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(before.getClassName());
+                                    routerBefores.put(routerName, clz);
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                     }
-                    break;
+                    continue;
+                }
+            }
+            if(controllerAfter != null){
+                try {
+                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerAfter.getClassName());
+                    controllerAfters.put(sort, clz);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(controllerBefore != null){
+                try {
+                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerAfter.getClassName());
+                    controllerBefores.put(sort, clz);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -285,7 +335,6 @@ public class SeedWeb {
     private static final Map<String, String> contentTypes = new HashMap<String, String>();
 
     public void execute(String routerName, SeedRequest request, final IResponse response) {
-        defaultAop.before();
         final SeedResponse seedResponse = (SeedResponse) response;
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
@@ -356,10 +405,10 @@ public class SeedWeb {
                 }
             }
         }
-        defaultAop.after();
     }
 
     public View executeLogic(String routerName, SeedRequest request) {
+        HashMap<String, SeedExcuteItrf> aopObjs = new HashMap<String, SeedExcuteItrf>();
         SeedRouter router = null;
         if (routers.containsKey(routerName.toUpperCase())) {
             router = routers.get(routerName.toUpperCase());
@@ -376,43 +425,127 @@ public class SeedWeb {
         }
         if (router != null) {
             int index = controllerSort.get(router.getClassBean().getSeedClz().getName());
-            ThreadLocal<SeedExcuteItrf> threadLocal = null;
-            if (controllerObjects.containsKey(index)) {
-                threadLocal = controllerObjects.get(index);
-            } else {
-                threadLocal = new ThreadLocal<SeedExcuteItrf>();
-                controllerObjects.put(index, threadLocal);
-            }
-            if (threadLocal.get() == null) {
-                try {
-                    threadLocal.set((SeedExcuteItrf) router.getClassBean().getSeedClz().newInstance());
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (argsMapped.containsKey(routerName.toUpperCase())) {
-                Object[] params = null;
-                if (router.hasRequestBody()) {
+            SeedExcuteItrf a1 = null,a2 = null,b1 = null,b2 = null;
+            try{
+                if(controllerAfters.containsKey(index)){
                     try {
-                        params = execLogicRequestBody(routerName, router, request);
-                    } catch (ParamUnSupportException e) {
-                        return new ErrorView(HttpResponseCode.CODE_415);
+                        Class cls = controllerAfters.get(index);
+                        if(aopObjs.containsKey(cls.getName())){
+                            a1 = aopObjs.get(cls.getName());
+                        }else{
+                            a1 = SeedInvoke.buildObject(cls);
+                            aopObjs.put(cls.getName(),a1);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    params = execLogicNormal(routerName, request.getValues(), router);
+                }
+                if(controllerBefores.containsKey(index)){
+                    try {
+                        Class cls = controllerBefores.get(index);
+                        if(aopObjs.containsKey(cls.getName())){
+                            b1 = aopObjs.get(cls.getName());
+                        }else{
+                            b1 = SeedInvoke.buildObject(cls);
+                            aopObjs.put(cls.getName(),b1);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(routerAfters.containsKey(router.getRouterName())){
+                    try {
+                        Class cls = routerAfters.get(router.getRouterName());
+                        if(aopObjs.containsKey(cls.getName())){
+                            a2 = aopObjs.get(cls.getName());
+                        }else{
+                            a2 = SeedInvoke.buildObject(cls);
+                            aopObjs.put(cls.getName(),a2);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(routerBefores.containsKey(router.getRouterName())){
+                    try {
+                        Class cls = routerBefores.get(router.getRouterName());
+                        if(aopObjs.containsKey(cls.getName())){
+                            b2 = aopObjs.get(cls.getName());
+                        }else{
+                            b2 = SeedInvoke.buildObject(cls);
+                            aopObjs.put(cls.getName(),b2);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                boolean isVoid = router.getMethodInfo().getType().getReturnType().getClassName().equals("void");
-                Object result = threadLocal.get().invokeMethod(router.getMethodInfo().getName(), params);
-                if (isVoid) {
-                    return null;
+                try{
+                    if(b2!=null){
+                        b2.invokeMethod("before");
+                    }
+                }catch (Exception e){
                 }
-                if (result instanceof View) {
-                    return (View) result;
+
+                try{
+                    if(b1!=null){
+                        b1.invokeMethod("before");
+                    }
+                }catch (Exception e){
                 }
-                return new DefaultView(result);
+
+                ThreadLocal<SeedExcuteItrf> threadLocal = null;
+                if (controllerObjects.containsKey(index)) {
+                    threadLocal = controllerObjects.get(index);
+                } else {
+                    threadLocal = new ThreadLocal<SeedExcuteItrf>();
+                    controllerObjects.put(index, threadLocal);
+                }
+                if (threadLocal.get() == null) {
+                    try {
+                        threadLocal.set((SeedExcuteItrf) router.getClassBean().getSeedClz().newInstance());
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (argsMapped.containsKey(routerName.toUpperCase())) {
+                    Object[] params = null;
+                    if (router.hasRequestBody()) {
+                        try {
+                            params = execLogicRequestBody(routerName, router, request);
+                        } catch (ParamUnSupportException e) {
+                            return new ErrorView(HttpResponseCode.CODE_415);
+                        }
+                    } else {
+                        params = execLogicNormal(routerName, request.getValues(), router);
+                    }
+
+                    boolean isVoid = router.getMethodInfo().getType().getReturnType().getClassName().equals("void");
+                    Object result = threadLocal.get().invokeMethod(router.getMethodInfo().getName(), params);
+                    if (isVoid) {
+                        return null;
+                    }
+                    if (result instanceof View) {
+                        return (View) result;
+                    }
+                    return new DefaultView(result);
+                }
+            }finally {
+                try{
+                    if(a2!=null){
+                        a2.invokeMethod("after");
+                    }
+                }catch (Exception e){
+                }
+
+                try{
+                    if(a1!=null){
+                        a1.invokeMethod("after");
+                    }
+                }catch (Exception e){
+                }
             }
         }
         return new ErrorView(HttpResponseCode.CODE_404);
