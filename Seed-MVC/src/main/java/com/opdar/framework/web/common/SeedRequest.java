@@ -10,21 +10,21 @@ import java.util.Map;
  * QQ:362116120
  */
 public class SeedRequest {
-    private Map<String, String> values = new HashMap<String, String>();
+    private Map<String, Object> values = new HashMap<String, Object>();
     private Map<String, String> headers = new HashMap<String, String>();
     private byte[] body;
 
     private String contentType;
     private String method;
 
-    public Map<String, String> getValues() {
+    public Map<String, Object> getValues() {
         return values;
     }
 
-    public void setValues(Map<String, String> values) {
+    public void setValues(Map<String, Object> values) {
         this.values = values;
     }
-    public void putValues(Map<String, String> values) {
+    public void putValues(Map<String, Object> values) {
         this.values.putAll(values);
     }
     public void setValue(String key,String value) {

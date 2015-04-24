@@ -16,6 +16,8 @@ import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.exceptions.ParamUnSupportException;
 import com.opdar.framework.web.interfaces.HttpConvert;
 import com.opdar.framework.web.interfaces.View;
+import com.opdar.framework.web.parser.FormParser;
+import com.opdar.framework.web.parser.HttpParser;
 import com.opdar.framework.web.views.DefaultView;
 import com.opdar.framework.web.views.ErrorView;
 import com.opdar.framework.web.views.FileView;
@@ -48,21 +50,24 @@ public class SeedWeb {
     private static final HashMap<Integer, ThreadLocal<SeedExcuteItrf>> controllerObjects = new HashMap<Integer, ThreadLocal<SeedExcuteItrf>>();
     private static final HashMap<String, HashMap<String, ClassBean>> argsMapped = new HashMap<String, HashMap<String, ClassBean>>();
     private static final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
+    private static final Map<String, HttpParser> parsers = new HashMap<String, HttpParser>();
     private static final HashSet<String> defaultPages = new HashSet<String>();
     public static String WEB_HTML_PATH = "";
     public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
+    public static Map<String,String> RESOURCE_MAPPING = new HashMap<String, String>();
 
     static {
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
         String seedRoot = System.getProperty("seed.root");
         if(seedRoot == null){
-            System.setProperty("seed.root", SeedWeb.class.getResource("/").getPath());
+            System.setProperty("seed.root", seedRoot = SeedWeb.class.getResource("/").getPath());
         }
     }
 
     public SeedWeb() {
         log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
+        setParser(new FormParser());
     }
 
     public void destory() {
@@ -203,6 +208,15 @@ public class SeedWeb {
 
     public void setHttpConvert(HttpConvert convert) {
         converts.put(convert.getContentType(), convert);
+    }
+
+    public void setParser(HttpParser parser){
+        parsers.put(parser.getContentType(),parser);
+    }
+    public HttpParser getParser(String contentType){
+        if(parsers.containsKey(contentType))
+            return parsers.get(contentType);
+        return null;
     }
 
 
@@ -426,7 +440,7 @@ public class SeedWeb {
         return params;
     }
 
-    private Object[] execLogicNormal(String routerName, Map<String, String> values, SeedRouter router) {
+    private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router) {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
         HashMap<String, ClassBean> mapped = argsMapped.get(routerName.toUpperCase());
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
@@ -470,6 +484,7 @@ public class SeedWeb {
 
     public void setWebHtml(String webHtml) {
         SeedWeb.WEB_HTML_PATH = webHtml.replace(".", "/");
+        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(webHtml));
     }
 
     public void setWebPublic(String webPublic) {
@@ -479,6 +494,8 @@ public class SeedWeb {
             String value = values.get(key);
             SeedPath path = new SeedPath(key, value);
             publicPaths.put(key.toUpperCase(), path);
+
+            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(path.getPath()));
         }
     }
 

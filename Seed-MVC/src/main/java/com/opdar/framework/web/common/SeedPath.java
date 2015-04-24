@@ -1,10 +1,12 @@
 package com.opdar.framework.web.common;
 
 import com.opdar.framework.utils.Utils;
+import com.opdar.framework.web.SeedWeb;
 
 import java.io.*;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 /**
  * Created by Jeffrey on 2015/4/20.
@@ -58,25 +60,29 @@ public class SeedPath {
 
     public InputStream getResourceAsStream(String file) throws FileNotFoundException {
         file = Utils.testRouter(file);
+        String path = this.path+file;
+        if(SeedWeb.RESOURCE_MAPPING.containsKey(path.toUpperCase())){
+            path = SeedWeb.RESOURCE_MAPPING.get(path.toUpperCase());
+        }
         if(pathType == 0){
-            File f = new File(System.getProperty("seed.root"),path+file);
+            File f = new File(System.getProperty("seed.root"),path);
             if(!f.exists()){
                 return null;
             }
             return new FileInputStream(f);
         }else if(pathType == 1){
-            return Thread.currentThread().getContextClassLoader().getResourceAsStream(path+file);
+            return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
         }
         return null;
     }
 
     public File getFilePath(String file){
         file = Utils.testRouter(file);
-        return new File(System.getProperty("seed.root"),path+file);
+        String path = this.path+file;
+        if(SeedWeb.RESOURCE_MAPPING.containsKey(path.toUpperCase())){
+            path = SeedWeb.RESOURCE_MAPPING.get(path.toUpperCase());
+        }
+        return new File(System.getProperty("seed.root"),path);
     }
 
-    public URL getResource(String file){
-        file = Utils.testRouter(file.replace(mapping,""));
-        return Thread.currentThread().getContextClassLoader().getResource(path+file);
-    }
 }

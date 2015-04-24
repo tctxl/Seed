@@ -24,7 +24,7 @@ public class LoginController {
 
     @Router
     public HtmlView index(String test1,TestBean test) {
-        return new HtmlView("INDEX.HTML");
+        return new HtmlView("index.html");
     }
 
     @Router(value = "users")

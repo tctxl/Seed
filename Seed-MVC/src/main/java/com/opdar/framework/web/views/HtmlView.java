@@ -22,7 +22,11 @@ public class HtmlView implements View{
     }
 
     public byte[] renderView() {
-        InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(SeedWeb.WEB_HTML_PATH.concat("/").concat(htmlFile));
+        String path = SeedWeb.WEB_HTML_PATH.concat("/").concat(htmlFile);
+        if(SeedWeb.RESOURCE_MAPPING.containsKey(path.toUpperCase())){
+            path = SeedWeb.RESOURCE_MAPPING.get(path.toUpperCase());
+        }
+        InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
         return new FileView(file,fileReadListener).renderView();
     }
 

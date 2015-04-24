@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * QQ:362116120
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.TYPE})
 public @interface After {
     Class value();
 }

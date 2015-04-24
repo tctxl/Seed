@@ -11,7 +11,6 @@ public interface IConfig {
     public static String DEFAULT_PAGES = "com.opdar.seed.web.default.pages";
     public static String ACTIVE_RECORD = "com.opdar.seed.activerecord";
 
-
     public static String JDBC_URL = "com.opdar.seed.sql.jdbcUrl";
     public static String JDBC_USERNAME = "com.opdar.seed.sql.username";
     public static String JDBC_PASSWORD = "com.opdar.seed.sql.password";
