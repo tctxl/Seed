@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -55,6 +56,19 @@ public class SeedServlet extends GenericServlet {
                     res.flushBuffer();
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void setHeader(String key, String value) {
+                res.setHeader(key,value);
+            }
+
+            @Override
+            public void setHeaders(Map<String, String> headers) {
+                for(Iterator<Map.Entry<String, String>> it = headers.entrySet().iterator();it.hasNext();){
+                    Map.Entry<String, String> entry = it.next();
+                    res.setHeader(entry.getKey(),entry.getValue());
                 }
             }
         };
