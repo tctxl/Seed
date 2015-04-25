@@ -317,7 +317,7 @@ public class SeedWeb {
             }
             if(controllerBefore != null){
                 try {
-                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerAfter.getClassName());
+                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerBefore.getClassName());
                     controllerBefores.put(sort, clz);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
