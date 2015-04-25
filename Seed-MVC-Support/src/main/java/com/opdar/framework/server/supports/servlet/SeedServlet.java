@@ -3,22 +3,18 @@ package com.opdar.framework.server.supports.servlet;
 import com.opdar.framework.server.supports.UriUtil;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.SeedWeb;
-import com.opdar.framework.web.common.HttpResponseCode;
-import com.opdar.framework.web.common.IResponse;
-import com.opdar.framework.web.common.SeedRequest;
-import com.opdar.framework.web.common.SeedResponse;
+import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.parser.HttpParser;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jeffrey on 2015/4/19.
@@ -74,6 +70,14 @@ public class SeedServlet extends GenericServlet {
         };
         SeedRequest request = new SeedRequest();
         SeedResponse response = new SeedResponse(session);
+        ISession iSession = new ServletSession(req.getSession());
+        request.setSession(iSession);
+        List<ICookie> iCookies = new LinkedList<ICookie>();
+        for(Cookie cookie:req.getCookies()){
+            ICookie iCookie = new ServletCookie(cookie);
+            iCookies.add(iCookie);
+        }
+        request.setCookie(iCookies);
         try{
             String queryString = req.getQueryString();
             String path = req.getPathInfo();

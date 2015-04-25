@@ -56,16 +56,20 @@ public class SeedWeb {
     private static final HashSet<String> defaultPages = new HashSet<String>();
     public static String WEB_HTML_PATH = "";
     public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
-    public static Map<String,String> RESOURCE_MAPPING = new HashMap<String, String>();
+    public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
     private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
+
     static {
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
         String seedRoot = System.getProperty("seed.root");
-        if(seedRoot == null){
+        if (seedRoot == null) {
             System.setProperty("seed.root", seedRoot = SeedWeb.class.getResource("/").getPath());
         }
     }
+
+    private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
+    private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
 
     public SeedWeb() {
         log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
@@ -80,7 +84,7 @@ public class SeedWeb {
         }
         DaoMap.clear();
         BaseDatabase database = Context.get(BaseDatabase.class);
-        if(database != null){
+        if (database != null) {
             database.close();
         }
         try {
@@ -211,11 +215,12 @@ public class SeedWeb {
         converts.put(convert.getContentType(), convert);
     }
 
-    public void setParser(HttpParser parser){
+    public void setParser(HttpParser parser) {
         parsers.put(parser.getContentType(), parser);
     }
-    public HttpParser getParser(String contentType){
-        if(parsers.containsKey(contentType))
+
+    public HttpParser getParser(String contentType) {
+        if (parsers.containsKey(contentType))
             return parsers.get(contentType);
         return null;
     }
@@ -243,11 +248,11 @@ public class SeedWeb {
                 boolean isController = anotationInfo.getType().getClassName().equals(Controller.class.getName());
                 boolean isAfter = anotationInfo.getType().getClassName().equals(After.class.getName());
                 boolean isBefore = anotationInfo.getType().getClassName().equals(Before.class.getName());
-                if (isAfter){
+                if (isAfter) {
                     controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
                     continue;
                 }
-                if (isBefore){
+                if (isBefore) {
                     controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
                     continue;
                 }
@@ -269,16 +274,16 @@ public class SeedWeb {
                     List<ClassBean.MethodInfo> methods = classBean.getMethods();
                     for (ClassBean.MethodInfo methodInfo : methods) {
                         String routerName = null;
-                        Type after = null , before = null;
+                        Type after = null, before = null;
                         for (ClassBean.AnotationInfo methodAnotation : methodInfo.getAnotations()) {
                             boolean isRouter = methodAnotation.getType().getClassName().equals(Router.class.getName());
                             boolean isRouterAfter = methodAnotation.getType().getClassName().equals(After.class.getName());
                             boolean isRouterBefore = methodAnotation.getType().getClassName().equals(Before.class.getName());
-                            if(isRouterAfter){
+                            if (isRouterAfter) {
                                 after = (Type) methodAnotation.getValue().get(0).getValue();
                                 continue;
                             }
-                            if (isRouterBefore){
+                            if (isRouterBefore) {
                                 before = (Type) methodAnotation.getValue().get(0).getValue();
                                 continue;
                             }
@@ -299,27 +304,27 @@ public class SeedWeb {
                                 routers.put(router.toUpperCase().concat(prefixName), seedRouter);
                             }
                         }
-                            if (after != null){
-                                try {
-                                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(after.getClassName());
-                                    routerAfters.put(routerName, clz);
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                        if (after != null) {
+                            try {
+                                Class clz = Thread.currentThread().getContextClassLoader().loadClass(after.getClassName());
+                                routerAfters.put(routerName, clz);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
                             }
-                            if (before != null){
-                                try {
-                                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(before.getClassName());
-                                    routerBefores.put(routerName, clz);
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                }
+                        }
+                        if (before != null) {
+                            try {
+                                Class clz = Thread.currentThread().getContextClassLoader().loadClass(before.getClassName());
+                                routerBefores.put(routerName, clz);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
                             }
+                        }
                     }
                     continue;
                 }
             }
-            if(controllerAfter != null){
+            if (controllerAfter != null) {
                 try {
                     Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerAfter.getClassName());
                     controllerAfters.put(sort, clz);
@@ -327,7 +332,7 @@ public class SeedWeb {
                     e.printStackTrace();
                 }
             }
-            if(controllerBefore != null){
+            if (controllerBefore != null) {
                 try {
                     Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerBefore.getClassName());
                     controllerBefores.put(sort, clz);
@@ -341,79 +346,94 @@ public class SeedWeb {
 
     private static final Map<String, String> contentTypes = new HashMap<String, String>();
 
+    public ThreadLocal<SeedResponse> SharedResponse() {
+        return sharedResponse;
+    }
+
+    public ThreadLocal<SeedRequest> SharedRequest() {
+        return sharedRequest;
+    }
+
     public void execute(String routerName, SeedRequest request, final IResponse response) {
         ThreadLocalUtils.record(HTTP_THREAD_KEY);
         final SeedResponse seedResponse = (SeedResponse) response;
-        routerName = routerName.toUpperCase();
-        SeedPath publicPath = null;
-        int pNameIndex = -1;
-        if ((pNameIndex = routerName.indexOf("/", 1)) != -1) {
-            String publicPathKey = routerName.substring(0, pNameIndex);
-            if (SeedWeb.publicPaths.containsKey(publicPathKey))
-                publicPath = SeedWeb.publicPaths.get(publicPathKey);
-        }
-        FileView.FileReadListener fileReadListener = new FileView.FileReadListener() {
-            @Override
-            public void read(byte[] bytes, String contentType, int responseCode) {
-                seedResponse.write(bytes, contentType, responseCode);
+        try {
+            sharedResponse.set(seedResponse);
+            sharedRequest.set(request);
+            routerName = routerName.toUpperCase();
+            SeedPath publicPath = null;
+            int pNameIndex = -1;
+            if ((pNameIndex = routerName.indexOf("/", 1)) != -1) {
+                String publicPathKey = routerName.substring(0, pNameIndex);
+                if (SeedWeb.publicPaths.containsKey(publicPathKey))
+                    publicPath = SeedWeb.publicPaths.get(publicPathKey);
             }
-
-            @Override
-            public void catchException(Throwable throwable) {
-                ErrorView error = new ErrorView(HttpResponseCode.CODE_404);
-                seedResponse.write(error.renderView(), error.contentType(), error.getCode());
-            }
-
-            @Override
-            public void close() {
-                seedResponse.flush();
-            }
-        };
-
-        View view = null;
-        if (publicPath != null) {
-            String res = Utils.testRouter(routerName.replace(publicPath.getMapping(), ""));
-            String contentType = "text/html";
-            if (contentTypes.containsKey(res)) {
-                contentType = contentTypes.get(res);
-            } else {
-                contentType = new MimetypesFileTypeMap().getContentType(res.toLowerCase());
-                contentTypes.put(res, contentType);
-            }
-            try {
-                if (view == null) {
-                    if (publicPath.getPathType() == 1) {
-                        view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
-                    } else {
-                        view = new FileView(publicPath.getFilePath(res), contentType, fileReadListener);
-                    }
+            FileView.FileReadListener fileReadListener = new FileView.FileReadListener() {
+                @Override
+                public void read(byte[] bytes, String contentType, int responseCode) {
+                    seedResponse.write(bytes, contentType, responseCode);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            byte[] data = view.renderView();
-            if (data == null && !(view instanceof FileView)) {
-                view = new ErrorView(HttpResponseCode.CODE_404);
-                data = view.renderView();
-                seedResponse.write(data, view.contentType(), view.getCode());
-                seedResponse.flush();
-            }
-        } else {
-            view = executeLogic(routerName, request);
-            if (view == null) {
-                //return void;
-                seedResponse.writeSuccess();
-            } else {
-                if(view.headers() != null)
-                    response.setHeaders(view.headers());
-                if (view instanceof HtmlView) {
-                    ((HtmlView) view).setFileReadListener(fileReadListener).renderView();
-                } else {
-                    byte[] result = view.renderView();
-                    seedResponse.write(result, view.contentType(), view.getCode());
+
+                @Override
+                public void catchException(Throwable throwable) {
+                    ErrorView error = new ErrorView(HttpResponseCode.CODE_404);
+                    seedResponse.write(error.renderView(), error.contentType(), error.getCode());
+                }
+
+                @Override
+                public void close() {
                     seedResponse.flush();
                 }
+            };
+
+            View view = null;
+            if (publicPath != null) {
+                String res = Utils.testRouter(routerName.replace(publicPath.getMapping(), ""));
+                String contentType = "text/html";
+                if (contentTypes.containsKey(res)) {
+                    contentType = contentTypes.get(res);
+                } else {
+                    contentType = new MimetypesFileTypeMap().getContentType(res.toLowerCase());
+                    contentTypes.put(res, contentType);
+                }
+                try {
+                    if (view == null) {
+                        if (publicPath.getPathType() == 1) {
+                            view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
+                        } else {
+                            view = new FileView(publicPath.getFilePath(res), contentType, fileReadListener);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                byte[] data = view.renderView();
+                if (data == null && !(view instanceof FileView)) {
+                    view = new ErrorView(HttpResponseCode.CODE_404);
+                    data = view.renderView();
+                    seedResponse.write(data, view.contentType(), view.getCode());
+                    seedResponse.flush();
+                }
+            } else {
+                view = executeLogic(routerName, request);
+                if (view == null) {
+                    //return void;
+                    seedResponse.writeSuccess();
+                } else {
+                    if (view.headers() != null)
+                        response.setHeaders(view.headers());
+                    if (view instanceof HtmlView) {
+                        ((HtmlView) view).setFileReadListener(fileReadListener).renderView();
+                    } else {
+                        byte[] result = view.renderView();
+                        seedResponse.write(result, view.contentType(), view.getCode());
+                        seedResponse.flush();
+                    }
+                }
             }
+        } finally {
+            sharedRequest.remove();
+            sharedResponse.remove();
         }
     }
 
@@ -435,73 +455,73 @@ public class SeedWeb {
         }
         if (router != null) {
             int index = controllerSort.get(router.getClassBean().getSeedClz().getName());
-            SeedExcuteItrf a1 = null,a2 = null,b1 = null,b2 = null;
-            try{
-                if(controllerAfters.containsKey(index)){
+            SeedExcuteItrf a1 = null, a2 = null, b1 = null, b2 = null;
+            try {
+                if (controllerAfters.containsKey(index)) {
                     try {
                         Class cls = controllerAfters.get(index);
-                        if(aopObjs.containsKey(cls.getName())){
+                        if (aopObjs.containsKey(cls.getName())) {
                             a1 = aopObjs.get(cls.getName());
-                        }else{
+                        } else {
                             a1 = SeedInvoke.buildObject(cls);
-                            aopObjs.put(cls.getName(),a1);
+                            aopObjs.put(cls.getName(), a1);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                if(controllerBefores.containsKey(index)){
+                if (controllerBefores.containsKey(index)) {
                     try {
                         Class cls = controllerBefores.get(index);
-                        if(aopObjs.containsKey(cls.getName())){
+                        if (aopObjs.containsKey(cls.getName())) {
                             b1 = aopObjs.get(cls.getName());
-                        }else{
+                        } else {
                             b1 = SeedInvoke.buildObject(cls);
-                            aopObjs.put(cls.getName(),b1);
+                            aopObjs.put(cls.getName(), b1);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                if(routerAfters.containsKey(router.getRouterName())){
+                if (routerAfters.containsKey(router.getRouterName())) {
                     try {
                         Class cls = routerAfters.get(router.getRouterName());
-                        if(aopObjs.containsKey(cls.getName())){
+                        if (aopObjs.containsKey(cls.getName())) {
                             a2 = aopObjs.get(cls.getName());
-                        }else{
+                        } else {
                             a2 = SeedInvoke.buildObject(cls);
-                            aopObjs.put(cls.getName(),a2);
+                            aopObjs.put(cls.getName(), a2);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                if(routerBefores.containsKey(router.getRouterName())){
+                if (routerBefores.containsKey(router.getRouterName())) {
                     try {
                         Class cls = routerBefores.get(router.getRouterName());
-                        if(aopObjs.containsKey(cls.getName())){
+                        if (aopObjs.containsKey(cls.getName())) {
                             b2 = aopObjs.get(cls.getName());
-                        }else{
+                        } else {
                             b2 = SeedInvoke.buildObject(cls);
-                            aopObjs.put(cls.getName(),b2);
+                            aopObjs.put(cls.getName(), b2);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-                try{
-                    if(b2!=null){
+                try {
+                    if (b2 != null) {
                         b2.invokeMethod("before");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
 
-                try{
-                    if(b1!=null){
+                try {
+                    if (b1 != null) {
                         b1.invokeMethod("before");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
 
                 ThreadLocal<SeedExcuteItrf> threadLocal = null;
@@ -542,19 +562,19 @@ public class SeedWeb {
                     }
                     return new DefaultView(result);
                 }
-            }finally {
-                try{
-                    if(a2!=null){
+            } finally {
+                try {
+                    if (a2 != null) {
                         a2.invokeMethod("after");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
 
-                try{
-                    if(a1!=null){
+                try {
+                    if (a1 != null) {
                         a1.invokeMethod("after");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
             }
         }
@@ -591,7 +611,9 @@ public class SeedWeb {
             HashMap<String, Integer> sorts = new HashMap<String, Integer>();
             sorts.putAll(router.getMethodInfo().getArgsSort());
             ClassBean classBean = mapped.get(key);
-            Type type = router.getMethodInfo().getArgs()[router.getMethodInfo().getArgsSort().get(key)];
+            if(!router.getMethodInfo().getArgsSort().containsKey(key))continue;
+            Integer index = router.getMethodInfo().getArgsSort().get(key);
+            Type type = router.getMethodInfo().getArgs()[index];
             if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName()))) {
                 if (sorts.containsKey(key))
                     params[sorts.get(key)] = (values.get(key));
@@ -643,9 +665,9 @@ public class SeedWeb {
     }
 
     public void setDatabase(String activeRecord, String driver, String jdbcUrl, String userName, String passWord) {
-        try{
+        try {
             Class.forName(driver);
-            if(Integer.parseInt(activeRecord) == 1){
+            if (Integer.parseInt(activeRecord) == 1) {
                 HikariConfig config = new HikariConfig();
                 config.setJdbcUrl(jdbcUrl);
                 config.setDriverClassName(driver);
@@ -658,14 +680,13 @@ public class SeedWeb {
                 config.setMaximumPoolSize(50);
                 config.setMinimumIdle(100);
                 HikariDataSource hikariDataSource = new HikariDataSource(config);
-                hikariDataSource.close();
-                BaseDatabase database = new BaseDatabase(hikariDataSource,new OnDataSourceCloseListener(){
+                BaseDatabase database = new BaseDatabase(hikariDataSource, new OnDataSourceCloseListener() {
 
                     @Override
                     public void close(DataSource dataSource) {
-                        if(dataSource!=null && dataSource instanceof HikariDataSource){
-                            ((HikariDataSource) dataSource).close();
+                        if (dataSource != null && dataSource instanceof HikariDataSource) {
                             try {
+                                ((HikariDataSource) dataSource).close();
                                 DriverManager.deregisterDriver(DriverManager.getDriver(((HikariDataSource) dataSource).getJdbcUrl()));
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -675,7 +696,7 @@ public class SeedWeb {
                 });
                 Context.add(database);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

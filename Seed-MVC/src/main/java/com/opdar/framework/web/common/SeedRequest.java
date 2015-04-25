@@ -1,6 +1,7 @@
 package com.opdar.framework.web.common;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +17,8 @@ public class SeedRequest {
 
     private String contentType;
     private String method;
+    private ISession session;
+    private List<ICookie> cookie;
 
     public Map<String, Object> getValues() {
         return values;
@@ -28,7 +31,7 @@ public class SeedRequest {
         this.values.putAll(values);
     }
     public void setValue(String key,String value) {
-        this.values.put(key,value);
+        this.values.put(key, value);
     }
 
     public byte[] getBody() {
@@ -61,5 +64,22 @@ public class SeedRequest {
 
     public String getMethod() {
         return method;
+    }
+
+    public void setSession(ISession session) {
+        this.session = session;
+    }
+
+    public ISession getSession() {
+        return session;
+    }
+
+
+    public void setCookie(List<ICookie> cookie) {
+        this.cookie = cookie;
+    }
+
+    public List<ICookie> getCookie() {
+        return cookie;
     }
 }
