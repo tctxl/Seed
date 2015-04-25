@@ -6,7 +6,10 @@ import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.asm.Type;
 import com.opdar.framework.db.impl.BaseDatabase;
+import com.opdar.framework.db.impl.DaoMap;
+import com.opdar.framework.db.impl.OnDataSourceCloseListener;
 import com.opdar.framework.utils.ParamsUtil;
+import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.*;
 import com.opdar.framework.web.common.*;
@@ -25,7 +28,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -35,7 +41,6 @@ import java.util.*;
  * QQ:362116120
  */
 public class SeedWeb {
-
     private final Log log = LogFactory.getLog("SeedWeb");
     //所有路由
     private static final HashMap<String, SeedRouter> routers = new HashMap<String, SeedRouter>();
@@ -52,7 +57,7 @@ public class SeedWeb {
     public static String WEB_HTML_PATH = "";
     public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
     public static Map<String,String> RESOURCE_MAPPING = new HashMap<String, String>();
-
+    private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
     static {
         defaultPages.add("INDEX.HTML");
         defaultPages.add("DEFAULT.HTML");
@@ -68,13 +73,20 @@ public class SeedWeb {
     }
 
     public void destory() {
-        System.out.println("destory all threadlocal!");
-        log.debug("destory all threadlocal!");
         for (Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>> entry = it.next();
-            entry.getValue().remove();
-            System.out.println("remove!");
-            controllerObjects.remove(entry.getKey());
+            ThreadLocal<SeedExcuteItrf> local = entry.getValue();
+            ThreadLocalUtils.clearThreadLocals(HTTP_THREAD_KEY, local);
+        }
+        DaoMap.clear();
+        BaseDatabase database = Context.get(BaseDatabase.class);
+        if(database != null){
+            database.close();
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -330,6 +342,7 @@ public class SeedWeb {
     private static final Map<String, String> contentTypes = new HashMap<String, String>();
 
     public void execute(String routerName, SeedRequest request, final IResponse response) {
+        ThreadLocalUtils.record(HTTP_THREAD_KEY);
         final SeedResponse seedResponse = (SeedResponse) response;
         routerName = routerName.toUpperCase();
         SeedPath publicPath = null;
@@ -500,6 +513,7 @@ public class SeedWeb {
                 }
                 if (threadLocal.get() == null) {
                     try {
+                        System.out.println("init router bean 2222222");
                         threadLocal.set((SeedExcuteItrf) router.getClassBean().getSeedClz().newInstance());
                     } catch (InstantiationException e) {
                         e.printStackTrace();
@@ -645,7 +659,21 @@ public class SeedWeb {
                 config.setMaximumPoolSize(50);
                 config.setMinimumIdle(100);
                 HikariDataSource hikariDataSource = new HikariDataSource(config);
-                BaseDatabase database = new BaseDatabase(hikariDataSource);
+                hikariDataSource.close();
+                BaseDatabase database = new BaseDatabase(hikariDataSource,new OnDataSourceCloseListener(){
+
+                    @Override
+                    public void close(DataSource dataSource) {
+                        if(dataSource!=null && dataSource instanceof HikariDataSource){
+                            ((HikariDataSource) dataSource).close();
+                            try {
+                                DriverManager.deregisterDriver(DriverManager.getDriver(((HikariDataSource) dataSource).getJdbcUrl()));
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
                 Context.add(database);
             }
         }catch (Exception e){

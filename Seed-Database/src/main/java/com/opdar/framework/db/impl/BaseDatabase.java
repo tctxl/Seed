@@ -4,6 +4,7 @@ package com.opdar.framework.db.impl;
 import com.opdar.framework.db.convert.*;
 import com.opdar.framework.db.interfaces.IDao;
 import com.opdar.framework.db.interfaces.IDatabase;
+import com.opdar.framework.utils.ThreadLocalUtils;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -20,9 +21,10 @@ import java.util.LinkedHashMap;
 public class BaseDatabase implements IDatabase {
     private DataSource dataSource;
     private HashMap<Class<?>, Convert<?>> converts = new LinkedHashMap<Class<?>, Convert<?>>();
-
-    public BaseDatabase(DataSource dataSource) {
+    private OnDataSourceCloseListener onDataSourceCloseListener;
+    public BaseDatabase(DataSource dataSource, OnDataSourceCloseListener onDataSourceCloseListener) {
         this.dataSource = dataSource;
+        this.onDataSourceCloseListener = onDataSourceCloseListener;
         converts.put(Date.class, new DateConvert());
         converts.put(Timestamp.class, new TimestampConvert());
         converts.put(Integer.class, new IntegerConvert());
@@ -56,5 +58,9 @@ public class BaseDatabase implements IDatabase {
 
     public void setConverts(HashMap<Class<?>, Convert<?>> converts) {
         this.converts = converts;
+    }
+
+    public void close(){
+        if(onDataSourceCloseListener != null)onDataSourceCloseListener.close(dataSource);
     }
 }
