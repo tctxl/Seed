@@ -38,6 +38,6 @@ public class RedirectView implements View {
 
     @java.lang.Override
     public int getCode() {
-        return 0;
+        return 301;
     }
 }
