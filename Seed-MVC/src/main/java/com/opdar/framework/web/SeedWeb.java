@@ -513,7 +513,6 @@ public class SeedWeb {
                 }
                 if (threadLocal.get() == null) {
                     try {
-                        System.out.println("init router bean 2222222");
                         threadLocal.set((SeedExcuteItrf) router.getClassBean().getSeedClz().newInstance());
                     } catch (InstantiationException e) {
                         e.printStackTrace();
