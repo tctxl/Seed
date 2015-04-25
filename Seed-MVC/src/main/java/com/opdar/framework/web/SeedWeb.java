@@ -391,6 +391,7 @@ public class SeedWeb {
                 //return void;
                 seedResponse.writeSuccess();
             } else {
+                response.setHeaders(view.headers());
                 if (view instanceof HtmlView) {
                     ((HtmlView) view).setFileReadListener(fileReadListener).renderView();
                 } else {
