@@ -4,6 +4,7 @@ import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by Jeffrey on 2015/4/11.
@@ -16,6 +17,11 @@ public class DefaultView implements View {
 
     public DefaultView(Object result) {
         this.result = result;
+    }
+
+    @Override
+    public Map<String, String> headers() {
+        return null;
     }
 
     public byte[] renderView() {

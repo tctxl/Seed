@@ -1,6 +1,7 @@
 package com.opdar.framework.web.common;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by Jeffrey on 2015/4/8.
@@ -53,5 +54,15 @@ public class SeedResponse implements IResponse {
     public void flush() {
         isWrite = true;
         response.flush();
+    }
+
+    @Override
+    public void setHeader(String key, String value) {
+        response.setHeader(key,value);
+    }
+
+    @Override
+    public void setHeaders(Map<String, String> headers) {
+        response.setHeaders(headers);
     }
 }

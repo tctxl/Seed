@@ -7,6 +7,7 @@ import com.opdar.framework.web.interfaces.View;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Map;
 
 /**
  * Created by 俊帆 on 2015/4/16.
@@ -64,6 +65,11 @@ public class FileView implements View{
         }
         this.contentType = contentType;
         this.fileReadListener = fileReadListener;
+    }
+
+    @Override
+    public Map<String, String> headers() {
+        return null;
     }
 
     public byte[] renderView() {

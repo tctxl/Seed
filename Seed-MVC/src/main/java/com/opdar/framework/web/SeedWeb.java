@@ -1,6 +1,5 @@
 package com.opdar.framework.web;
 
-import com.opdar.framework.aop.SeedAop;
 import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.SeedWeakClassloader;
 import com.opdar.framework.aop.base.ClassBean;
@@ -24,13 +23,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import sun.awt.image.URLImageSource;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
 /**

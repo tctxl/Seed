@@ -4,6 +4,7 @@ import com.opdar.framework.web.SeedWeb;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.*;
+import java.util.Map;
 
 /**
  * Created by 俊帆 on 2015/4/16.
@@ -19,6 +20,11 @@ public class HtmlView implements View{
     public HtmlView setFileReadListener(FileView.FileReadListener fileReadListener){
         this.fileReadListener = fileReadListener;
         return this;
+    }
+
+    @Override
+    public Map<String, String> headers() {
+        return null;
     }
 
     public byte[] renderView() {

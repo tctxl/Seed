@@ -4,6 +4,7 @@ import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by Jeffrey on 2015/4/11.
@@ -16,6 +17,12 @@ public class ErrorView implements View {
     public ErrorView(HttpResponseCode responseCode){
         this.responseCode = responseCode;
     }
+
+    @Override
+    public Map<String, String> headers() {
+        return null;
+    }
+
     public byte[] renderView() {
         try {
             return responseCode.getContent().getBytes("utf-8");

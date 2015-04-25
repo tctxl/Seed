@@ -1,7 +1,6 @@
 package com.opdar.framework.server.supports.netty;
 
 import com.opdar.framework.web.common.IResponse;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -10,11 +9,15 @@ import io.netty.handler.codec.http.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 public class SeedSession implements IResponse {
 	private ChannelHandlerContext ctx;
 	private String socketId;
+    private Map<String,String> headers = new HashMap<String, String>();
 
     public SeedSession(){}
 	public SeedSession(ChannelHandlerContext ctx) {
@@ -33,6 +36,10 @@ public class SeedSession implements IResponse {
 
     public ChannelFuture writeResult(final byte[] content,String contentType,int responseCode){
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(responseCode), Unpooled.wrappedBuffer(content));
+        for(Iterator<Map.Entry<String, String>> it = headers.entrySet().iterator();it.hasNext();){
+            Map.Entry<String, String> entry = it.next();
+            response.headers().set(entry.getKey(),entry.getValue());
+        }
         response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
         return writeAndAddListener(response, ChannelFutureListener.CLOSE);
@@ -69,6 +76,16 @@ public class SeedSession implements IResponse {
         baos = null;
         contentType = null;
         responseCode = 0;
+    }
+
+    @Override
+    public void setHeader(String key, String value) {
+        headers.put(key,value);
+    }
+
+    @Override
+    public void setHeaders(Map<String, String> headers) {
+        this.headers.putAll(headers);
     }
 
 

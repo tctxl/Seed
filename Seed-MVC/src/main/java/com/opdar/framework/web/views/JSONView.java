@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
+import java.util.Map;
+
 /**
  * Created by Jeffrey on 2015/4/11.
  * E-Mail:shijunfan@163.com
@@ -15,6 +17,12 @@ public class JSONView implements View {
     JSONView(Object result){
         this.result = result;
     }
+
+    @Override
+    public Map<String, String> headers() {
+        return null;
+    }
+
     public byte[] renderView() {
         return JSON.toJSONBytes(result);
     }
