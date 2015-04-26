@@ -72,12 +72,14 @@ public class SeedServlet extends GenericServlet {
         SeedResponse response = new SeedResponse(session);
         ISession iSession = new ServletSession(req.getSession());
         request.setSession(iSession);
-        List<ICookie> iCookies = new LinkedList<ICookie>();
-        for(Cookie cookie:req.getCookies()){
-            ICookie iCookie = new ServletCookie(cookie);
-            iCookies.add(iCookie);
+        if(req.getCookies() != null){
+            List<ICookie> iCookies = new LinkedList<ICookie>();
+            for(Cookie cookie:req.getCookies()){
+                ICookie iCookie = new ServletCookie(cookie);
+                iCookies.add(iCookie);
+            }
+            request.setCookie(iCookies);
         }
-        request.setCookie(iCookies);
         try{
             String queryString = req.getQueryString();
             String path = req.getPathInfo();

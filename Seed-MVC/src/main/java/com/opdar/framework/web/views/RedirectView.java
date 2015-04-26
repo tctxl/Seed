@@ -19,6 +19,8 @@ public class RedirectView implements View {
     public RedirectView(String rediretUrl){
         this.rediretUrl = rediretUrl;
         headers.put("location",rediretUrl);
+        headers.put("Cache-Control","no-store, must-revalidate");
+        headers.put("Pragma","no-cache");
     }
 
     @Override

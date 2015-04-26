@@ -19,7 +19,10 @@ import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import io.netty.handler.codec.http.multipart.MixedAttribute;
 import io.netty.util.AttributeKey;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +47,11 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
         List<InterfaceHttpData> params = decoder.getBodyHttpDatas();
         for(InterfaceHttpData data :params){
             MixedAttribute attribute = (MixedAttribute) data;
-            request.setValue(new String(attribute.getName()), new String(attribute.content().array()));
+            try {
+                request.setValue(new String(attribute.getName()), URLDecoder.decode(new String(attribute.content().array()),"utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
     }
 

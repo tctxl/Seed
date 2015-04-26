@@ -29,37 +29,70 @@ public class BaseWhere<T> implements IWhere<T> {
 
     @Override
     public IWhere IS(String name, String value) {
-        whereBuilder.append(name).append("=").append("'").append(value).append("'");
+        whereBuilder.append(name).append("=");
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 
     @Override
     public IWhere NOT_IS(String name, String value) {
-        whereBuilder.append(name).append("<>").append("'").append(value).append("'");
+        whereBuilder.append(name).append("<>");
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 
     @Override
     public IWhere GT(String name, String value) {
-        whereBuilder.append(name).append(">").append("'").append(value).append("'");
+        whereBuilder.append(name).append(">");
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 
     @Override
     public IWhere GTIS(String name, String value) {
-        whereBuilder.append(name).append(">=").append("'").append(value).append("'");
+        whereBuilder.append(name).append(">=");
+
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 
     @Override
     public IWhere LT(String name, String value) {
-        whereBuilder.append(name).append("<").append("'").append(value).append("'");
+        whereBuilder.append(name).append("<");
+
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 
     @Override
     public IWhere LTIS(String name, String value) {
-        whereBuilder.append(name).append("<=").append("'").append(value).append("'");
+        whereBuilder.append(name).append("<=");
+
+        if(value.indexOf("${")==0&&value.lastIndexOf("}")==value.length()-1){
+            whereBuilder.append(value.substring(2,value.length()-1));
+        }else{
+            whereBuilder.append("'").append(value).append("'");
+        }
         return this;
     }
 

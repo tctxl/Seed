@@ -1,10 +1,13 @@
 package com.opdar.framework.db.interfaces;
 
+import com.opdar.framework.db.impl.FieldModel;
 import com.opdar.framework.db.impl.Join;
+import com.opdar.framework.db.impl.MappingFilter;
 
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jeffrey on 2014/9/3
@@ -16,9 +19,12 @@ public interface IDao<T>{
     IDao<T> addMapper(String mapper);
     IDao<T> clearMapper();
     IDao<T> INSERT(T o);
-    void JOIN(Join join,String tableName,String synx);
+    IDao<T> JOIN(Join join,String tableName,String synx);
     IDao<T> UPDATE(T o);
     IDao<T> DELETE(T o);
+
+    IDao<T> setFilter(MappingFilter filter);
+
     IDao<T> SELECT();
     IWhere<T> WHERE(String name, String value);
     IWhere<T> WHERE(IWhere where);
@@ -27,6 +33,7 @@ public interface IDao<T>{
     void findEnum(Type enumType);
     T findOne();
     int status();
+    Map<String, FieldModel> getFieldNames();
     String getTableName(Class<?> clz);
     String getSimpleTableName(Class<?> clz);
 
@@ -37,4 +44,6 @@ public interface IDao<T>{
     void excute(String sql);
     StringBuilder getSqlBuilder();
     void truncateTable();
+
+    void excute(String sql, Class<?> cls);
 }

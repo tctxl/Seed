@@ -1,6 +1,8 @@
 package com.opdar.framework.web.parser;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class FormParser implements HttpParser {
                         String p1 = param[0].trim();
                         String p2 = param[1].trim();
                         if(p1.length()>0&&p2.length()>0){
-                            map.put(p1,p2);
+                            map.put(p1, URLDecoder.decode(p2, "utf-8"));
                         }
                     }
                 }

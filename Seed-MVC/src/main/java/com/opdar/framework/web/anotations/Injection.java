@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  * QQ:362116120
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target(ElementType.FIELD)
 public @interface Injection {
 }

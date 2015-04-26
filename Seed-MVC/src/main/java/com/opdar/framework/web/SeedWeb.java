@@ -49,7 +49,7 @@ public class SeedWeb {
     private static final HashMap<Integer, Class<?>> controllerBefores = new HashMap<Integer, Class<?>>();
     private static final HashMap<String, Class<?>> routerAfters = new HashMap<String, Class<?>>();
     private static final HashMap<String, Class<?>> routerBefores = new HashMap<String, Class<?>>();
-    private static final HashMap<Integer, ThreadLocal<SeedExcuteItrf>> controllerObjects = new HashMap<Integer, ThreadLocal<SeedExcuteItrf>>();
+    private static final HashMap<String, ThreadLocal<Object>> threadMaps = new HashMap<String, ThreadLocal<Object>>();
     private static final HashMap<String, HashMap<String, ClassBean>> argsMapped = new HashMap<String, HashMap<String, ClassBean>>();
     private static final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
     private static final Map<String, HttpParser> parsers = new HashMap<String, HttpParser>();
@@ -77,9 +77,9 @@ public class SeedWeb {
     }
 
     public void destory() {
-        for (Iterator<Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>>> it = controllerObjects.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Integer, ThreadLocal<SeedExcuteItrf>> entry = it.next();
-            ThreadLocal<SeedExcuteItrf> local = entry.getValue();
+        for (Iterator<Map.Entry<String, ThreadLocal<Object>>> it = threadMaps.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<String, ThreadLocal<Object>> entry = it.next();
+            ThreadLocal<Object> local = entry.getValue();
             ThreadLocalUtils.clearThreadLocals(HTTP_THREAD_KEY, local);
         }
         DaoMap.clear();
@@ -346,11 +346,11 @@ public class SeedWeb {
 
     private static final Map<String, String> contentTypes = new HashMap<String, String>();
 
-    public ThreadLocal<SeedResponse> SharedResponse() {
+    public static ThreadLocal<SeedResponse> SharedResponse() {
         return sharedResponse;
     }
 
-    public ThreadLocal<SeedRequest> SharedRequest() {
+    public static ThreadLocal<SeedRequest> SharedRequest() {
         return sharedRequest;
     }
 
@@ -510,30 +510,60 @@ public class SeedWeb {
                     }
                 }
 
+                Object ret = null;
                 try {
                     if (b2 != null) {
-                        b2.invokeMethod("before");
+                        ret = b2.invokeMethod("before");
                     }
                 } catch (Exception e) {
+                }finally {
+                    if(ret != null){
+                        if(ret instanceof Boolean){
+                            if(!(Boolean)ret){
+                                return new ErrorView(HttpResponseCode.CODE_401);
+                            }
+                        }else
+                        if (ret instanceof View) {
+                            return (View) ret;
+                        }else{
+                            return new DefaultView(ret);
+                        }
+                    }
                 }
 
                 try {
+                    ret = null;
+
                     if (b1 != null) {
-                        b1.invokeMethod("before");
+                        ret = b1.invokeMethod("before");
                     }
                 } catch (Exception e) {
+                }finally {
+                    if(ret != null){
+                        if(ret instanceof Boolean){
+                            if(!(Boolean)ret){
+                                return new ErrorView(HttpResponseCode.CODE_401);
+                            }
+                        }else
+                        if (ret instanceof View) {
+                            return (View) ret;
+                        }else{
+                            return new DefaultView(ret);
+                        }
+                    }
                 }
 
-                ThreadLocal<SeedExcuteItrf> threadLocal = null;
-                if (controllerObjects.containsKey(index)) {
-                    threadLocal = controllerObjects.get(index);
+                ThreadLocal<Object> threadLocal = null;
+                String threadKey = router.getClassBean().getSeedClz().getSuperclass().getName();
+                if (threadMaps.containsKey(threadKey)) {
+                    threadLocal = threadMaps.get(threadKey);
                 } else {
-                    threadLocal = new ThreadLocal<SeedExcuteItrf>();
-                    controllerObjects.put(index, threadLocal);
+                    threadLocal = new ThreadLocal<Object>();
+                    threadMaps.put(threadKey, threadLocal);
                 }
                 if (threadLocal.get() == null) {
                     try {
-                        threadLocal.set((SeedExcuteItrf) router.getClassBean().getSeedClz().newInstance());
+                        threadLocal.set(router.getClassBean().getSeedClz().newInstance());
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -553,7 +583,8 @@ public class SeedWeb {
                     }
 
                     boolean isVoid = router.getMethodInfo().getType().getReturnType().getClassName().equals("void");
-                    Object result = threadLocal.get().invokeMethod(router.getMethodInfo().getName(), params);
+                    Object seedExcuteItrf = threadLocal.get();
+                    Object result = ((SeedExcuteItrf)seedExcuteItrf).invokeMethod(router.getMethodInfo().getName(), params);
                     if (isVoid) {
                         return null;
                     }

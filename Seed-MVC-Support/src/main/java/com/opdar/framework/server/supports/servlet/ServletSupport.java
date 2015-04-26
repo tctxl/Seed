@@ -45,7 +45,6 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
                 e.printStackTrace();
             }
         }else{
-            ServletSupport.config.onCreate();
             SeedServlet.web.scanController(ServletSupport.config.get(IConfig.CONTROLLER_PATH));
             SeedServlet.web.setWebHtml(ServletSupport.config.get(IConfig.PAGES));
             SeedServlet.web.setWebPublic(ServletSupport.config.get(IConfig.PUBLIC));
@@ -57,9 +56,10 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
             String driver = ServletSupport.config.get(IConfig.JDBC_DRIVER);
 
             if(activeRecord == null)activeRecord = "0";
-            SeedServlet.web.setDatabase(activeRecord,driver,jdbcUrl,userName,passWord);
+            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord);
         }
         SeedServlet.web.setHttpConvert(JSONConvert.class);
+        ServletSupport.config.onCreate();
     }
 
     @Override

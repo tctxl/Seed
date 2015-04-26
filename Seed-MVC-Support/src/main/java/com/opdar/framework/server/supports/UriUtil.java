@@ -2,6 +2,9 @@ package com.opdar.framework.server.supports;
 
 import com.opdar.framework.web.common.SeedRequest;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 /**
  * Created by jeffrey on 2015/4/19.
  */
@@ -24,7 +27,11 @@ public class UriUtil {
                     if(p2s.length >1){
                         String key = p2s[0];
                         String value = p2s[1];
-                        request.setValue(key,value);
+                        try {
+                            request.setValue(key, URLDecoder.decode(value,"utf-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

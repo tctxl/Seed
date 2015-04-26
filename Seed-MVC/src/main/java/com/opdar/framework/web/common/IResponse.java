@@ -12,4 +12,5 @@ public interface IResponse {
 
     void setHeader(String key, String value);
     void setHeaders(Map<String,String> headers);
+
 }

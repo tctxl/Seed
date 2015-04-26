@@ -49,8 +49,8 @@ public class Utils {
         if(field.indexOf("is") == 0){
             field = field.replaceFirst("is","");
         }
-        if(field.length() < 3){
-            return field;
+        if(field.length() < 3 && field.length()>1){
+            return Character.toUpperCase(field.charAt(0))+field.substring(1);
         }
         char c1 = field.charAt(0);
         char c2 = field.charAt(1);
