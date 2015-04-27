@@ -13,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -30,47 +31,11 @@ public class SeedServlet extends GenericServlet {
     @Override
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest)servletRequest;
-        final HttpServletResponse res = (HttpServletResponse)servletResponse;
-        IResponse session = new IResponse() {
-            public void write(byte[] content, String contentType, int responseCode) {
-                try {
-                    res.setContentType(contentType);
-                    res.setStatus(responseCode);
-                    res.getOutputStream().write(content, 0, content.length);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            public void writeAndFlush(byte[] content, String contentType, int responseCode) {
-                write(content,contentType,responseCode);
-                flush();
-            }
-
-            public void flush() {
-                try {
-                    res.flushBuffer();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void setHeader(String key, String value) {
-                res.setHeader(key,value);
-            }
-
-            @Override
-            public void setHeaders(Map<String, String> headers) {
-                for(Iterator<Map.Entry<String, String>> it = headers.entrySet().iterator();it.hasNext();){
-                    Map.Entry<String, String> entry = it.next();
-                    res.setHeader(entry.getKey(),entry.getValue());
-                }
-            }
-        };
+        HttpServletResponse res = (HttpServletResponse)servletResponse;
+        SSResponse session = new SSResponse(res);
         SeedRequest request = new SeedRequest();
         SeedResponse response = new SeedResponse(session);
-        ISession iSession = new ServletSession(req.getSession());
+        ISession iSession = new ServletSession(req);
         request.setSession(iSession);
         if(req.getCookies() != null){
             List<ICookie> iCookies = new LinkedList<ICookie>();
@@ -104,12 +69,16 @@ public class SeedServlet extends GenericServlet {
             web.execute(path,request,response);
         }catch (Exception e){
             e.printStackTrace();
-            //400
+//            400
             if(response!=null)
                 response.write(HttpResponseCode.CODE_400.getContent().getBytes(),"text/html", HttpResponseCode.CODE_400.getCode());
         } finally{
             if(response!=null && !response.isWrite())
                 response.writeSuccess();
+            session = null;
+            iSession = null;
+            request = null;
+            response = null;
         }
     }
 }

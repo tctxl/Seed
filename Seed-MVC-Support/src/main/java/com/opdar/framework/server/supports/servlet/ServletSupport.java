@@ -54,9 +54,13 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
             String userName = ServletSupport.config.get(IConfig.JDBC_USERNAME);
             String passWord = ServletSupport.config.get(IConfig.JDBC_PASSWORD);
             String driver = ServletSupport.config.get(IConfig.JDBC_DRIVER);
-
+            String database = ServletSupport.config.get(IConfig.JDBC_DATABASE);
+            String datasource = ServletSupport.config.get(IConfig.JDBC_DATASOURCE);
+            String host = ServletSupport.config.get(IConfig.JDBC_HOST);
+            String openurl = ServletSupport.config.get(IConfig.JDBC_OPENURL);
             if(activeRecord == null)activeRecord = "0";
-            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord);
+            if(openurl == null)openurl = "0";
+            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord,database,datasource,host,openurl);
         }
         SeedServlet.web.setHttpConvert(JSONConvert.class);
         ServletSupport.config.onCreate();

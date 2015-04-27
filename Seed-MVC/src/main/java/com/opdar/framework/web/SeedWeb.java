@@ -434,6 +434,8 @@ public class SeedWeb {
         } finally {
             sharedRequest.remove();
             sharedResponse.remove();
+            sharedRequest.set(null);
+            sharedResponse.set(null);
         }
     }
 
@@ -695,15 +697,30 @@ public class SeedWeb {
         }
     }
 
-    public void setDatabase(String activeRecord, String driver, String jdbcUrl, String userName, String passWord) {
+    public void setDatabase(String activeRecord, String driver, String jdbcUrl, String userName, String passWord, String databaseName, String datasourceClass, String host, String openurl) {
         try {
-            Class.forName(driver);
             if (Integer.parseInt(activeRecord) == 1) {
                 HikariConfig config = new HikariConfig();
-                config.setJdbcUrl(jdbcUrl);
-                config.setDriverClassName(driver);
-                config.setUsername(userName);
-                config.setPassword(passWord);
+                if(jdbcUrl != null){
+                    config.setJdbcUrl(jdbcUrl);
+                }
+                if(driver !=null){
+                    config.setDriverClassName(driver);
+                }
+
+                if (Integer.parseInt(openurl) == 0) {
+                    config.setMaximumPoolSize(100);
+                    config.setDataSourceClassName(datasourceClass);
+                    config.addDataSourceProperty("serverName", host);
+                    config.addDataSourceProperty("port", "3306");
+                    config.addDataSourceProperty("databaseName", databaseName);
+                    config.addDataSourceProperty("user", userName);
+                    config.addDataSourceProperty("password", passWord);
+                }else{
+                    config.setUsername(userName);
+                    config.setPassword(passWord);
+                }
+
                 config.setConnectionTestQuery("select 1");
                 config.setConnectionTimeout(3000);
                 config.setIdleTimeout(600000);

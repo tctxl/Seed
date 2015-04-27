@@ -15,6 +15,10 @@ public interface IConfig {
     public static String JDBC_USERNAME = "com.opdar.seed.sql.username";
     public static String JDBC_PASSWORD = "com.opdar.seed.sql.password";
     public static String JDBC_DRIVER = "com.opdar.seed.sql.driver";
+    public static String JDBC_DATABASE = "com.opdar.seed.sql.database";
+    public static String JDBC_DATASOURCE = "com.opdar.seed.sql.dataSource";
+    public static String JDBC_HOST = "com.opdar.seed.sql.host";
+    public static String JDBC_OPENURL = "com.opdar.seed.sql.openurl";
 
     void onCreate();
     void onDestory();

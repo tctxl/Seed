@@ -77,6 +77,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                         model.setMapping(replaceFieldName(fieldName));
                     }
                 }
+                models.put(cls,fieldSort);
             }
         }
         tableName = getTableName(cls);

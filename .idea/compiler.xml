@@ -37,17 +37,17 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6">
-      <module name="Seed" target="1.5" />
-      <module name="seed-aop" target="1.5" />
-      <module name="seed-base" target="1.5" />
-      <module name="seed-configuration-web" target="1.5" />
+      <module name="Seed" target="1.6" />
+      <module name="seed-aop" target="1.6" />
+      <module name="seed-base" target="1.6" />
+      <module name="seed-configuration-web" target="1.6" />
       <module name="Seed-Configuration-Web-Plugin" target="1.6" />
-      <module name="Seed-Configuration-Web-Tomcat" target="1.5" />
-      <module name="seed-database" target="1.5" />
-      <module name="seed-extra" target="1.5" />
-      <module name="seed-mvc" target="1.5" />
-      <module name="seed-mvc-support" target="1.5" />
-      <module name="seed-template" target="1.5" />
+      <module name="Seed-Configuration-Web-Tomcat" target="1.6" />
+      <module name="seed-database" target="1.6" />
+      <module name="seed-extra" target="1.6" />
+      <module name="seed-mvc" target="1.6" />
+      <module name="seed-mvc-support" target="1.6" />
+      <module name="seed-template" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

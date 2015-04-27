@@ -2,6 +2,8 @@ package com.opdar.framework.server.supports.servlet;
 
 import com.opdar.framework.web.common.ISession;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -11,13 +13,13 @@ import javax.servlet.http.HttpSession;
  * QQ:362116120
  */
 public class ServletSession implements ISession {
-    private HttpSession session;
-    public ServletSession(HttpSession session){
-        this.session = session;
+    private HttpServletRequest request;
+    public ServletSession(HttpServletRequest request){
+        this.request = request;
     }
     @Override
     public void setValue(String key, Object value) {
-        session.setAttribute(key,value);
+        request.getSession().setAttribute(key, value);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ServletSession implements ISession {
 
     @Override
     public Object getValue(String key, String defaultValue) {
-        Object value = session.getAttribute(key);
+        Object value = request.getSession().getAttribute(key);
         return value == null?defaultValue:value;
     }
 }
