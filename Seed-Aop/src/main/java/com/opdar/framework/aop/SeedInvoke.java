@@ -6,9 +6,7 @@ import com.opdar.framework.asm.*;
 import com.opdar.framework.asm.signature.SignatureReader;
 import com.opdar.framework.asm.signature.SignatureVisitor;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +35,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
 
     public static void init(final Class<?> clz) {
         if (beanSymbols.containsKey(clz)) return;
+        if(clz.isAnonymousClass())return;
         ClassReader cr = null;
         ClassBean cb = null;
         beanSymbols.put(clz, cb = new ClassBean());

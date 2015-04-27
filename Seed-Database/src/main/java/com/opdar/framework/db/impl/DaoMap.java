@@ -3,6 +3,7 @@ package com.opdar.framework.db.impl;
 import com.opdar.framework.db.interfaces.IDao;
 import com.opdar.framework.utils.ThreadLocalUtils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,21 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DaoMap {
     private static final String DATABASE_THREAD_KEY = "DATABASE_THREAD_KEY";
 
-    private static ConcurrentHashMap<Class<?>,ThreadLocal<IDao>> concurrentHashMap = new ConcurrentHashMap<Class<?>,ThreadLocal<IDao>>();
+    private static Map<String,ThreadLocal<IDao>> map = new HashMap<String, ThreadLocal<IDao>>();
 
 
     public static void clear(){
-        for(Iterator<Map.Entry<Class<?>, ThreadLocal<IDao>>> it = concurrentHashMap.entrySet().iterator();it.hasNext();){
-            Map.Entry<Class<?>, ThreadLocal<IDao>> entry = it.next();
+        for(Iterator<Map.Entry<String, ThreadLocal<IDao>>> it = map.entrySet().iterator();it.hasNext();){
+            Map.Entry<String, ThreadLocal<IDao>> entry = it.next();
             ThreadLocal local = entry.getValue();
             ThreadLocalUtils.clearThreadLocals(DATABASE_THREAD_KEY,local);
         }
-        concurrentHashMap.clear();
+        map.clear();
     }
 
     public static IDao get(Class<?> cls){
-        if(concurrentHashMap.containsKey(cls)){
-            ThreadLocal<IDao> dao = concurrentHashMap.get(cls);
+        if(map.containsKey(cls.getName())){
+            ThreadLocal<IDao> dao = map.get(cls.getName());
             return dao.get();
         }
         return null;
@@ -38,10 +39,10 @@ public class DaoMap {
 
     public static IDao put(Class<?> cls,IDao dao){
         ThreadLocalUtils.record(DATABASE_THREAD_KEY);
-        if(!concurrentHashMap.containsKey(cls)){
+        if(!map.containsKey(cls.getName())){
             ThreadLocal tdao = new ThreadLocal<IDao>();
             tdao.set(dao);
-            concurrentHashMap.put(cls, tdao);
+            map.put(cls.getName(), tdao);
         }
         return dao;
     }

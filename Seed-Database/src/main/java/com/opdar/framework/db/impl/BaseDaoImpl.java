@@ -43,8 +43,10 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private Class<T> cls;
     private Map<String, FieldModel> fieldSort = new LinkedHashMap<String, FieldModel>();
     String tableName = "";
+    private String simpleTableName = "";
+    private boolean autoCloseConnection = true;
 
-    private static Map<Class<?>,Map<String, FieldModel>> models = new HashMap<Class<?>, Map<String, FieldModel>>();
+    static final Map<String,Map<String, FieldModel>> models = new HashMap<String, Map<String, FieldModel>>();
 
     public BaseDaoImpl(DataSource dataSource, Class<T> cls, BaseDatabase baseDatabase) {
         this.dataSource = dataSource;
@@ -53,8 +55,8 @@ public class BaseDaoImpl<T> implements IDao<T> {
         this.baseDatabase = baseDatabase;
         if(!EnumValue.class.isAssignableFrom(cls)){
             SeedInvoke.init(cls);
-            if(models.containsKey(cls)){
-                fieldSort = models.get(cls);
+            if(BaseDaoImpl.models.containsKey(cls.getName())){
+                fieldSort = BaseDaoImpl.models.get(cls.getName());
             }else{
                 java.lang.reflect.Field[] fields = cls.getDeclaredFields();
                 for(int i = 0;i<fields.length;i++){
@@ -77,34 +79,48 @@ public class BaseDaoImpl<T> implements IDao<T> {
                         model.setMapping(replaceFieldName(fieldName));
                     }
                 }
-                models.put(cls,fieldSort);
+                BaseDaoImpl.models.put(cls.getName(),fieldSort);
             }
         }
         tableName = getTableName(cls);
+        simpleTableName = getSimpleTableName(cls);
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void setAutoCloseConnection(boolean autoCloseConnection) {
+        this.autoCloseConnection = autoCloseConnection;
+    }
+
+    private void executeChildSqlParam(ChildSql childSql){
+        StringBuilder stringBuilder = new StringBuilder();
+        String sql = childSql.sql;
+        int index = sql.indexOf("#{");
+        if(index != -1){
+            stringBuilder.append(sql.substring(0,index));
+            int index2 = sql.indexOf("}");
+            if(index2 != -1){
+                String key = sql.substring(index+2,index2);
+                childSql.parentMapping.add(key);
+                stringBuilder.append(" %s ");
+                stringBuilder.append(sql.substring(index2+1,sql.length()));
+            }else{
+                stringBuilder.append(sql.substring(index));
+            }
+            childSql.sql = stringBuilder.toString();
+            executeChildSqlParam(childSql);
+        }
     }
 
     private ChildSql executeChildSql(java.lang.reflect.Field field){
         Factor factor = field.getAnnotation(Factor.class);
         if(factor!=null){
-            StringBuilder stringBuilder = new StringBuilder();
             ChildSql childSql = new ChildSql();
-            Class<?> typeClass = factor.cls();
-            String sql = factor.value();
-            int index = sql.indexOf("#{");
-            if(index != -1){
-                stringBuilder.append(sql.substring(0,index));
-                int index2 = sql.indexOf("}");
-                if(index2 != -1){
-                    String key = sql.substring(index+2,index2);
-                    childSql.parentMapping.add(key);
-                    stringBuilder.append(" %s ");
-                    stringBuilder.append(sql.substring(index2+1,sql.length()));
-                }else{
-                    stringBuilder.append(sql.substring(index));
-                }
-            }
-            childSql.sql = stringBuilder.toString();
-            childSql.type = typeClass;
+            childSql.sql = factor.value();
+            childSql.type = factor.cls();
+            executeChildSqlParam(childSql);
             return childSql;
         }
         return null;
@@ -128,7 +144,8 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
     @Override
     public IDao<T> addMapper(String _mapper){
-        this.mapper.add(_mapper);
+        if(!mapper.contains(mapper))
+            this.mapper.add(_mapper);
         return this;
     }
 
@@ -136,6 +153,16 @@ public class BaseDaoImpl<T> implements IDao<T> {
     public IDao<T> clearMapper(){
         this.mapper.clear();
         return this;
+    }
+
+    private void close(){
+        if(connection!=null){
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void clear() {
@@ -259,7 +286,8 @@ public class BaseDaoImpl<T> implements IDao<T> {
             for(String map:mapper){
                 sqlBuilder.append(map).append(" ,");
             }
-            String simpleTableName = getSimpleTableName(cls)+".";
+
+            String simpleTableName = this.simpleTableName+".";
             if (EnumValue.class.isAssignableFrom(cls)) {
                 String baseName = cls.getSimpleName().toLowerCase();
                 String enumName = replaceFieldName(baseName.concat("Name"));
@@ -281,7 +309,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
             }
             sqlBuilder.delete(sqlBuilder.length() - 1, sqlBuilder.length());
             sqlBuilder.append(" from ");
-            sqlBuilder.append(tableName).append(" ").append(getSimpleTableName(cls));
+            sqlBuilder.append(tableName).append(" ").append(this.simpleTableName);
         }
         return this;
     }
@@ -435,6 +463,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                     try {
                                         Map.Entry<String, FieldModel> entry = it.next();
                                         String fieldName = entry.getKey();
+                                        String setMethodName = "set".concat(Utils.testField(fieldName));
                                         FieldModel model = entry.getValue();
                                         if(model.getChildSql() !=null){
                                             ChildSql childSql = model.getChildSql();
@@ -452,6 +481,8 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                             }
                                             String complateSql = String.format(childSql.sql,pMap);
                                             BaseDaoImpl dap = new BaseDaoImpl(dataSource,childSql.type,baseDatabase);
+                                            dap.setConnection(connection);
+                                            dap.setAutoCloseConnection(false);
                                             dap.excute(complateSql);
                                             Object result = null;
                                             if(Collection.class.isAssignableFrom(model.field.getType())){
@@ -459,7 +490,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                             }else{
                                                 result = dap.findOne();
                                             }
-                                            object.invokeMethod("set".concat(Utils.testField(model.field.getName())),result );
+                                            object.invokeMethod(setMethodName,result );
                                             continue;
                                         }
                                         String dbFieldName = model.getMapping();
@@ -474,16 +505,16 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
                                         Class type = field.getType();
                                         if (PrimaryUtil.isPrimary(field.getType())) {
-                                            object.invokeMethod("set".concat(Utils.testField(fieldName)), PrimaryUtil.cast(result, type));
+                                            object.invokeMethod(setMethodName, PrimaryUtil.cast(result, type));
                                         } else {
                                             if (baseDatabase.getConverts().containsKey(type)) {
                                                 Convert convert = baseDatabase.getConverts().get(type);
-                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), convert.reconvert(result));
+                                                object.invokeMethod(setMethodName, convert.reconvert(result));
                                             } else if (type.isEnum()) {
                                                 Convert convert = baseDatabase.getConverts().get(Enum.class);
-                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), convert.reconvert(type, result));
+                                                object.invokeMethod(setMethodName, convert.reconvert(type, result));
                                             } else {
-                                                object.invokeMethod("set".concat(Utils.testField(fieldName)), result);
+                                                object.invokeMethod(setMethodName, result);
                                             }
                                         }
                                     } catch (SQLException e2) {
@@ -506,7 +537,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
             e.printStackTrace();
         } finally {
             try {
-                if (this.connection==null && connection != null)
+                if (this.connection==null && connection != null && autoCloseConnection)
                     connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();

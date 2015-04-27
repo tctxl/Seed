@@ -32,9 +32,9 @@ public class SeedServlet extends GenericServlet {
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest)servletRequest;
         HttpServletResponse res = (HttpServletResponse)servletResponse;
-        SSResponse session = new SSResponse(res);
+        SSResponse ssr = new SSResponse(res);
         SeedRequest request = new SeedRequest();
-        SeedResponse response = new SeedResponse(session);
+        SeedResponse response = new SeedResponse(ssr);
         ISession iSession = new ServletSession(req);
         request.setSession(iSession);
         if(req.getCookies() != null){
@@ -75,10 +75,8 @@ public class SeedServlet extends GenericServlet {
         } finally{
             if(response!=null && !response.isWrite())
                 response.writeSuccess();
-            session = null;
+            ssr = null;
             iSession = null;
-            request = null;
-            response = null;
         }
     }
 }

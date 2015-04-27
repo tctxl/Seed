@@ -239,6 +239,7 @@ public class SeedWeb {
         if (isClear) routers.clear();
         Set<Class<?>> controllersClz = ParamsUtil.getClasses(packageName);
         for (Class<?> c : controllersClz) {
+            if(c.isAnonymousClass())continue;
             SeedInvoke.init(c);
             ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
             Type controllerAfter = null;

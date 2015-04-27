@@ -1,10 +1,15 @@
 package com.opdar.framework.configureweb.controller;
 
 import com.opdar.framework.configureweb.beans.TestBean;
+import com.opdar.framework.configureweb.beans.ConfigureEntity;
+import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.web.anotations.After;
 import com.opdar.framework.web.anotations.Before;
 import com.opdar.framework.web.anotations.Controller;
 import com.opdar.framework.web.anotations.Router;
+import com.opdar.framework.web.common.Context;
+
+import java.util.List;
 
 /**
  * Created by Jeffrey on 2015/4/10.
@@ -12,9 +17,7 @@ import com.opdar.framework.web.anotations.Router;
  * Site:opdar.com
  * QQ:362116120
  */
-@Controller("/test/")
-@After(ControllerInterceptor.class)
-@Before(ControllerInterceptor.class)
+@Controller(value = "/test/",prefix = "html")
 public class TestController {
 
     private static int i=0;
@@ -30,7 +33,9 @@ public class TestController {
     }
 
     @Router("index")
-    public String routerRender(String testParam, TestBean bean){
-        return String.valueOf(i);
+    public List<ConfigureEntity> routerRender(String testParam, TestBean bean){
+        BaseDatabase database = Context.get(BaseDatabase.class);
+        List<ConfigureEntity> users = database.getDao(ConfigureEntity.class).SELECT().END().findAll();
+        return users;
     }
 }

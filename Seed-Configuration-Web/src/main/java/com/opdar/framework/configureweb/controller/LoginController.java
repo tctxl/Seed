@@ -1,12 +1,10 @@
 package com.opdar.framework.configureweb.controller;
 
 import com.opdar.framework.configureweb.beans.TestBean;
-import com.opdar.framework.configureweb.beans.UserEntity;
+import com.opdar.framework.configureweb.beans.ConfigureEntity;
 import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.db.interfaces.IDao;
 import com.opdar.framework.web.anotations.Controller;
-import com.opdar.framework.web.anotations.Injection;
-import com.opdar.framework.web.anotations.RequestBody;
 import com.opdar.framework.web.anotations.Router;
 import com.opdar.framework.web.common.Context;
 import com.opdar.framework.web.views.HtmlView;
@@ -28,9 +26,9 @@ public class LoginController {
     }
 
     @Router(value = "users")
-    public List<UserEntity> findUser() {
-        IDao<UserEntity> dao = Context.get(BaseDatabase.class).getDao(UserEntity.class);
-        List<UserEntity> array = dao.SELECT().END().findAll();
+    public List<ConfigureEntity> findUser() {
+        IDao<ConfigureEntity> dao = Context.get(BaseDatabase.class).getDao(ConfigureEntity.class);
+        List<ConfigureEntity> array = dao.SELECT().END().findAll();
         return array;
     }
 }
