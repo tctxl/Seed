@@ -41,7 +41,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private ArrayList<T> values = new ArrayList<T>();
     private ArrayList<String> mapper = new ArrayList<String>();
     private Class<T> cls;
-    private Map<String, FieldModel> fieldSort = new HashMap<String, FieldModel>();
+    private Map<String, FieldModel> fieldSort = new LinkedHashMap<String, FieldModel>();
     String tableName = "";
 
     private static Map<Class<?>,Map<String, FieldModel>> models = new HashMap<Class<?>, Map<String, FieldModel>>();
