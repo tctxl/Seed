@@ -94,33 +94,13 @@ public class BaseDaoImpl<T> implements IDao<T> {
         this.autoCloseConnection = autoCloseConnection;
     }
 
-    private void executeChildSqlParam(ChildSql childSql){
-        StringBuilder stringBuilder = new StringBuilder();
-        String sql = childSql.sql;
-        int index = sql.indexOf("#{");
-        if(index != -1){
-            stringBuilder.append(sql.substring(0,index));
-            int index2 = sql.indexOf("}");
-            if(index2 != -1){
-                String key = sql.substring(index+2,index2);
-                childSql.parentMapping.add(key);
-                stringBuilder.append(" %s ");
-                stringBuilder.append(sql.substring(index2+1,sql.length()));
-            }else{
-                stringBuilder.append(sql.substring(index));
-            }
-            childSql.sql = stringBuilder.toString();
-            executeChildSqlParam(childSql);
-        }
-    }
-
     private ChildSql executeChildSql(java.lang.reflect.Field field){
         Factor factor = field.getAnnotation(Factor.class);
         if(factor!=null){
             ChildSql childSql = new ChildSql();
             childSql.sql = factor.value();
             childSql.type = factor.cls();
-            executeChildSqlParam(childSql);
+            childSql.sql = Utils.parseSignFactor(childSql.sql, childSql.parentMapping);
             return childSql;
         }
         return null;
@@ -472,8 +452,12 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                             for(String s:childSql.parentMapping){
                                                 if(fieldSort.containsKey(s)){
                                                     FieldModel m2 = fieldSort.get(s);
-                                                    String result = resultSet.getString(m2.getMapping());
-                                                    pMap[pIndex] = "'".concat(result).concat("'");
+                                                    try {
+                                                        String result = resultSet.getString(m2.getMapping());
+                                                        pMap[pIndex] = "'".concat(result).concat("'");
+                                                    }catch (Exception e){
+                                                        throw new Exception(e.getCause());
+                                                    }
                                                 }else{
                                                     pMap[pIndex] = "''";
                                                 }
@@ -497,7 +481,6 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                         try{
                                             resultSet.findColumn(dbFieldName);
                                         }catch (Exception e){
-
                                             continue;
                                         }
                                         String result = resultSet.getString(dbFieldName);
@@ -520,12 +503,11 @@ public class BaseDaoImpl<T> implements IDao<T> {
                                     } catch (SQLException e2) {
                                         e2.printStackTrace();
                                     } catch (Exception e2) {
-                                        e2.printStackTrace();
                                     }
                                 }
                                 values.add((T) object);
                             } catch (Exception e2) {
-                                e2.printStackTrace();
+//                                e2.printStackTrace();
                             }
                         }
                     } catch (SQLException e2) {

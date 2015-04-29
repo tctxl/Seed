@@ -32,8 +32,8 @@ public class TestController {
         return "this is /test/router2  testParam : "+testParam;
     }
 
-    @Router("index")
-    public List<ConfigureEntity> routerRender(String testParam, TestBean bean){
+    @Router("index/#{haha}")
+    public List<ConfigureEntity> routerRender(String testParam, TestBean bean,String haha){
         BaseDatabase database = Context.get(BaseDatabase.class);
         List<ConfigureEntity> users = database.getDao(ConfigureEntity.class).SELECT().END().findAll();
         return users;

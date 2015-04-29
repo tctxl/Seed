@@ -12,6 +12,7 @@ import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.*;
+import com.opdar.framework.web.anotations.Router;
 import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.exceptions.ParamUnSupportException;
 import com.opdar.framework.web.interfaces.HttpConvert;
@@ -58,6 +59,7 @@ public class SeedWeb {
     public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
     public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
     private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
+    private static final List<String> restfulList = new LinkedList<String>();
 
     static {
         defaultPages.add("INDEX.HTML");
@@ -280,6 +282,9 @@ public class SeedWeb {
                             boolean isRouter = methodAnotation.getType().getClassName().equals(Router.class.getName());
                             boolean isRouterAfter = methodAnotation.getType().getClassName().equals(After.class.getName());
                             boolean isRouterBefore = methodAnotation.getType().getClassName().equals(Before.class.getName());
+                            if (!isRouter) {
+                                continue;
+                            }
                             if (isRouterAfter) {
                                 after = (Type) methodAnotation.getValue().get(0).getValue();
                                 continue;
@@ -295,15 +300,21 @@ public class SeedWeb {
                                     routerName = routerValue.getValue().toString();
                                 }
                             }
+                            List<String> restfulPar = new ArrayList<String>();
+
+                            routerName = Utils.parseSignFactor(routerName,restfulPar).replace(" %s ",".*");
                             String router = Utils.testRouter(controllerRouter).concat(Utils.testRouter(routerName));
 
-                            if (isRouter) {
-                                SeedRouter seedRouter = new SeedRouter();
-                                seedRouter.setClassBean(classBean);
-                                seedRouter.setMethodInfo(methodInfo);
-                                seedRouter.setRouterName(routerName.concat(prefixName));
-                                routers.put(router.toUpperCase().concat(prefixName), seedRouter);
+                            SeedRouter seedRouter = new SeedRouter();
+                            seedRouter.setRouterName(routerName.concat(prefixName));
+                            if(restfulPar.size()>0){
+                                restfulList.add(router.concat(prefixName.replace(".", "\\.")).toUpperCase());
+                                prefixName = prefixName.replace(".","\\.");
+                                seedRouter.setRestfulPar(restfulPar);
                             }
+                            routers.put(router.toUpperCase().concat(prefixName), seedRouter);
+                            seedRouter.setClassBean(classBean);
+                            seedRouter.setMethodInfo(methodInfo);
                         }
                         if (after != null) {
                             try {
@@ -456,6 +467,34 @@ public class SeedWeb {
                 }
             }
         }
+        HashMap<String,String> restfulResult = new HashMap<String, String>();
+        if(router == null){
+            for (String restfulPath : restfulList){
+
+                if(routerName.matches(restfulPath) && routers.containsKey(restfulPath)){
+                    router = routers.get(restfulPath);
+                    String[] sp = restfulPath.replaceAll("\\.\\*","&").split("&");
+                    String tempRouterName = routerName;
+                    for(String s:sp){
+                        tempRouterName = tempRouterName.replaceAll(s,"&");
+                    }
+                    int tempIndex = -1;
+                    if((tempIndex = tempRouterName.indexOf("&"))>=0){
+                        String[] result = tempRouterName.split("&");
+                        int plus = tempIndex == 0?1:0;
+                        for(int i=0;i<router.getRestfulPar().size();i++){
+                            String key = router.getRestfulPar().get(i);
+                            String value = null;
+                            if(i < result.length ){
+                                value = result[i+plus];
+                            }
+                            restfulResult.put(key,value);
+                        }
+                    }
+                    routerName = restfulPath;
+                }
+            }
+        }
         if (router != null) {
             int index = controllerSort.get(router.getClassBean().getSeedClz().getName());
             SeedExcuteItrf a1 = null, a2 = null, b1 = null, b2 = null;
@@ -577,12 +616,12 @@ public class SeedWeb {
                     Object[] params = null;
                     if (router.hasRequestBody()) {
                         try {
-                            params = execLogicRequestBody(routerName, router, request);
+                            params = execLogicRequestBody(routerName, router, request,restfulResult);
                         } catch (ParamUnSupportException e) {
                             return new ErrorView(HttpResponseCode.CODE_415);
                         }
                     } else {
-                        params = execLogicNormal(routerName, request.getValues(), router);
+                        params = execLogicNormal(routerName, request.getValues(), router,restfulResult);
                     }
 
                     boolean isVoid = router.getMethodInfo().getType().getReturnType().getClassName().equals("void");
@@ -615,7 +654,7 @@ public class SeedWeb {
         return new ErrorView(HttpResponseCode.CODE_404);
     }
 
-    private Object[] execLogicRequestBody(String routerName, SeedRouter router, SeedRequest request) throws ParamUnSupportException {
+    private Object[] execLogicRequestBody(String routerName, SeedRouter router, SeedRequest request, HashMap<String, String> restfulResult) throws ParamUnSupportException {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
         for (int i = 0; i < router.getMethodInfo().getLocalVars().size(); i++) {
             ClassBean.MethodInfo.LocalVar localVar = router.getMethodInfo().getLocalVars().get(i);
@@ -631,23 +670,26 @@ public class SeedWeb {
                 } else {
                     throw new ParamUnSupportException(String.format("contentType[%s]不被RequestBody支持", contentType));
                 }
+            }else
+            if(restfulResult.containsKey(localVar.getName())){
+                value = restfulResult.get(localVar.getName());
             }
             params[i] = value;
         }
         return params;
     }
 
-    private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router) {
+    private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router, HashMap<String, String> restfulResult) {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
         HashMap<String, ClassBean> mapped = argsMapped.get(routerName.toUpperCase());
+        HashMap<String, Integer> sorts = router.getMethodInfo().getArgsSort();
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
-            HashMap<String, Integer> sorts = new HashMap<String, Integer>();
-            sorts.putAll(router.getMethodInfo().getArgsSort());
             ClassBean classBean = mapped.get(key);
             if(!router.getMethodInfo().getArgsSort().containsKey(key))continue;
             Integer index = router.getMethodInfo().getArgsSort().get(key);
             Type type = router.getMethodInfo().getArgs()[index];
+//            if(restfulResult.containsKey(key))
             if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName()))) {
                 if (sorts.containsKey(key))
                     params[sorts.get(key)] = (values.get(key));
@@ -664,6 +706,12 @@ public class SeedWeb {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+        if(restfulResult.size()>0){
+            for(Iterator<String> it = restfulResult.keySet().iterator(); it.hasNext();){
+                String key = it.next();
+                params[sorts.get(key)] = (restfulResult.get(key));
             }
         }
         return params;

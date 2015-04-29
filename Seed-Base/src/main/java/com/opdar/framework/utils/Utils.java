@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +45,26 @@ public class Utils {
             return params.substring(10);
         }
         return null;
+    }
+
+    public static String parseSignFactor(String factor,List<String> parentMapping){
+        StringBuilder stringBuilder = new StringBuilder();
+        int index = factor.indexOf("#{");
+        if(index != -1){
+            stringBuilder.append(factor.substring(0,index));
+            int index2 = factor.indexOf("}");
+            if(index2 != -1){
+                String key = factor.substring(index+2,index2);
+
+                parentMapping.add(key);
+                stringBuilder.append(" %s ");
+                stringBuilder.append(factor.substring(index2+1,factor.length()));
+            }else{
+                stringBuilder.append(factor.substring(index));
+            }
+            factor = parseSignFactor(stringBuilder.toString(), parentMapping);
+        }
+        return factor;
     }
 
     public static String testField(String field) {
