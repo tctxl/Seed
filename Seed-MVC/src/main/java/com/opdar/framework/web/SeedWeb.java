@@ -305,14 +305,15 @@ public class SeedWeb {
                             routerName = Utils.parseSignFactor(routerName,restfulPar).replace(" %s ",".*");
                             String router = Utils.testRouter(controllerRouter).concat(Utils.testRouter(routerName));
 
+                            String p1 = prefixName;
                             SeedRouter seedRouter = new SeedRouter();
-                            seedRouter.setRouterName(routerName.concat(prefixName));
+                            seedRouter.setRouterName(routerName.concat(p1));
                             if(restfulPar.size()>0){
-                                restfulList.add(router.concat(prefixName.replace(".", "\\.")).toUpperCase());
-                                prefixName = prefixName.replace(".","\\.");
+                                restfulList.add(router.concat(p1.replace(".", "\\.")).toUpperCase());
+                                p1 = p1.replace(".","\\.");
                                 seedRouter.setRestfulPar(restfulPar);
                             }
-                            routers.put(router.toUpperCase().concat(prefixName), seedRouter);
+                            routers.put(router.toUpperCase().concat(p1), seedRouter);
                             seedRouter.setClassBean(classBean);
                             seedRouter.setMethodInfo(methodInfo);
                         }

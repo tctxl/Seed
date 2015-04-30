@@ -7,14 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="abb2bb81-bf14-46c4-bdbc-e166198f6541" name="Default" comment="修复content-type识别">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/ControllerAction.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/Router.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/impl/BaseDaoImpl.java" afterPath="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/impl/BaseDaoImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedRouter.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedRouter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" afterPath="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java" afterPath="$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java" afterPath="$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="6044808a-45eb-4696-90f2-eccff687ddbd" name="Failed commit: Default" comment="增加静态资源渲染路径&#10;增加html渲染路径" />
     <list id="ebc53550-cccd-42d4-8727-405acb8aa604" name="Failed commit: Default (2)" comment="实现优雅关闭，解决程序终止时的memory leak" />
@@ -57,48 +50,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SeedWeb.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SeedWeb.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.233333">
-              <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="613" selection-end-column="0" />
+            <state vertical-scroll-proportion="1.0061855">
+              <caret line="287" column="48" selection-start-line="287" selection-start-column="48" selection-end-line="287" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1784#1804#0" expanded="true" />
-                <element signature="e#1886#1903#0" expanded="true" />
-                <element signature="e#1989#2008#0" expanded="true" />
-                <element signature="e#2095#2114#0" expanded="true" />
-                <element signature="e#2195#2213#0" expanded="true" />
-                <element signature="e#2295#2313#0" expanded="true" />
-                <element signature="e#2403#2432#0" expanded="true" />
-                <element signature="e#2529#2565#0" expanded="true" />
-                <element signature="e#2645#2666#0" expanded="true" />
-                <element signature="e#2831#2839#0" expanded="true" />
-                <element signature="e#2963#2981#0" expanded="true" />
-                <element signature="e#3053#3069#0" expanded="true" />
-                <element signature="e#3208#3216#0" expanded="true" />
-                <element signature="e#9659#9660#0" expanded="true" />
-                <element signature="e#9722#9723#0" expanded="true" />
-                <element signature="e#9770#9771#0" expanded="true" />
-                <element signature="e#9830#9831#0" expanded="true" />
-                <element signature="e#10058#10059#0" expanded="true" />
-                <element signature="e#10107#10108#0" expanded="true" />
-                <element signature="e#14185#14193#0" expanded="true" />
-                <element signature="e#17082#17083#0" expanded="true" />
-                <element signature="e#17119#17120#0" expanded="true" />
-                <element signature="e#17181#17182#0" expanded="true" />
-                <element signature="e#17217#17218#0" expanded="true" />
-                <element signature="e#21802#21818#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TestController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.54285717">
-              <caret line="31" column="63" selection-start-line="31" selection-start-column="63" selection-end-line="31" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="34" column="28" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -109,7 +77,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="59" column="42" selection-start-line="59" selection-start-column="41" selection-end-line="59" selection-end-column="42" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -283,8 +253,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1874" />
-    <option name="height" value="1096" />
+    <option name="width" value="1394" />
+    <option name="height" value="916" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -325,8 +295,9 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -347,7 +318,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1027,6 +997,7 @@
       <workItem from="1430127344722" duration="6492000" />
       <workItem from="1430225806909" duration="771000" />
       <workItem from="1430270345069" duration="16489000" />
+      <workItem from="1430401835724" duration="903000" />
     </task>
     <task id="LOCAL-00001" summary="中文编码问题">
       <created>1429184229559</created>
@@ -1080,7 +1051,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="355530000" />
+    <option name="totallyTimeSpent" value="356433000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1092,22 +1063,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1874" height="1096" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1394" height="916" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32900432" sideWeight="0.4978678" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3205394" sideWeight="0.30170986" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.280083" sideWeight="0.66023165" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34438777" sideWeight="0.6624156" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32900432" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27137342" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3690923" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2099567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.280083" sideWeight="0.33976835" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34438777" sideWeight="0.3375844" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30832875" sideWeight="0.49393415" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41935483" sideWeight="0.49393415" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924962" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="ASM" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35946667" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1120,6 +1090,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3205394" sideWeight="0.30170986" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3690476" sideWeight="0.47786668" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1370,7 +1341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
           <caret line="307" column="14" selection-start-line="307" selection-start-column="14" selection-end-line="307" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1434,11 +1404,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5125786">
           <caret line="102" column="44" selection-start-line="102" selection-start-column="44" selection-end-line="102" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3716#3717#0" expanded="false" />
-            <element signature="e#3778#3779#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1462,21 +1427,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.44970414">
           <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#279#287#0" expanded="false" />
-            <element signature="e#416#417#0" expanded="false" />
-            <element signature="e#468#469#0" expanded="false" />
-            <element signature="e#506#507#0" expanded="false" />
-            <element signature="e#540#541#0" expanded="false" />
-            <element signature="e#568#569#0" expanded="false" />
-            <element signature="e#612#613#0" expanded="false" />
-            <element signature="e#646#647#0" expanded="false" />
-            <element signature="e#681#682#0" expanded="false" />
-            <element signature="e#710#711#0" expanded="false" />
-            <element signature="e#756#757#0" expanded="false" />
-            <element signature="e#792#793#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1484,7 +1434,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28106508">
           <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1516,19 +1465,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.53402364">
           <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#394#395#0" expanded="false" />
-            <element signature="e#430#431#0" expanded="false" />
-            <element signature="e#488#489#0" expanded="false" />
-            <element signature="e#515#516#0" expanded="false" />
-            <element signature="e#549#550#0" expanded="false" />
-            <element signature="e#596#597#0" expanded="false" />
-            <element signature="e#631#632#0" expanded="false" />
-            <element signature="e#672#673#0" expanded="false" />
-            <element signature="e#700#701#0" expanded="false" />
-            <element signature="e#758#759#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1552,7 +1488,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="59" column="42" selection-start-line="59" selection-start-column="41" selection-end-line="59" selection-end-column="42" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1561,52 +1499,27 @@
         <state vertical-scroll-proportion="0.35304055">
           <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
           <folding>
-            <element signature="e#782#783#0" expanded="true" />
-            <element signature="e#826#827#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.233333">
-          <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="613" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1784#1804#0" expanded="true" />
-            <element signature="e#1886#1903#0" expanded="true" />
-            <element signature="e#1989#2008#0" expanded="true" />
-            <element signature="e#2095#2114#0" expanded="true" />
-            <element signature="e#2195#2213#0" expanded="true" />
-            <element signature="e#2295#2313#0" expanded="true" />
-            <element signature="e#2403#2432#0" expanded="true" />
-            <element signature="e#2529#2565#0" expanded="true" />
-            <element signature="e#2645#2666#0" expanded="true" />
-            <element signature="e#2831#2839#0" expanded="true" />
-            <element signature="e#2963#2981#0" expanded="true" />
-            <element signature="e#3053#3069#0" expanded="true" />
-            <element signature="e#3208#3216#0" expanded="true" />
-            <element signature="e#9659#9660#0" expanded="true" />
-            <element signature="e#9722#9723#0" expanded="true" />
-            <element signature="e#9770#9771#0" expanded="true" />
-            <element signature="e#9830#9831#0" expanded="true" />
-            <element signature="e#10058#10059#0" expanded="true" />
-            <element signature="e#10107#10108#0" expanded="true" />
-            <element signature="e#14185#14193#0" expanded="true" />
-            <element signature="e#17082#17083#0" expanded="true" />
-            <element signature="e#17119#17120#0" expanded="true" />
-            <element signature="e#17181#17182#0" expanded="true" />
-            <element signature="e#17217#17218#0" expanded="true" />
-            <element signature="e#21802#21818#0" expanded="true" />
+            <element signature="e#782#783#0" expanded="false" />
+            <element signature="e#826#827#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Seed-Configuration-Web/src/main/java/com/opdar/framework/configureweb/controller/TestController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54285717">
-          <caret line="31" column="63" selection-start-line="31" selection-start-column="63" selection-end-line="31" selection-end-column="63" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="28" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0061855">
+          <caret line="287" column="48" selection-start-line="287" selection-start-column="48" selection-end-line="287" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
