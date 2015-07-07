@@ -8,6 +8,7 @@ import com.opdar.framework.asm.signature.SignatureVisitor;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -182,23 +183,56 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
             public FieldVisitor visitField(int access, String name,
                                            String desc, String signature, Object value) {
                 // TODO Auto-generated method stub
+                final ClassBean.FieldInfo fieldInfo = new ClassBean.FieldInfo();
                 try {
                     Type type = Type.getType(desc);
+
                     if (type.getSort() > 1 && type.getSort() < 9 || type.getSort() == 10) {
-                        ClassBean.FieldInfo fieldInfo = new ClassBean.FieldInfo();
                         fieldInfo.setName(name);
                         fieldInfo.setDesc(desc);
                         fieldInfo.setType(type);
                         fieldInfo.setAccess(access);
                         fieldInfo.setDefaultValue(value);
+                        Field dField = clz.getDeclaredField(name);
+                        fieldInfo.setField(dField);
                         beanSymbols.get(clz).setField(fieldInfo);
                     }
                 } catch (SecurityException e) {
                     e.printStackTrace();
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
-                return super.visitField(access, name, desc, signature, value);
+                return new FieldVisitor(ASM4) {
+                    @Override
+                    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+                        final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
+                        fieldInfo.setAnotation(anotationInfo);
+                        anotationInfo.setDesc(desc);
+                        anotationInfo.setType(Type.getType(desc));
+                        return new AnnotationVisitor(ASM4) {
+                            @Override
+                            public void visit(String name, Object value) {
+                                ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
+                                value1.setName(name);
+                                value1.setValue(value);
+                                anotationInfo.setValue(value1);
+                                super.visit(name, value);
+                            }
+                        };
+                    }
+
+                    @Override
+                    public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+                        return super.visitTypeAnnotation(typeRef, typePath, desc, visible);
+                    }
+
+                    @Override
+                    public void visitAttribute(Attribute attr) {
+                        super.visitAttribute(attr);
+                    }
+                };
             }
         }, 0);
         Class<?> defineClz = definedClass(clz);

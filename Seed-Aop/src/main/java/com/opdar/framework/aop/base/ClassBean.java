@@ -2,6 +2,7 @@ package com.opdar.framework.aop.base;
 
 import com.opdar.framework.asm.Type;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,6 +102,8 @@ public class ClassBean {
         private String name;
         private Object defaultValue;
         private int access;
+        private List<AnotationInfo> anotations;
+        private Field field;
 
         public Object getDefaultValue() {
             return defaultValue;
@@ -140,6 +143,24 @@ public class ClassBean {
 
         public int getAccess() {
             return access;
+        }
+
+        public void setAnotation(AnotationInfo anotation) {
+            if(anotations == null)anotations = new LinkedList<AnotationInfo>();
+            this.anotations.add(anotation);
+        }
+
+        public List<AnotationInfo> getAnotations() {
+            return anotations;
+        }
+
+        public void setField(Field field) {
+            this.field = field;
+            field.setAccessible(true);
+        }
+
+        public Field getField() {
+            return field;
         }
     }
     public static class MethodInfo{
