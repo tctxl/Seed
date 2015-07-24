@@ -1,0 +1,6 @@
+{
+  "module-name":"plan",
+  "desc":"随访管理",
+  "main":"com.opdar.cplan.test.TestEntry",
+  "controllers":"com.opdar.cplan.controller"
+}
