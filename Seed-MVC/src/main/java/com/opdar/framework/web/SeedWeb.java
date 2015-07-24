@@ -229,7 +229,7 @@ public class SeedWeb {
 
 
     public void scanController(String packageName) {
-        scanController(packageName, true);
+        scanController(packageName, true,null);
     }
 
     /**
@@ -237,7 +237,7 @@ public class SeedWeb {
      *
      * @param packageName 包名
      */
-    public void scanController(String packageName, boolean isClear) {
+    public void scanController(String packageName, boolean isClear ,String perfix) {
         if (isClear) routers.clear();
         Set<Class<?>> controllersClz = ParamsUtil.getClasses(packageName);
         for (Class<?> c : controllersClz) {
@@ -301,9 +301,9 @@ public class SeedWeb {
                                 }
                             }
                             List<String> restfulPar = new ArrayList<String>();
-
+                            if(perfix == null)perfix = "";else perfix = Utils.testRouter(perfix.concat("/"));
                             routerName = Utils.parseSignFactor(routerName,restfulPar).replace(" %s ",".*");
-                            String router = Utils.testRouter(controllerRouter).concat(Utils.testRouter(routerName));
+                            String router = perfix.concat(Utils.testRouter(controllerRouter)).concat(Utils.testRouter(routerName));
 
                             String p1 = prefixName;
                             SeedRouter seedRouter = new SeedRouter();

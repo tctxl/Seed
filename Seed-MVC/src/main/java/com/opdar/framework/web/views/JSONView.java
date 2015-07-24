@@ -28,7 +28,7 @@ public class JSONView implements View {
     }
 
     public String contentType() {
-        return "application/json";
+        return "application/yeson";
     }
 
     public int getCode() {
