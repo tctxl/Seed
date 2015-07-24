@@ -3,6 +3,8 @@ package com.opdar.framework.server.supports.netty;
 import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.server.base.ISupport;
 import com.opdar.framework.server.supports.DefaultSupport;
+import com.opdar.framework.server.supports.servlet.SeedServlet;
+import com.opdar.framework.web.SeedWeb;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -54,6 +56,11 @@ public class NettySupport extends DefaultSupport {
             }
         }).start();
         return this;
+    }
+
+    @Override
+    public void scanController(String path, boolean isClear, String perfix) {
+        SeedHttpHandler.web.scanController(path);
     }
 
 }

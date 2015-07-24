@@ -33,7 +33,7 @@ import java.util.Map;
 public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
 
     public static AttributeKey<SeedSession> SESSION_FLAG = AttributeKey.valueOf("session");
-    private static SeedWeb web = new SeedWeb();
+    public static SeedWeb web = new SeedWeb();
 
     public SeedHttpHandler(){
         web.scanController(NettySupport.config.get(IConfig.CONTROLLER_PATH));

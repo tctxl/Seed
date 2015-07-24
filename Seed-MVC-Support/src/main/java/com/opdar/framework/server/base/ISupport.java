@@ -9,4 +9,6 @@ import com.opdar.framework.web.common.SeedResponse;
 public interface ISupport {
     ISupport start();
     ISupport config(IConfig config);
+    void scanController(String path,boolean isClear,String perfix);
+
 }
