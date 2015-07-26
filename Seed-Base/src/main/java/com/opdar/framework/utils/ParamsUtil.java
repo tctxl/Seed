@@ -22,14 +22,14 @@ import java.util.jar.JarFile;
 public class ParamsUtil {
 
 
-    public static Map<String,String> getResourceMapping(String pack) {
+    public static Map<String,String> getResourceMapping(ClassLoader loader,String pack) {
         Map<String,String> resources = new LinkedHashMap<String, String>();
         boolean recursive = true;
         String packageName = pack;
         String packageDirName = packageName.replace('.', '/');
         Enumeration<URL> dirs;
         try {
-            dirs = Thread.currentThread().getContextClassLoader().getResources(
+            dirs = loader.getResources(
                     packageDirName);
             while (dirs.hasMoreElements()) {
                 URL url = dirs.nextElement();
@@ -76,21 +76,21 @@ public class ParamsUtil {
         return resources;
     }
 
-    public static Set<Class<?>> getClasses(String pack) {
+    public static Set<Class<?>> getClasses(ClassLoader loader,String pack) {
         Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
         boolean recursive = true;
         String packageName = pack;
         String packageDirName = packageName.replace('.', '/');
         Enumeration<URL> dirs;
         try {
-            dirs = Thread.currentThread().getContextClassLoader().getResources(
+            dirs = loader.getResources(
                     packageDirName);
             while (dirs.hasMoreElements()) {
                 URL url = dirs.nextElement();
                 String protocol = url.getProtocol();
                 if ("file".equals(protocol)) {
                     String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
-                    findAndAddClassesInPackageByFile(packageName, filePath,
+                    findAndAddClassesInPackageByFile(loader,packageName, filePath,
                             recursive, classes);
                 } else if ("jar".equals(protocol)) {
                     JarFile jar;
@@ -117,7 +117,7 @@ public class ParamsUtil {
                                                 packageName.length() + 1, name
                                                         .length() - 6);
                                         try {
-                                            classes.add(Thread.currentThread().getContextClassLoader().loadClass(packageName + '.' + className));
+                                            classes.add(loader.loadClass(packageName + '.' + className));
                                         } catch (ClassNotFoundException e) {
                                             e.printStackTrace();
                                         }
@@ -140,12 +140,13 @@ public class ParamsUtil {
     /**
      * 以文件的形式来获取包下的�?有Class
      *
+     * @param loader
      * @param packageName
      * @param packagePath
      * @param recursive
      * @param classes
      */
-    public static void findAndAddClassesInPackageByFile(String packageName,
+    public static void findAndAddClassesInPackageByFile(ClassLoader loader, String packageName,
                                                         String packagePath, final boolean recursive, Set<Class<?>> classes) {
         File dir = new File(packagePath);
         if (!dir.exists() || !dir.isDirectory()) {
@@ -159,14 +160,14 @@ public class ParamsUtil {
         });
         for (File file : dirfiles) {
             if (file.isDirectory()) {
-                findAndAddClassesInPackageByFile(packageName + "."
+                findAndAddClassesInPackageByFile(loader, packageName + "."
                                 + file.getName(), file.getAbsolutePath(), recursive,
                         classes);
             } else {
                 String className = file.getName().substring(0,
                         file.getName().length() - 6);
                 try {
-                    classes.add(Thread.currentThread().getContextClassLoader().loadClass(packageName + '.' + className));
+                    classes.add(loader.loadClass(packageName + '.' + className));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

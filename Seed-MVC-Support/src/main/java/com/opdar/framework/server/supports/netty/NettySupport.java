@@ -58,9 +58,4 @@ public class NettySupport extends DefaultSupport {
         return this;
     }
 
-    @Override
-    public void scanController(String path, boolean isClear, String perfix) {
-        SeedHttpHandler.web.scanController(path);
-    }
-
 }

@@ -54,7 +54,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
         this.cls = cls;
         this.baseDatabase = baseDatabase;
         if(!EnumValue.class.isAssignableFrom(cls)){
-            SeedInvoke.init(cls);
+            SeedInvoke.init(cls.getClassLoader(),cls);
             if(BaseDaoImpl.models.containsKey(cls.getName())){
                 fieldSort = BaseDaoImpl.models.get(cls.getName());
             }else{

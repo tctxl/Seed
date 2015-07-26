@@ -13,7 +13,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.*;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Jeffrey on 2015/4/8.
@@ -24,17 +28,16 @@ import java.util.*;
 public class SeedInvoke extends URLClassLoader implements Opcodes {
     private static String _iter = SeedExcuteItrf.class.getName().replaceAll("\\.", "/");
     private static HashMap<Class<?>, ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
-    static SeedInvoke loader = new SeedInvoke();
 
     public SeedInvoke() {
         super(new URL[]{}, Thread.currentThread().getContextClassLoader());
     }
-
+    private static AtomicLong i = new AtomicLong();
     public static HashMap<Class<?>, ClassBean> getBeanSymbols() {
         return beanSymbols;
     }
 
-    public static void init(final Class<?> clz) {
+    public static void init(ClassLoader loader,final Class<?> clz) {
         if (beanSymbols.containsKey(clz)) return;
         if(clz.isAnonymousClass())return;
         ClassReader cr = null;
@@ -42,7 +45,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
         beanSymbols.put(clz, cb = new ClassBean());
         try {
             String clzName = clz.getName().replace(".", "/").concat(".class");
-            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(clzName);
+            InputStream is = loader.getResourceAsStream(clzName);
             cr = new ClassReader(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -241,7 +244,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
 
     public static Class<?> definedClass(Class<?> clazz) {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        String className = String.format("com/opdar/framework/invoke/__Seed_T_%s_Copy_%s", clazz.getName().replace(".", "_"), Thread.currentThread().getId());
+        String className = String.format("com/opdar/framework/invoke/__Seed_T_%s_Copy_%s_%d", clazz.getName().replace(".", "_"), Thread.currentThread().getId(), i.incrementAndGet());
         ClassBean c = beanSymbols.get(clazz);
         c.setClassName(className);
         String typeName = clazz.getName().replace(".", "/");
@@ -382,7 +385,14 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
          */
         Class seedClass = null;
         synchronized (SeedInvoke.class) {
-            seedClass = loader.defineClass(className.replace("/", "."), code, 0, code.length);
+            ClassLoader classLoader = clazz.getClassLoader();
+            try {
+                seedClass = (Class) DEFINECLASS1.invoke(classLoader,new Object[]{className.replace("/", "."), code, 0, code.length});
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
         return seedClass;
     }
@@ -390,7 +400,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
     public static SeedExcuteItrf buildObject(Class clazz) throws Exception {
         SeedExcuteItrf obj = null;
         if (!beanSymbols.containsKey(clazz)) {
-            init(clazz);
+            init(clazz.getClassLoader() , clazz);
         }
         obj = (SeedExcuteItrf) beanSymbols.get(clazz).getSeedClz().newInstance();
         return obj;
@@ -407,4 +417,20 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
     }
 
 
+    private static Method DEFINECLASS1 = null;
+
+    static {
+        try {
+            AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                public Object run() throws Exception {
+                    Class cl = Class.forName("java.lang.ClassLoader");
+                    DEFINECLASS1 = cl.getDeclaredMethod("defineClass", new Class[]{String.class, byte[].class, int.class, int.class});
+                    DEFINECLASS1.setAccessible(true);
+                    return null;
+                }
+            });
+        } catch (PrivilegedActionException pae) {
+            pae.printStackTrace();
+        }
+    }
 }

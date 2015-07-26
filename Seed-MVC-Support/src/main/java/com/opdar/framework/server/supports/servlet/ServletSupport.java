@@ -67,11 +67,6 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
     }
 
     @Override
-    public void scanController(String path,boolean isClear,String perfix){
-        SeedServlet.web.scanController(path,isClear,perfix);
-    }
-
-    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         if(ServletSupport.config !=null)
             ServletSupport.config.onDestory();

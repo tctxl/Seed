@@ -79,4 +79,12 @@ public class SeedServlet extends GenericServlet {
             iSession = null;
         }
     }
+
+    public static SeedWeb getWeb() {
+        return web;
+    }
+
+    public static void setWeb(SeedWeb web) {
+        SeedServlet.web = web;
+    }
 }

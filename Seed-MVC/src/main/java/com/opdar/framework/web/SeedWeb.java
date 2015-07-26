@@ -43,6 +43,9 @@ import java.util.*;
  */
 public class SeedWeb {
     private final Log log = LogFactory.getLog("SeedWeb");
+
+    private ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
     //所有路由
     private static final HashMap<String, SeedRouter> routers = new HashMap<String, SeedRouter>();
     private static final HashMap<String, Integer> controllerSort = new HashMap<String, Integer>();
@@ -147,8 +150,8 @@ public class SeedWeb {
                                 if (var.getSignatureTypes().size() > 1) {
                                     String className = var.getSignatureTypes().get(var.getSignatureTypes().size() - 2).replace("/", ".");
                                     try {
-                                        Class clz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                                        SeedInvoke.init(clz);
+                                        Class clz = loader.loadClass(className);
+                                        SeedInvoke.init(clz.getClassLoader(),clz);
                                         ClassBean classBean = SeedInvoke.getBeanSymbols().get(clz);
                                         for (ClassBean.FieldInfo fieldInfo : classBean.getField()) {
                                             table.put(fieldInfo.getName(), classBean);
@@ -161,8 +164,8 @@ public class SeedWeb {
                                 }
                             } else {
                                 try {
-                                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(var.getType().getClassName());
-                                    SeedInvoke.init(clz);
+                                    Class clz = loader.loadClass(var.getType().getClassName());
+                                    SeedInvoke.init(clz.getClassLoader(),clz);
                                     ClassBean classBean = SeedInvoke.getBeanSymbols().get(clz);
                                     for (ClassBean.FieldInfo fieldInfo : classBean.getField()) {
                                         table.put(fieldInfo.getName(), classBean);
@@ -188,7 +191,7 @@ public class SeedWeb {
 
     public void scanConverts(String packageName) {
         converts.clear();
-        Set<Class<?>> convertsClz = ParamsUtil.getClasses(packageName);
+        Set<Class<?>> convertsClz = ParamsUtil.getClasses(loader,packageName);
         for (Class<?> c : convertsClz) {
             try {
                 HttpConvert convert = (HttpConvert) c.newInstance();
@@ -229,7 +232,7 @@ public class SeedWeb {
 
 
     public void scanController(String packageName) {
-        scanController(packageName, true,null);
+        scanController(packageName, true, null);
     }
 
     /**
@@ -238,12 +241,21 @@ public class SeedWeb {
      * @param packageName 包名
      */
     public void scanController(String packageName, boolean isClear ,String perfix) {
+        synchronized (this){
         if (isClear) routers.clear();
-        Set<Class<?>> controllersClz = ParamsUtil.getClasses(packageName);
+        Set<Class<?>> controllersClz = ParamsUtil.getClasses(loader,packageName);
         for (Class<?> c : controllersClz) {
             if(c.isAnonymousClass())continue;
-            SeedInvoke.init(c);
+            SeedInvoke.init(c.getClassLoader(),c);
             ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
+            try {
+                SeedExcuteItrf ex = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
+                ex.invokeMethod("index","");
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             Type controllerAfter = null;
             Type controllerBefore = null;
             int sort = controllerSort.size();
@@ -319,7 +331,7 @@ public class SeedWeb {
                         }
                         if (after != null) {
                             try {
-                                Class clz = Thread.currentThread().getContextClassLoader().loadClass(after.getClassName());
+                                Class clz = loader.loadClass(after.getClassName());
                                 routerAfters.put(routerName, clz);
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
@@ -327,7 +339,7 @@ public class SeedWeb {
                         }
                         if (before != null) {
                             try {
-                                Class clz = Thread.currentThread().getContextClassLoader().loadClass(before.getClassName());
+                                Class clz = loader.loadClass(before.getClassName());
                                 routerBefores.put(routerName, clz);
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
@@ -339,7 +351,7 @@ public class SeedWeb {
             }
             if (controllerAfter != null) {
                 try {
-                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerAfter.getClassName());
+                    Class clz = loader.loadClass(controllerAfter.getClassName());
                     controllerAfters.put(sort, clz);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -347,7 +359,7 @@ public class SeedWeb {
             }
             if (controllerBefore != null) {
                 try {
-                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(controllerBefore.getClassName());
+                    Class clz = loader.loadClass(controllerBefore.getClassName());
                     controllerBefores.put(sort, clz);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -355,6 +367,7 @@ public class SeedWeb {
             }
         }
         createRouterArgsMapped();
+        }
     }
 
     private static final Map<String, String> contentTypes = new HashMap<String, String>();
@@ -597,7 +610,7 @@ public class SeedWeb {
                 }
 
                 ThreadLocal<Object> threadLocal = null;
-                String threadKey = router.getClassBean().getSeedClz().getSuperclass().getName();
+                String threadKey = router.getClassBean().getSeedClz().getName();
                 if (threadMaps.containsKey(threadKey)) {
                     threadLocal = threadMaps.get(threadKey);
                 } else {
@@ -732,7 +745,7 @@ public class SeedWeb {
 
     public void setWebHtml(String webHtml) {
         SeedWeb.WEB_HTML_PATH = webHtml.replace(".", "/");
-        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(webHtml));
+        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader,webHtml));
     }
 
     public void setWebPublic(String webPublic) {
@@ -743,7 +756,7 @@ public class SeedWeb {
             SeedPath path = new SeedPath(key, value);
             publicPaths.put(key.toUpperCase(), path);
 
-            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(path.getPath()));
+            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader,path.getPath()));
         }
     }
 
@@ -797,5 +810,9 @@ public class SeedWeb {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setClassLoader(ClassLoader loader) {
+        this.loader = loader;
     }
 }

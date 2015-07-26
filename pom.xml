@@ -19,6 +19,7 @@
         <module>Seed-Template</module>
         <module>Seed-Configuration-Web</module>
         <module>Seed-Configuration-Web-Tomcat</module>
+        <module>Seed-CPlan</module>
         <!--<module>Seed-Configuration-Web-Plugin</module>-->
     </modules>
     <dependencies>
@@ -29,4 +30,14 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://192.168.1.235:7071/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://192.168.1.235:7071/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
