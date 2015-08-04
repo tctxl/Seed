@@ -11,6 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Context {
     private static ConcurrentHashMap<String,Object> pObjects = new ConcurrentHashMap<String,Object>();
 
+    public static void print(){
+        System.out.println(pObjects);
+        System.out.println(pObjects.hashCode());
+    }
+
     public static void add(Class clz){
         String typeName = clz.getName();
         Object o = null;

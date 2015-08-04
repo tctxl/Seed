@@ -54,7 +54,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
         this.cls = cls;
         this.baseDatabase = baseDatabase;
         if(!EnumValue.class.isAssignableFrom(cls)){
-            SeedInvoke.init(cls.getClassLoader(),cls);
+            SeedInvoke.init(cls);
             if(BaseDaoImpl.models.containsKey(cls.getName())){
                 fieldSort = BaseDaoImpl.models.get(cls.getName());
             }else{
@@ -165,6 +165,27 @@ public class BaseDaoImpl<T> implements IDao<T> {
         return String.valueOf(value);
     }
 
+    private HashMap<String,IDao> extendDaos = new HashMap<String, IDao>();
+
+    @Override
+    public <D>IDao<D> EXTEND(Class<D> clz) {
+        BaseDaoImpl dao = (BaseDaoImpl) baseDatabase.getDao(clz);
+        dao.connection = this.connection;
+        extendDaos.put(clz.getName(),dao);
+        return dao;
+    }
+
+    @Override
+    public IDao<T> CloseExtend() {
+        for(Iterator<String> it = extendDaos.keySet().iterator();it.hasNext();){
+            String key = it.next();
+            BaseDaoImpl dao = (BaseDaoImpl) extendDaos.get(key);
+            dao.connection = null;
+            extendDaos.remove(key);
+        }
+        return this;
+    }
+
     @Override
     public IDao<T> INSERT(T o) {
         clear();
@@ -231,7 +252,8 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 java.lang.reflect.Field field = model.getField();
                 try {
                     Object value = field.get(o);
-                    values.append(dbFieldName).append("=").append("'").append(value).append("'").append(",");
+                    if(value != null && value.toString().length()>0)
+                        values.append(dbFieldName).append("=").append("'").append(value).append("'").append(",");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -363,7 +385,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
             tableName = tableName.substring(index+1);
         }
         tableName = tableName.replace(prefix,"");
-        return tableName;
+        return "`".concat(tableName).concat("`");
     }
 
     @Override
@@ -382,6 +404,17 @@ public class BaseDaoImpl<T> implements IDao<T> {
         }
         return this;
     }
+
+    @Override
+    public IDao<T> rollback() throws SQLException {
+        if(connection!=null){
+            connection.rollback();
+            connection.close();
+            connection = null;
+        }
+        return this;
+    }
+
     @Override
     public void excute(String sql) {
         excute(sql,cls);
@@ -389,6 +422,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
     @Override
     public void excute(String sql,Class<?> cls) {
+        System.out.println(sql);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

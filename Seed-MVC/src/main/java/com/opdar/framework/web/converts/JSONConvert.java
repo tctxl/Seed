@@ -21,7 +21,7 @@ public class JSONConvert implements HttpConvert {
     }
 
     public String getContentType() {
-        return "application/yeson";
+        return "application/json";
     }
 
     public Object readBody(byte[] buffer, Type type) {

@@ -38,11 +38,9 @@ public class CPLoader extends URLClassLoader {
         super(new URL[]{}, Thread.currentThread().getContextClassLoader());
     }
 
-    public Class<?> defineCls(String name, byte[] b, int off, int len){
-        return defineClass(name,b,off,len);
+    public Class<?> defineCls(String name, byte[] b){
+        return defineClass(name,b,0,b.length);
     }
-
-
 
     /**
      * 循环遍历目录，找出所有的JAR包

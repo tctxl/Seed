@@ -84,7 +84,7 @@ public class FileView implements View{
             if(fileReadListener!=null)
                 fileReadListener.close();
         }
-        return null;
+        return fileReadListener==null?file:null;
     }
 
     public String contentType() {

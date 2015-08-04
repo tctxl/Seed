@@ -2,6 +2,9 @@ package com.opdar.framework.utils;
 
 import com.opdar.framework.asm.Type;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 
 /**
  * Created by Jeffrey on 2014/9/3
@@ -14,15 +17,15 @@ public class PrimaryUtil {
     public static boolean isPrimary(Class<?> clz) {
         if (
                 Integer.class.isAssignableFrom(clz)
-                || (Long.class.isAssignableFrom(clz))
-                || (Double.class.isAssignableFrom(clz))
-                || (Float.class.isAssignableFrom(clz))
-                || (Character.class.isAssignableFrom(clz))
-                || (Byte.class.isAssignableFrom(clz))
-                || (Boolean.class.isAssignableFrom(clz))
-                || (Short.class.isAssignableFrom(clz))
-                || (String.class.isAssignableFrom(clz))
-                || clz.isPrimitive()
+                        || (Long.class.isAssignableFrom(clz))
+                        || (Double.class.isAssignableFrom(clz))
+                        || (Float.class.isAssignableFrom(clz))
+                        || (Character.class.isAssignableFrom(clz))
+                        || (Byte.class.isAssignableFrom(clz))
+                        || (Boolean.class.isAssignableFrom(clz))
+                        || (Short.class.isAssignableFrom(clz))
+                        || (String.class.isAssignableFrom(clz))
+                        || clz.isPrimitive()
                 ) {
             return true;
         }
@@ -50,43 +53,53 @@ public class PrimaryUtil {
             } else if (Short.class.isAssignableFrom(clz) || short.class.isAssignableFrom(clz)) {
                 number = cast(value, Type.SHORT);
             }
+
             return (T) number;
         }
         return (T) value;
     }
 
     public static <T> T cast(Object value, Type type) {
-        switch (type.getSort()) {
-            case Type.OBJECT:
-                try {
-                    Class clz = Thread.currentThread().getContextClassLoader().loadClass(type.getClassName());
+        try {
+            Class clz = clz = Thread.currentThread().getContextClassLoader().loadClass(type.getClassName());
+            Object result = null;
+            switch (type.getSort()) {
+                case Type.OBJECT:
                     if (Number.class.isAssignableFrom(clz)) {
-                        Object number = null;
                         if (Integer.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.INT);
+                            result = cast(value, Type.INT);
                         } else if (Long.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.LONG);
+                            result = cast(value, Type.LONG);
                         } else if (Double.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.DOUBLE);
+                            result = cast(value, Type.DOUBLE);
                         } else if (Float.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.FLOAT);
+                            result = cast(value, Type.FLOAT);
                         } else if (Character.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.CHAR);
+                            result = cast(value, Type.CHAR);
                         } else if (Byte.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.BYTE);
+                            result = cast(value, Type.BYTE);
                         } else if (Boolean.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.BOOLEAN);
+                            result = cast(value, Type.BOOLEAN);
                         } else if (Short.class.isAssignableFrom(clz)) {
-                            number = cast(value, Type.SHORT);
+                            result = cast(value, Type.SHORT);
                         }
-                        return (T) number;
+                        return (T) result;
+                    }else if(String.class.isAssignableFrom(clz)){
+                        return (T) value.toString();
+                    }else if(Collection.class.isAssignableFrom(clz)){
+                        Collection collection = new LinkedList();
+                        if(value instanceof Collection){
+                            collection.addAll((Collection) value);
+                        }
+                        return (T) collection;
                     }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
+                    break;
+                case Type.ARRAY:
+
+                    break;
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return (T) value;
     }

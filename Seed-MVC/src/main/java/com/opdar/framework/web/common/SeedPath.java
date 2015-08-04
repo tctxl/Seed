@@ -22,8 +22,9 @@ public class SeedPath {
     private int pathType = 0;
     private String path;
     private String mapping;
+    private ClassLoader loader;
 
-    public SeedPath(String key, String value) {
+    public SeedPath(String key, String value, ClassLoader loader) {
         mapping = key.toUpperCase();
         String path = Utils.getClassPath(value);
         if(path != null){
@@ -31,6 +32,7 @@ public class SeedPath {
         }else{
             path = value;
         }
+        this.loader = loader;
         this.path = Utils.testRouter(path.replace(".","/")).substring(1);
     }
 
@@ -71,7 +73,7 @@ public class SeedPath {
             }
             return new FileInputStream(f);
         }else if(pathType == 1){
-            return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            return loader.getResourceAsStream(path);
         }
         return null;
     }

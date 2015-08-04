@@ -5,6 +5,7 @@ import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.asm.*;
 import com.opdar.framework.asm.signature.SignatureReader;
 import com.opdar.framework.asm.signature.SignatureVisitor;
+import com.opdar.framework.utils.Utils;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
@@ -37,13 +38,14 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
         return beanSymbols;
     }
 
-    public static void init(ClassLoader loader,final Class<?> clz) {
+    public static void init(final Class<?> clz) {
         if (beanSymbols.containsKey(clz)) return;
         if(clz.isAnonymousClass())return;
         ClassReader cr = null;
         ClassBean cb = null;
         beanSymbols.put(clz, cb = new ClassBean());
         try {
+            ClassLoader loader = clz.getClassLoader();
             String clzName = clz.getName().replace(".", "/").concat(".class");
             InputStream is = loader.getResourceAsStream(clzName);
             cr = new ClassReader(is);
@@ -380,6 +382,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
         }
         cw.visitEnd();
         byte[] code = cw.toByteArray();
+//        Utils.save(code);
         /*
          * 从文件加载类
          */
@@ -400,7 +403,7 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
     public static SeedExcuteItrf buildObject(Class clazz) throws Exception {
         SeedExcuteItrf obj = null;
         if (!beanSymbols.containsKey(clazz)) {
-            init(clazz.getClassLoader() , clazz);
+            init(clazz);
         }
         obj = (SeedExcuteItrf) beanSymbols.get(clazz).getSeedClz().newInstance();
         return obj;

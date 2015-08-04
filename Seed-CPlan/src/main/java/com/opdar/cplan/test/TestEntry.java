@@ -2,6 +2,7 @@ package com.opdar.cplan.test;
 
 import com.opdar.cplan.base.Entry;
 import com.opdar.cplan.utils.Utils;
+import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.utils.yeson.JSONObject;
 import com.opdar.framework.utils.yeson.YesonParser;
 import org.beetl.core.Configuration;
@@ -50,6 +51,11 @@ public class TestEntry implements Entry {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public IConfig getConfig() {
+        return null;
     }
 
 }

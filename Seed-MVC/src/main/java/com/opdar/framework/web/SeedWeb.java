@@ -9,6 +9,7 @@ import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.db.impl.DaoMap;
 import com.opdar.framework.db.impl.OnDataSourceCloseListener;
 import com.opdar.framework.utils.ParamsUtil;
+import com.opdar.framework.utils.PrimaryUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.*;
@@ -31,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.activation.MimetypesFileTypeMap;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
@@ -151,7 +153,11 @@ public class SeedWeb {
                                     String className = var.getSignatureTypes().get(var.getSignatureTypes().size() - 2).replace("/", ".");
                                     try {
                                         Class clz = loader.loadClass(className);
-                                        SeedInvoke.init(clz.getClassLoader(),clz);
+                                        if(clz.isAssignableFrom(String.class) || clz.isAssignableFrom(Number.class)){
+                                            table.put(var.getName(), null);
+                                            break;
+                                        }
+                                        SeedInvoke.init(clz);
                                         ClassBean classBean = SeedInvoke.getBeanSymbols().get(clz);
                                         for (ClassBean.FieldInfo fieldInfo : classBean.getField()) {
                                             table.put(fieldInfo.getName(), classBean);
@@ -165,7 +171,11 @@ public class SeedWeb {
                             } else {
                                 try {
                                     Class clz = loader.loadClass(var.getType().getClassName());
-                                    SeedInvoke.init(clz.getClassLoader(),clz);
+                                    if(Number.class.isAssignableFrom(clz)){
+                                        table.put(var.getName(), null);
+                                        continue;
+                                    }
+                                    SeedInvoke.init(clz);
                                     ClassBean classBean = SeedInvoke.getBeanSymbols().get(clz);
                                     for (ClassBean.FieldInfo fieldInfo : classBean.getField()) {
                                         table.put(fieldInfo.getName(), classBean);
@@ -191,7 +201,7 @@ public class SeedWeb {
 
     public void scanConverts(String packageName) {
         converts.clear();
-        Set<Class<?>> convertsClz = ParamsUtil.getClasses(loader,packageName);
+        Set<Class<?>> convertsClz = ParamsUtil.getClasses(loader, packageName);
         for (Class<?> c : convertsClz) {
             try {
                 HttpConvert convert = (HttpConvert) c.newInstance();
@@ -225,8 +235,16 @@ public class SeedWeb {
     }
 
     public HttpParser getParser(String contentType) {
-        if (parsers.containsKey(contentType))
-            return parsers.get(contentType);
+        String[] cs = null;
+        if(contentType.indexOf(";") != -1){
+            cs = contentType.split(";");
+        }else{
+            cs = new String[]{contentType};
+        }
+        for(String s :cs){
+            if (parsers.containsKey(s))
+                return parsers.get(s);
+        }
         return null;
     }
 
@@ -240,133 +258,134 @@ public class SeedWeb {
      *
      * @param packageName 包名
      */
-    public void scanController(String packageName, boolean isClear ,String perfix) {
-        synchronized (this){
-        if (isClear) routers.clear();
-        Set<Class<?>> controllersClz = ParamsUtil.getClasses(loader,packageName);
-        for (Class<?> c : controllersClz) {
-            if(c.isAnonymousClass())continue;
-            SeedInvoke.init(c.getClassLoader(),c);
-            ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
-            try {
-                SeedExcuteItrf ex = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
-                ex.invokeMethod("index","");
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            Type controllerAfter = null;
-            Type controllerBefore = null;
-            int sort = controllerSort.size();
-            for (ClassBean.AnotationInfo anotationInfo : classBean.getAnotations()) {
-                boolean isController = anotationInfo.getType().getClassName().equals(Controller.class.getName());
-                boolean isAfter = anotationInfo.getType().getClassName().equals(After.class.getName());
-                boolean isBefore = anotationInfo.getType().getClassName().equals(Before.class.getName());
-                if (isAfter) {
-                    controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
-                    continue;
+    public void scanController(String packageName, boolean isClear, String perfix) {
+        synchronized (this) {
+            if (isClear) routers.clear();
+            Set<Class<?>> controllersClz = ParamsUtil.getClasses(loader, packageName);
+            for (Class<?> c : controllersClz) {
+                if (c.isAnonymousClass()) continue;
+                SeedInvoke.init(c);
+                ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
+                try {
+                    SeedExcuteItrf ex = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
+                    ex.invokeMethod("index", "");
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
-                if (isBefore) {
-                    controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
-                    continue;
-                }
-                if (isController) {
-                    controllerSort.put(classBean.getSeedClz().getName(), sort);
-                    List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
-                    String controllerRouter = "";
-                    if (anotations.size() > 0) {
-                        ClassBean.AnotationInfo.AnotationValue value = anotations.get(0);
-                        controllerRouter = String.valueOf(value.getValue());
+                Type controllerAfter = null;
+                Type controllerBefore = null;
+                int sort = controllerSort.size();
+                for (ClassBean.AnotationInfo anotationInfo : classBean.getAnotations()) {
+                    boolean isController = anotationInfo.getType().getClassName().equals(Controller.class.getName());
+                    boolean isAfter = anotationInfo.getType().getClassName().equals(After.class.getName());
+                    boolean isBefore = anotationInfo.getType().getClassName().equals(Before.class.getName());
+                    if (isAfter) {
+                        controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
+                        continue;
                     }
-                    String prefixName = "";
-                    if (anotations.size() > 1) {
-                        ClassBean.AnotationInfo.AnotationValue prefix = anotationInfo.getValue().get(1);
-                        if (prefix.getValue().toString().trim().length() > 0) {
-                            prefixName = ".".concat(prefix.getValue().toString().toUpperCase());
+                    if (isBefore) {
+                        controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
+                        continue;
+                    }
+                    if (isController) {
+                        controllerSort.put(classBean.getSeedClz().getName(), sort);
+                        List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
+                        String controllerRouter = "";
+                        if (anotations.size() > 0) {
+                            ClassBean.AnotationInfo.AnotationValue value = anotations.get(0);
+                            controllerRouter = String.valueOf(value.getValue());
                         }
-                    }
-                    List<ClassBean.MethodInfo> methods = classBean.getMethods();
-                    for (ClassBean.MethodInfo methodInfo : methods) {
-                        String routerName = null;
-                        Type after = null, before = null;
-                        for (ClassBean.AnotationInfo methodAnotation : methodInfo.getAnotations()) {
-                            boolean isRouter = methodAnotation.getType().getClassName().equals(Router.class.getName());
-                            boolean isRouterAfter = methodAnotation.getType().getClassName().equals(After.class.getName());
-                            boolean isRouterBefore = methodAnotation.getType().getClassName().equals(Before.class.getName());
-                            if (!isRouter) {
-                                continue;
+                        String prefixName = "";
+                        if (anotations.size() > 1) {
+                            ClassBean.AnotationInfo.AnotationValue prefix = anotationInfo.getValue().get(1);
+                            if (prefix.getValue().toString().trim().length() > 0) {
+                                prefixName = ".".concat(prefix.getValue().toString().toUpperCase());
                             }
-                            if (isRouterAfter) {
-                                after = (Type) methodAnotation.getValue().get(0).getValue();
-                                continue;
+                        }
+                        List<ClassBean.MethodInfo> methods = classBean.getMethods();
+                        for (ClassBean.MethodInfo methodInfo : methods) {
+                            String routerName = null;
+                            Type after = null, before = null;
+                            for (ClassBean.AnotationInfo methodAnotation : methodInfo.getAnotations()) {
+                                boolean isRouter = methodAnotation.getType().getClassName().equals(Router.class.getName());
+                                boolean isRouterAfter = methodAnotation.getType().getClassName().equals(After.class.getName());
+                                boolean isRouterBefore = methodAnotation.getType().getClassName().equals(Before.class.getName());
+                                if (!isRouter) {
+                                    continue;
+                                }
+                                if (isRouterAfter) {
+                                    after = (Type) methodAnotation.getValue().get(0).getValue();
+                                    continue;
+                                }
+                                if (isRouterBefore) {
+                                    before = (Type) methodAnotation.getValue().get(0).getValue();
+                                    continue;
+                                }
+                                routerName = methodInfo.getName();
+                                if (methodAnotation.getValue().size() > 0) {
+                                    ClassBean.AnotationInfo.AnotationValue routerValue = methodAnotation.getValue().get(0);
+                                    if (!routerValue.getValue().equals("")) {
+                                        routerName = routerValue.getValue().toString();
+                                    }
+                                }
+                                List<String> restfulPar = new ArrayList<String>();
+                                if (perfix == null) perfix = "";
+                                else perfix = Utils.testRouter(perfix.concat("/"));
+                                routerName = Utils.parseSignFactor(routerName, restfulPar).replace(" %s ", ".*");
+                                String router = perfix.concat(Utils.testRouter(controllerRouter)).concat(Utils.testRouter(routerName));
+
+                                String p1 = prefixName;
+                                SeedRouter seedRouter = new SeedRouter();
+                                seedRouter.setRouterName(routerName.concat(p1));
+                                if (restfulPar.size() > 0) {
+                                    restfulList.add(router.concat(p1.replace(".", "\\.")).toUpperCase());
+                                    p1 = p1.replace(".", "\\.");
+                                    seedRouter.setRestfulPar(restfulPar);
+                                }
+                                routers.put(router.toUpperCase().concat(p1), seedRouter);
+                                seedRouter.setClassBean(classBean);
+                                seedRouter.setMethodInfo(methodInfo);
                             }
-                            if (isRouterBefore) {
-                                before = (Type) methodAnotation.getValue().get(0).getValue();
-                                continue;
-                            }
-                            routerName = methodInfo.getName();
-                            if (methodAnotation.getValue().size() > 0) {
-                                ClassBean.AnotationInfo.AnotationValue routerValue = methodAnotation.getValue().get(0);
-                                if (!routerValue.getValue().equals("")) {
-                                    routerName = routerValue.getValue().toString();
+                            if (after != null) {
+                                try {
+                                    Class clz = loader.loadClass(after.getClassName());
+                                    routerAfters.put(routerName, clz);
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                            List<String> restfulPar = new ArrayList<String>();
-                            if(perfix == null)perfix = "";else perfix = Utils.testRouter(perfix.concat("/"));
-                            routerName = Utils.parseSignFactor(routerName,restfulPar).replace(" %s ",".*");
-                            String router = perfix.concat(Utils.testRouter(controllerRouter)).concat(Utils.testRouter(routerName));
-
-                            String p1 = prefixName;
-                            SeedRouter seedRouter = new SeedRouter();
-                            seedRouter.setRouterName(routerName.concat(p1));
-                            if(restfulPar.size()>0){
-                                restfulList.add(router.concat(p1.replace(".", "\\.")).toUpperCase());
-                                p1 = p1.replace(".","\\.");
-                                seedRouter.setRestfulPar(restfulPar);
-                            }
-                            routers.put(router.toUpperCase().concat(p1), seedRouter);
-                            seedRouter.setClassBean(classBean);
-                            seedRouter.setMethodInfo(methodInfo);
-                        }
-                        if (after != null) {
-                            try {
-                                Class clz = loader.loadClass(after.getClassName());
-                                routerAfters.put(routerName, clz);
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
+                            if (before != null) {
+                                try {
+                                    Class clz = loader.loadClass(before.getClassName());
+                                    routerBefores.put(routerName, clz);
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                        if (before != null) {
-                            try {
-                                Class clz = loader.loadClass(before.getClassName());
-                                routerBefores.put(routerName, clz);
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        continue;
                     }
-                    continue;
+                }
+                if (controllerAfter != null) {
+                    try {
+                        Class clz = loader.loadClass(controllerAfter.getClassName());
+                        controllerAfters.put(sort, clz);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (controllerBefore != null) {
+                    try {
+                        Class clz = loader.loadClass(controllerBefore.getClassName());
+                        controllerBefores.put(sort, clz);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            if (controllerAfter != null) {
-                try {
-                    Class clz = loader.loadClass(controllerAfter.getClassName());
-                    controllerAfters.put(sort, clz);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (controllerBefore != null) {
-                try {
-                    Class clz = loader.loadClass(controllerBefore.getClassName());
-                    controllerBefores.put(sort, clz);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        createRouterArgsMapped();
+            createRouterArgsMapped();
         }
     }
 
@@ -481,28 +500,28 @@ public class SeedWeb {
                 }
             }
         }
-        HashMap<String,String> restfulResult = new HashMap<String, String>();
-        if(router == null){
-            for (String restfulPath : restfulList){
+        HashMap<String, String> restfulResult = new HashMap<String, String>();
+        if (router == null) {
+            for (String restfulPath : restfulList) {
 
-                if(routerName.matches(restfulPath) && routers.containsKey(restfulPath)){
+                if (routerName.matches(restfulPath) && routers.containsKey(restfulPath)) {
                     router = routers.get(restfulPath);
-                    String[] sp = restfulPath.replaceAll("\\.\\*","&").split("&");
+                    String[] sp = restfulPath.replaceAll("\\.\\*", "&").split("&");
                     String tempRouterName = routerName;
-                    for(String s:sp){
-                        tempRouterName = tempRouterName.replaceAll(s,"&");
+                    for (String s : sp) {
+                        tempRouterName = tempRouterName.replaceAll(s, "&");
                     }
                     int tempIndex = -1;
-                    if((tempIndex = tempRouterName.indexOf("&"))>=0){
+                    if ((tempIndex = tempRouterName.indexOf("&")) >= 0) {
                         String[] result = tempRouterName.split("&");
-                        int plus = tempIndex == 0?1:0;
-                        for(int i=0;i<router.getRestfulPar().size();i++){
+                        int plus = tempIndex == 0 ? 1 : 0;
+                        for (int i = 0; i < router.getRestfulPar().size(); i++) {
                             String key = router.getRestfulPar().get(i);
                             String value = null;
-                            if(i < result.length ){
-                                value = result[i+plus];
+                            if (i < result.length) {
+                                value = result[i + plus];
                             }
-                            restfulResult.put(key,value);
+                            restfulResult.put(key, value);
                         }
                     }
                     routerName = restfulPath;
@@ -572,16 +591,15 @@ public class SeedWeb {
                         ret = b2.invokeMethod("before");
                     }
                 } catch (Exception e) {
-                }finally {
-                    if(ret != null){
-                        if(ret instanceof Boolean){
-                            if(!(Boolean)ret){
+                } finally {
+                    if (ret != null) {
+                        if (ret instanceof Boolean) {
+                            if (!(Boolean) ret) {
                                 return new ErrorView(HttpResponseCode.CODE_401);
                             }
-                        }else
-                        if (ret instanceof View) {
+                        } else if (ret instanceof View) {
                             return (View) ret;
-                        }else{
+                        } else {
                             return new DefaultView(ret);
                         }
                     }
@@ -594,16 +612,15 @@ public class SeedWeb {
                         ret = b1.invokeMethod("before");
                     }
                 } catch (Exception e) {
-                }finally {
-                    if(ret != null){
-                        if(ret instanceof Boolean){
-                            if(!(Boolean)ret){
+                } finally {
+                    if (ret != null) {
+                        if (ret instanceof Boolean) {
+                            if (!(Boolean) ret) {
                                 return new ErrorView(HttpResponseCode.CODE_401);
                             }
-                        }else
-                        if (ret instanceof View) {
+                        } else if (ret instanceof View) {
                             return (View) ret;
-                        }else{
+                        } else {
                             return new DefaultView(ret);
                         }
                     }
@@ -630,17 +647,17 @@ public class SeedWeb {
                     Object[] params = null;
                     if (router.hasRequestBody()) {
                         try {
-                            params = execLogicRequestBody(routerName, router, request,restfulResult);
+                            params = execLogicRequestBody(routerName, router, request, restfulResult);
                         } catch (ParamUnSupportException e) {
                             return new ErrorView(HttpResponseCode.CODE_415);
                         }
                     } else {
-                        params = execLogicNormal(routerName, request.getValues(), router,restfulResult);
+                        params = execLogicNormal(routerName, request.getValues(), router, restfulResult,threadLocal.get());
                     }
 
                     boolean isVoid = router.getMethodInfo().getType().getReturnType().getClassName().equals("void");
                     Object seedExcuteItrf = threadLocal.get();
-                    Object result = ((SeedExcuteItrf)seedExcuteItrf).invokeMethod(router.getMethodInfo().getName(), params);
+                    Object result = ((SeedExcuteItrf) seedExcuteItrf).invokeMethod(router.getMethodInfo().getName(), params);
                     if (isVoid) {
                         return null;
                     }
@@ -684,8 +701,7 @@ public class SeedWeb {
                 } else {
                     throw new ParamUnSupportException(String.format("contentType[%s]不被RequestBody支持", contentType));
                 }
-            }else
-            if(restfulResult.containsKey(localVar.getName())){
+            } else if (restfulResult.containsKey(localVar.getName())) {
                 value = restfulResult.get(localVar.getName());
             }
             params[i] = value;
@@ -693,22 +709,51 @@ public class SeedWeb {
         return params;
     }
 
-    private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router, HashMap<String, String> restfulResult) {
+    private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router, HashMap<String, String> restfulResult, Object controller) {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
         HashMap<String, ClassBean> mapped = argsMapped.get(routerName.toUpperCase());
         HashMap<String, Integer> sorts = router.getMethodInfo().getArgsSort();
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             ClassBean classBean = mapped.get(key);
-            if(!router.getMethodInfo().getArgsSort().containsKey(key))continue;
+            if (!router.getMethodInfo().getArgsSort().containsKey(key)) continue;
             Integer index = router.getMethodInfo().getArgsSort().get(key);
-            Type type = router.getMethodInfo().getArgs()[index];
-//            if(restfulResult.containsKey(key))
-            if (classBean == null && (type.getSort() != 10 || type.getClassName().equals(String.class.getName()))) {
-                if (sorts.containsKey(key))
-                    params[sorts.get(key)] = (values.get(key));
-                continue;
+            ClassBean.MethodInfo.LocalVar var = router.getMethodInfo().getLocalVars().get(index);
+            ClassLoader classLoader = controller.getClass().getClassLoader();
+            try {
+                Class clz = classLoader.loadClass(var.getType().getClassName());
+                if (classBean == null && (Number.class.isAssignableFrom(clz) || String.class.isAssignableFrom(clz))) {
+                    if (sorts.containsKey(key))
+                        params[sorts.get(key)] = PrimaryUtil.cast(values.get(key), var.getType());
+                    continue;
+                }else if(Collection.class.isAssignableFrom(clz) && var.getSignatureTypes().size() == 2){
+                    String className = var.getSignatureTypes().get(0).replace("/", ".");
+                    Class genicClz = classLoader.loadClass(className);
+
+                    if(Number.class.isAssignableFrom(genicClz) || String.class.isAssignableFrom(genicClz)){
+                        Collection list = null;
+                        if(clz.isInterface()){
+                            list = new LinkedList();
+                        }else{
+                            list = (Collection) clz.newInstance();
+                        }
+                        Collection result = (Collection) values.get(key);
+                        for(Iterator it2 = result.iterator();it2.hasNext();){
+                            Object val = it2.next();
+                            list.add(PrimaryUtil.cast(val,genicClz));
+                        }
+                        params[sorts.get(key)] = list;
+                        continue;
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
+
             try {
                 SeedExcuteItrf execute = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
                 execute.invokeMethod(productSetMethodName(key), values.get(key));
@@ -722,8 +767,8 @@ public class SeedWeb {
                 e.printStackTrace();
             }
         }
-        if(restfulResult.size()>0){
-            for(Iterator<String> it = restfulResult.keySet().iterator(); it.hasNext();){
+        if (restfulResult.size() > 0) {
+            for (Iterator<String> it = restfulResult.keySet().iterator(); it.hasNext(); ) {
                 String key = it.next();
                 params[sorts.get(key)] = (restfulResult.get(key));
             }
@@ -745,7 +790,7 @@ public class SeedWeb {
 
     public void setWebHtml(String webHtml) {
         SeedWeb.WEB_HTML_PATH = webHtml.replace(".", "/");
-        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader,webHtml));
+        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader, webHtml));
     }
 
     public void setWebPublic(String webPublic) {
@@ -753,10 +798,10 @@ public class SeedWeb {
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             String value = values.get(key);
-            SeedPath path = new SeedPath(key, value);
+            SeedPath path = new SeedPath(key, value, loader);
             publicPaths.put(key.toUpperCase(), path);
 
-            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader,path.getPath()));
+            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader, path.getPath()));
         }
     }
 
@@ -764,10 +809,10 @@ public class SeedWeb {
         try {
             if (Integer.parseInt(activeRecord) == 1) {
                 HikariConfig config = new HikariConfig();
-                if(jdbcUrl != null){
+                if (jdbcUrl != null) {
                     config.setJdbcUrl(jdbcUrl);
                 }
-                if(driver !=null){
+                if (driver != null) {
                     config.setDriverClassName(driver);
                 }
 
@@ -779,7 +824,7 @@ public class SeedWeb {
                     config.addDataSourceProperty("databaseName", databaseName);
                     config.addDataSourceProperty("user", userName);
                     config.addDataSourceProperty("password", passWord);
-                }else{
+                } else {
                     config.setUsername(userName);
                     config.setPassword(passWord);
                 }
@@ -805,7 +850,9 @@ public class SeedWeb {
                         }
                     }
                 });
-                Context.add(database);
+                Class context = loader.loadClass(Context.class.getName());
+                Method method = context.getMethod("add",Object.class);
+                method.invoke(null,database);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,6 +17,11 @@
             <artifactId>seed-base</artifactId>
             <version>0.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.opdar.seed</groupId>
+            <artifactId>seed-aop</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

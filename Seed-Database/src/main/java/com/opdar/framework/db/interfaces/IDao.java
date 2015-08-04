@@ -18,6 +18,11 @@ import java.util.Map;
 public interface IDao<T>{
     IDao<T> addMapper(String mapper);
     IDao<T> clearMapper();
+
+    <D>IDao<D> EXTEND(Class<D> clz);
+
+    IDao<T> CloseExtend();
+
     IDao<T> INSERT(T o);
     IDao<T> JOIN(Join join,String tableName,String synx);
     IDao<T> UPDATE(T o);
@@ -40,6 +45,8 @@ public interface IDao<T>{
     IDao<T> openTransaction() throws SQLException;
 
     IDao<T> commit() throws SQLException;
+
+    IDao<T> rollback() throws SQLException;
 
     void excute(String sql);
     StringBuilder getSqlBuilder();
