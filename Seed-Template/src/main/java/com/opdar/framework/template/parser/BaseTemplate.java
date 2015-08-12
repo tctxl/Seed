@@ -6,6 +6,7 @@ import com.opdar.framework.template.utils.TemplateUtil;
 
 import java.io.StringWriter;
 import java.nio.CharBuffer;
+import java.util.HashMap;
 
 /**
  * Created by 俊帆 on 2015/8/3.
@@ -24,6 +25,7 @@ public class BaseTemplate implements Template {
 
     private StringBuilder contentBuilder = new StringBuilder();
     Part part;
+    private HashMap globalVars = new HashMap();
 
     private ClassPathResourceLoader resourceLoader;
 
@@ -38,7 +40,7 @@ public class BaseTemplate implements Template {
     @Override
     public String parse(Object object) {
         StringWriter sw = new StringWriter();
-        TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL,resourceLoader);
+        TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL,resourceLoader, globalVars);
         return sw.toString();
     }
 

@@ -12,6 +12,7 @@ import java.util.Map;
 public class ValueUtil {
     public static Object get(Object values,String fieldName){
         if(values instanceof Map){
+            if(!((Map) values).containsKey(fieldName))return null;
             return ((Map) values).get(fieldName);
         }else{
             if(values instanceof SeedExcuteItrf){

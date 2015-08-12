@@ -15,6 +15,10 @@ public abstract class Loader {
         return currentPath;
     }
 
+    public String getCharsetName() {
+        return charsetName;
+    }
+
     public void setCharsetName(String charsetName) {
         this.charsetName = charsetName;
     }

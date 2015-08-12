@@ -4,6 +4,7 @@ import com.opdar.framework.template.utils.ValueUtil;
 
 import java.io.StringWriter;
 import java.nio.CharBuffer;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,21 +53,25 @@ public class Parser {
         }
     }
 
-    public void parse(Object object,StringWriter sw){
+    public void parse(Object object, StringWriter sw, HashMap<String, Object> vars){
         for(int i=0;i<contentTable.size();i++){
             sw.write(contentTable.get(i));
             if(i!=contentTable.size()-1){
                 String param = params.get(i);
                 if(param.indexOf(".") > 0){
                     String[] par = param.split("\\.");
-                    Object o = object;
+                    Object o = ValueUtil.get(vars, param);
+                    if(o == null)
+                    o = object;
                     for(String s:par){
                         o = ValueUtil.get(o,s);
                     }
                     if(o == null)o = "";
                     sw.write(o.toString());
                 }else{
-                    Object o = ValueUtil.get(object,param);
+                    Object o = ValueUtil.get(vars,param);
+                    if(o == null)
+                    o = ValueUtil.get(object,param);
                     if(o == null)o = "";
                     sw.write(o.toString());
                 }

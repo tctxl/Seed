@@ -1,6 +1,12 @@
 package com.opdar.framework.utils;
 
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
 import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 /**
@@ -26,6 +32,7 @@ public class Utils {
         char c = (char) (((b[0] & 0xFF) << 8) | (b[1] & 0xFF));
         return c;
     }
+
 
     public static String decodeUnicode(String theString) {
         char aChar;
@@ -189,7 +196,7 @@ public class Utils {
     }
 
     public static void save(byte[] code) {
-        String filename = UUID.randomUUID().toString().replace("-","");
+        String filename = UUID.randomUUID().toString().replace("-","")+".class";
         try {
             File file;
             FileOutputStream fos = new FileOutputStream(file = new File(filename));

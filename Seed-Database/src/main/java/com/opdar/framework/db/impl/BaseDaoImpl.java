@@ -269,8 +269,9 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> DELETE(T o) {
+    public IDao<T> DELETE() {
         clear();
+        sqlBuilder.append("DELETE FROM ").append(tableName);
         return this;
     }
 

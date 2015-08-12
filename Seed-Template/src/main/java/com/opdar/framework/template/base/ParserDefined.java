@@ -81,6 +81,7 @@ public class ParserDefined {
                 continue;
             }else if(!isFuncParse && isExpressionOpen && c == ')'){
                 skipBracket--;
+                continue;
             }
             if (!isFuncParse && PROGRAM_STAT == 1 && c == '(') {
                 isExpressionOpen = true;
@@ -103,7 +104,7 @@ public class ParserDefined {
                 }
                 else new Throwable("Error");
                 continue;
-            }else if(!isFuncParse && isProgramOpen && c == '}'){
+            }else if(!isFuncParse && !isExpressionOpen && isProgramOpen && c == '}'){
                 skipBrace--;
             }
             if (!isFuncParse && PROGRAM_STAT == 2 && c == '{') {
@@ -128,10 +129,4 @@ public class ParserDefined {
         return part;
     }
 
-    public static void main(String[] args) {
-        String s = "var b=1;if(){if(){if(){}}};var a=1;";
-        ParserDefined defined = new ParserDefined();
-        Part part = defined.parse(s);
-        System.out.println(part);
-    }
 }

@@ -266,14 +266,6 @@ public class SeedWeb {
                 if (c.isAnonymousClass()) continue;
                 SeedInvoke.init(c);
                 ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
-                try {
-                    SeedExcuteItrf ex = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
-                    ex.invokeMethod("index", "");
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
                 Type controllerAfter = null;
                 Type controllerBefore = null;
                 int sort = controllerSort.size();

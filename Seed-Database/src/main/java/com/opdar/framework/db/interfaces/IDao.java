@@ -26,7 +26,7 @@ public interface IDao<T>{
     IDao<T> INSERT(T o);
     IDao<T> JOIN(Join join,String tableName,String synx);
     IDao<T> UPDATE(T o);
-    IDao<T> DELETE(T o);
+    IDao<T> DELETE();
 
     IDao<T> setFilter(MappingFilter filter);
 
