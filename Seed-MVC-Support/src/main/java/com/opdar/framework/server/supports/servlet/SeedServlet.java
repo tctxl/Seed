@@ -59,9 +59,12 @@ public class SeedServlet extends GenericServlet {
             if(((HttpServletRequest) servletRequest).getMethod().equals("POST")){
                 byte[] data = Utils.is2byte(servletRequest.getInputStream());
                 HttpParser parser = web.getParser(request.getContentType());
-                Object result = parser.execute(data);
+                Object result = null;
+                if(parser != null){
+                    result = parser.execute(data);
+                }
 
-                if(result instanceof Map) {
+                if(result!= null && result instanceof Map) {
                     request.putValues((Map<String, Object>) result);
                 }
                 request.setBody(data);

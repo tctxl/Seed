@@ -125,4 +125,14 @@ public class JSONArray extends AbstractList<Object> {
 	public void trimToSize() {
 		arrays.trimToSize();
 	}
+
+
+	public <T> List<T> getArray(Class<T> clz) {
+		List<T> list = new ArrayList<T>();
+		for(int i=0;i<size();i++){
+			JSONObject object = getJSONObject(i);
+			list.add(object.getObject(clz));
+		}
+		return list;
+	}
 }

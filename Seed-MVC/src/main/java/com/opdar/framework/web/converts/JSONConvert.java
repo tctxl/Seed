@@ -1,6 +1,6 @@
 package com.opdar.framework.web.converts;
 
-import com.alibaba.fastjson.JSON;
+import com.opdar.framework.utils.yeson.YesonParser;
 import com.opdar.framework.web.interfaces.HttpConvert;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
@@ -25,16 +25,17 @@ public class JSONConvert implements HttpConvert {
     }
 
     public Object readBody(byte[] buffer, Type type) {
-        if(type instanceof ParameterizedType){
+        YesonParser parser = new YesonParser();
+        if (type instanceof ParameterizedType) {
             ParameterizedTypeImpl clz = (ParameterizedTypeImpl) type;
-            if(Collection.class.isAssignableFrom(clz.getRawType())){
+            if (Collection.class.isAssignableFrom(clz.getRawType())) {
                 try {
-                    return JSON.parseArray(new String(buffer,"utf-8"), clz.getActualTypeArguments());
+                    return parser.parseArray(new String(buffer, "utf-8"), (Class<Object>) clz.getActualTypeArguments()[0]);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return JSON.parseObject(buffer,type);
+        return parser.parseObject(new String(buffer), (Class<Object>) type);
     }
 }

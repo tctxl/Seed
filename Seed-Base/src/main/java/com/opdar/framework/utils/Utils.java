@@ -137,6 +137,7 @@ public class Utils {
     }
 
     public static String testField(String field) {
+        if(field.length() == 1)return field.toUpperCase();
         if (field.indexOf("is") == 0) {
             field = field.replaceFirst("is", "");
         }

@@ -1,9 +1,10 @@
 package com.opdar.framework.web.views;
 
-import com.alibaba.fastjson.JSON;
+import com.opdar.framework.utils.yeson.YesonParser;
 import com.opdar.framework.web.common.HttpResponseCode;
 import com.opdar.framework.web.interfaces.View;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -24,11 +25,17 @@ public class JSONView implements View {
     }
 
     public byte[] renderView() {
-        return JSON.toJSONBytes(result);
+        YesonParser parser = new YesonParser();
+        try {
+            return parser.toJSONString(result).getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
 
     public String contentType() {
-        return "application/yeson";
+        return "application/json";
     }
 
     public int getCode() {
