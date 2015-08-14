@@ -17,14 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 /**
  * Created by 俊帆 on 2015/7/23.
  */
 public class CPLoader extends URLClassLoader {
 
-    public static HashMap<String, JSONObject> packages = new HashMap<String, JSONObject>();
-    public static HashMap<String, CPLoader> loaders = new HashMap<String, CPLoader>();
+    private Logger logger = Logger.getLogger(CPLoader.class.getName());
+
+    public final static HashMap<String, JSONObject> packages = new HashMap<String, JSONObject>();
+    public final static HashMap<String, CPLoader> loaders = new HashMap<String, CPLoader>();
 
     public static CPLoader getLoader(String module){
         return loaders.get(module);
@@ -38,7 +41,7 @@ public class CPLoader extends URLClassLoader {
         super(new URL[]{}, Thread.currentThread().getContextClassLoader());
     }
 
-    public Class<?> defineCls(String name, byte[] b){
+    public Class defineCls(String name, byte[] b){
         return defineClass(name,b,0,b.length);
     }
 
@@ -58,7 +61,7 @@ public class CPLoader extends URLClassLoader {
         }
     }
 
-    public Class<?> findClass(String name) throws ClassNotFoundException {
+    public Class findClass(String name) throws ClassNotFoundException {
         return super.findClass(name);
     }
 
@@ -72,7 +75,6 @@ public class CPLoader extends URLClassLoader {
     public void loadJarFile(File file) {
         try {
             addURL(file.toURI().toURL());
-            System.out.println("Loaded Jar：" + file.getAbsolutePath());
             JarFile jarFile = new JarFile(file);
             JarEntry entry = jarFile.getJarEntry("package.json");
             InputStream is = jarFile.getInputStream(entry);
@@ -81,14 +83,22 @@ public class CPLoader extends URLClassLoader {
                 String packageJSON = new String(Utils.read(is), "utf-8");
                 YesonParser parser = new YesonParser();
                 JSONObject object = parser.parse(packageJSON);
-                packages.put(object.get("module-name").toString(), object);
-                loaders.put(object.get("module-name").toString(),this);
+                packages.put(getModuleName(object), object);
+                loaders.put(getModuleName(object),this);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.fine("Load jar file [".concat(file.getAbsolutePath()).concat("] failure!"));
         }
     }
 
+    /**
+     * 获取模块名称
+     * @param object
+     * @return
+     */
+    private String getModuleName(JSONObject object) {
+        return object.get("module-name").toString();
+    }
 
     /**
      * <pre>

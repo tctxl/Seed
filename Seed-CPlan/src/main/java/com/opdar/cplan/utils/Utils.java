@@ -9,6 +9,7 @@ import java.io.InputStream;
  */
 public class Utils {
 
+    private Utils(){}
 
     public static byte[] read(InputStream inputStream) throws IOException {
         ByteArrayOutputStream arrayBuffer = new ByteArrayOutputStream();
