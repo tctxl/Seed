@@ -2,7 +2,9 @@
 专注于快速Web开发
 
 ##Seed-MVC
-目前文档尚不完善，使用方法可参考[stbackground](https://git.oschina.net/opdar/stbackground)
+目前文档尚不完善，目前正在完善中，使用方法可参考[stbackground](https://git.oschina.net/opdar/stbackground)
+
+附件中有[QuickStart文档](https://git.oschina.net/opdar/Seed/attach_files)，5分钟上手使用。
 
 Seed-MVC目前支持Restful形式的接口，可自定义各种返回视图，接口参数支持自定义Content-Type实现定制化的参数流，参数支持RequestBody用法类似于SpringMvc并且更灵活，可支持对象数组。
 
