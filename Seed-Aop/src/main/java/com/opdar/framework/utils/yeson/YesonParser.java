@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.BatchUpdateException;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class YesonParser {
@@ -64,6 +65,8 @@ public class YesonParser {
                         JSONConvert convert = converts.get(field.getType());
                         Object result = convert.convert(field.get(o));
                         builder.append(result);
+                    }else{
+                        builder.append("null");
                     }
                     builder.append(",");
                 } catch (IllegalAccessException e) {
@@ -94,19 +97,25 @@ public class YesonParser {
         converts.put(String.class, new StringConvert());
         converts.put(int.class, new IntegerConvert());
         converts.put(short.class, new IntegerConvert());
-        converts.put(long.class, new IntegerConvert());
+        converts.put(long.class, new LongConvert());
         converts.put(char.class, new CharConvert());
         converts.put(float.class, new FloatConvert());
         converts.put(double.class, new DoubleConvert());
         converts.put(byte.class, new ByteConvert());
         converts.put(Integer.class, new IntegerConvert());
         converts.put(Short.class, new IntegerConvert());
-        converts.put(Long.class, new IntegerConvert());
+        converts.put(Long.class, new LongConvert());
         converts.put(Character.class, new CharConvert());
         converts.put(Float.class, new FloatConvert());
         converts.put(Double.class, new DoubleConvert());
         converts.put(Byte.class, new ByteConvert());
         converts.put(Number.class, new NumberConvert());
+        converts.put(Timestamp.class, new TimestapConvert());
+        converts.put(Date.class, new DateConvert());
+    }
+
+    public void addConvert(Class type,JSONConvert convert){
+        converts.put(type,convert);
     }
 
     public JSONObject parse(String json) {
