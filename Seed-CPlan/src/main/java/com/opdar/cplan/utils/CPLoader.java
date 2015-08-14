@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class CPLoader extends URLClassLoader {
 
-    private Logger logger = Logger.getLogger(CPLoader.class.getName());
+    private static final Logger logger = Logger.getLogger(CPLoader.class.getName());
 
     public final static HashMap<String, JSONObject> packages = new HashMap<String, JSONObject>();
     public final static HashMap<String, CPLoader> loaders = new HashMap<String, CPLoader>();

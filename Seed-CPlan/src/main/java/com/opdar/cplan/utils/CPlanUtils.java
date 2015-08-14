@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  */
 public class CPlanUtils {
 
-    static Logger logger = Logger.getLogger(CPlanUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(CPlanUtils.class.getName());
 
     private CPlanUtils() {
     }
