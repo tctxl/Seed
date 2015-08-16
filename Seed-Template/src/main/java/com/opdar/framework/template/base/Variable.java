@@ -24,7 +24,7 @@ public class Variable {
 
     public Variable(String var) {
         var = var.substring(4);
-        String[] t = var.split("=");
+        String[] t = var.split("=",2);
         name = t[0].trim();
         exp = t[1].trim();
     }
@@ -32,5 +32,9 @@ public class Variable {
     @Override
     public String toString() {
         return exp+"";
+    }
+
+    public static void main(String[] args) {
+        new Variable("var a= 1==1;");
     }
 }

@@ -23,7 +23,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="seed-base" />
-    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.1.46" level="project" />
     <orderEntry type="module" module-name="seed-aop" />
     <orderEntry type="module" module-name="seed-mvc" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP-java6:2.3.2" level="project" />

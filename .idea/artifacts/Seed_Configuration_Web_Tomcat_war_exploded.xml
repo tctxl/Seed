@@ -10,7 +10,6 @@
           <element id="archive" name="seed-base-0.1.0.jar">
             <element id="module-output" name="seed-base" />
           </element>
-          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.1.46" />
           <element id="archive" name="seed-aop-0.1.0.jar">
             <element id="module-output" name="seed-aop" />
           </element>
