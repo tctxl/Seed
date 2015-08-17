@@ -43,6 +43,10 @@ public class YesonParser {
     }
 
     public String toJSONString(Object o) {
+        if(o instanceof String) return (String)o;
+        if(o instanceof Boolean) return String.valueOf(o);
+        if(o instanceof Number) return String.valueOf(o);
+
         Class clz = o.getClass();
         if (o instanceof SeedExcuteItrf) {
             clz = clz.getSuperclass();

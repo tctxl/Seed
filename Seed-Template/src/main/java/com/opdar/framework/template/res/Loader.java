@@ -1,5 +1,6 @@
 package com.opdar.framework.template.res;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 public abstract class Loader {
     protected String currentPath = "";
     protected String charsetName = "utf-8";
-    public abstract InputStream load(String path);
+    public abstract InputStream load(String path) throws FileNotFoundException;
 
     public String getCurrentPath() {
         return currentPath;

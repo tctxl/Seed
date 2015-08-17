@@ -2,6 +2,7 @@ package com.opdar.framework.template.parser;
 
 import com.opdar.framework.template.base.ParserDefined;
 import com.opdar.framework.template.base.Part;
+import com.opdar.framework.template.res.Loader;
 import com.opdar.framework.template.utils.TemplateUtil;
 
 import java.io.StringWriter;
@@ -27,9 +28,9 @@ public class BaseTemplate implements Template {
     Part part;
     private HashMap globalVars = new HashMap();
 
-    private ClassPathResourceLoader resourceLoader;
+    private Loader resourceLoader;
 
-    public BaseTemplate(String content, CharBuffer contentBuffer, ClassPathResourceLoader loader) {
+    public BaseTemplate(String content, CharBuffer contentBuffer, Loader loader) {
         this.content = content;
         findProgram(contentBuffer);
         ParserDefined parserDefined = new ParserDefined();
@@ -40,7 +41,7 @@ public class BaseTemplate implements Template {
     @Override
     public String parse(Object object) {
         StringWriter sw = new StringWriter();
-        TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL,resourceLoader, globalVars);
+        TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL, resourceLoader, globalVars);
         return sw.toString();
     }
 

@@ -1,5 +1,7 @@
 package com.opdar.framework.template.parser;
 
+import com.opdar.framework.template.res.Loader;
+
 import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,7 +36,7 @@ public class Resolver {
         System.out.println(System.currentTimeMillis() - time);
     }
 
-    public Resolver(String content, ClassPathResourceLoader loader) {
+    public Resolver(String content, Loader loader) {
         CharBuffer contentBuffer = CharBuffer.wrap(content);
         template = new BaseTemplate(content, contentBuffer ,loader);
     }

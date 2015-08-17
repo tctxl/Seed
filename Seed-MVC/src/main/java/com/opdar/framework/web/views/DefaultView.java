@@ -25,7 +25,7 @@ public class DefaultView implements View {
     }
 
     public byte[] renderView() {
-        if(result instanceof String){
+        if(result instanceof String ){
             try {
                 return result.toString().getBytes("utf-8");
             } catch (UnsupportedEncodingException e) {

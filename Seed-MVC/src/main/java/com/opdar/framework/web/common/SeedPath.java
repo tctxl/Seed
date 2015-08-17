@@ -4,9 +4,13 @@ import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.SeedWeb;
 
 import java.io.*;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Created by Jeffrey on 2015/4/20.
@@ -24,11 +28,35 @@ public class SeedPath {
     private String mapping;
     private ClassLoader loader;
 
+    public Map<String,String> pathMappings = new HashMap<String,String>();
     public SeedPath(String key, String value, ClassLoader loader) {
         mapping = key.toUpperCase();
         String path = Utils.getClassPath(value);
         if(path != null){
             pathType = 1;
+            JarFile jar = null;
+            try {
+                URL url = loader.getResource(key.substring(1));
+                if(url != null){
+                    String protocol = url.getProtocol();
+                    if(protocol.equals("jar")){
+                        jar = ((JarURLConnection)loader.getResource(key.substring(1)).openConnection()).getJarFile();;
+                        Enumeration<JarEntry> entries = jar.entries();
+                        while (entries.hasMoreElements()) {
+                            JarEntry entry = entries.nextElement();
+                            String name = entry.getName();
+                            String publick = key.substring(1).concat("/");
+                            if(name.indexOf(publick) == 0){
+                                name = name.replace(publick, "");
+                                pathMappings.put(name.toUpperCase(),name);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }else{
             path = value;
         }
@@ -73,6 +101,10 @@ public class SeedPath {
             }
             return new FileInputStream(f);
         }else if(pathType == 1){
+            if(pathMappings.containsKey(file.toUpperCase())){
+                file = pathMappings.get(file.toUpperCase());
+                path = this.path + file;
+            }
             return loader.getResourceAsStream(path);
         }
         return null;
