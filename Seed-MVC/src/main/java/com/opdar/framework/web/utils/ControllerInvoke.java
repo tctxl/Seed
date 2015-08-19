@@ -6,6 +6,7 @@ import com.opdar.framework.asm.Type;
 import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.*;
+import com.opdar.framework.web.common.Context;
 import com.opdar.framework.web.common.ControllerAct;
 import com.opdar.framework.web.common.SeedRouter;
 
@@ -59,6 +60,7 @@ public class ControllerInvoke {
                         }
                     }
                     List<ClassBean.MethodInfo> methods = classBean.getMethods();
+
                     scanRouter(perfix, loader, classBean, controllerRouter, prefixName, methods ,act);
                     continue;
                 }

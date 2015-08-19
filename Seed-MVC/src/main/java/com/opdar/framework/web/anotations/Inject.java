@@ -6,12 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by Jeffrey on 2015/4/11.
- * E-Mail:shijunfan@163.com
- * Site:opdar.com
- * QQ:362116120
+ * Created by 俊帆 on 2015/8/19.
  */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Injection {
+public @interface Inject {
 }

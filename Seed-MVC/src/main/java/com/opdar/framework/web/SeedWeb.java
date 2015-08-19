@@ -10,6 +10,7 @@ import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.PrimaryUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
+import com.opdar.framework.web.anotations.Inject;
 import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.exceptions.ParamUnSupportException;
 import com.opdar.framework.web.interfaces.HttpConvert;
@@ -30,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.activation.MimetypesFileTypeMap;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -374,6 +376,25 @@ public class SeedWeb {
         if (threadLocal.get() == null) {
             try {
                 threadLocal.set(router.getClassBean().getSeedClz().newInstance());
+                ClassBean bean = router.getClassBean();
+                for(ClassBean.FieldInfo fieldInfo:bean.getField()){
+                    Inject inject = fieldInfo.getField().getAnnotation(Inject.class);
+                    if(inject != null){
+                        try {
+                            ClassLoader loader = router.getClassBean().getSeedClz().getClassLoader();
+                            Class context = loader.loadClass(Context.class.getName());
+                            Method method = context.getMethod("get", Class.class);
+                            Object o = method.invoke(null, fieldInfo.getField().getType());
+                            fieldInfo.getField().set(threadLocal.get(),o);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
