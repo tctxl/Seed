@@ -35,5 +35,4 @@ public class ClassPathResourceLoader extends Loader {
         return loader.getResourceAsStream(path);
     }
 
-
 }

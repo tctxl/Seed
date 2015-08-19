@@ -11,5 +11,19 @@
 
     <artifactId>seed-extra</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.opdar.seed</groupId>
+            <artifactId>seed-mvc</artifactId>
+            <version>0.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.opdar.seed</groupId>
+            <artifactId>seed-template</artifactId>
+            <version>0.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>

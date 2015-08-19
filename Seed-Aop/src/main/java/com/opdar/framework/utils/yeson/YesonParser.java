@@ -90,6 +90,8 @@ public class YesonParser {
             builder.append("[");
             for(Iterator it = collection.iterator();it.hasNext();){
                 builder.append(toJSONString(it.next()));
+                if(it.hasNext())
+                    builder.append(",");
             }
             builder.append("]");
         }else{

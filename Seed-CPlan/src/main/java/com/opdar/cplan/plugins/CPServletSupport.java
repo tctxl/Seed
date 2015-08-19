@@ -11,12 +11,10 @@ import com.opdar.framework.utils.yeson.JSONObject;
 import com.opdar.framework.web.SeedWeb;
 import com.opdar.framework.web.common.Context;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContextEvent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
 
 /**
  * Created by 俊帆 on 2015/7/24.
