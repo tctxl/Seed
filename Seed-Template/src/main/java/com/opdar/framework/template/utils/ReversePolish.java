@@ -19,7 +19,7 @@ public class ReversePolish {
     private LinkedList<Character> exp = new LinkedList<Character>();
 
     public static void main(String[] args) {
-        System.out.println(new ReversePolish().execute("\"a\" == \"a\""));
+        System.out.println(new ReversePolish().execute("1 != 1 | false | false"));
     }
 
     public String execute(String s) {
@@ -29,11 +29,85 @@ public class ReversePolish {
         int newExp = 0;
         boolean isMulDiv = false;
         boolean isStr = false;
+        int lastToken = -1;
+        boolean lastResult = false;
         int token = 0;
         while (buffer.length() != 0) {
             char c = buffer.get();
             if (c == '\"') {
                 isStr = !isStr;
+            }
+            if(!isStr && (c == '&' || c =='|')){
+                char c2 = buffer.get();
+                int logicToken = -1;
+                if(c == '&'){
+                    logicToken = 10;
+                    if(c2 == '&'){
+                        logicToken = 11;
+                    }else if(c2 == '|'){
+                        System.out.println("parse error");
+                    }else{
+                        buffer.position(buffer.position()-1);
+                    }
+                }else if(c == '|'){
+                    logicToken = 12;
+                    if(c2 == '|'){
+                        logicToken = 13;
+                    }else if(c2 == '&'){
+                        System.out.println("parse error");
+                    }else{
+                        buffer.position(buffer.position()-1);
+                    }
+                }
+                values.push(builder.toString());
+                if(lastToken == -1){
+                    token = executeToken(token);
+                    boolean t = Boolean.parseBoolean(values.pollLast());
+                    values.clear();
+                    lastResult = t;
+                }else
+                if(lastToken == 11){
+                    //&&
+                    boolean t = lastResult;
+                    if(!t){
+                        values.clear();
+                        values.push(String.valueOf(t));
+                        builder.delete(0, builder.length());
+                        break;
+                    }
+                    token = executeToken(token);
+                    boolean t2 = Boolean.parseBoolean(values.pollLast());
+                    values.clear();
+                    lastResult=lastResult && t2;
+                }else
+                if(lastToken == 13){
+                    //||
+                    boolean t = lastResult;
+                    if(t){
+                        values.clear();
+                        values.push(String.valueOf(t));
+                        builder.delete(0, builder.length());
+                        break;
+                    }
+                    token = executeToken(token);
+                    boolean t2 = Boolean.parseBoolean(values.pollLast());
+                    values.clear();
+                    lastResult=lastResult || t2;
+                }else if(lastToken == 10){
+                    //& |
+                    token = executeToken(token);
+                    boolean t = Boolean.parseBoolean(values.pollLast());
+                    values.clear();
+                    lastResult=lastResult & t;
+                }else if(lastToken == 12){
+                    token = executeToken(token);
+                    boolean t = Boolean.parseBoolean(values.pollLast());
+                    values.clear();
+                    lastResult=lastResult | t;
+                }
+                builder.delete(0, builder.length());
+                lastToken = logicToken;
+                continue;
             }
             if (!isStr) {
                 if (c == ' ') continue;
@@ -69,6 +143,8 @@ public class ReversePolish {
                     } else if (c == '=' && c2 != '=') {
                         token = 0;
                         System.out.println("parse error" + c);
+                    }else{
+                        buffer.position(buffer.position()-1);
                     }
 
                     values.push(builder.toString());
@@ -130,8 +206,36 @@ public class ReversePolish {
         }
         if (isMulDiv) {
             mulDiv();
-            isMulDiv = false;
         }
+        token = executeToken(token);
+        if(lastToken != - 1){
+            boolean t = Boolean.parseBoolean(values.pollLast());
+            if(lastToken == 11){
+                values.push(String.valueOf(lastResult && t));
+            }else
+            if(lastToken == 13){
+                values.push(String.valueOf(lastResult || t));
+            }else if(lastToken == 10){
+                //& |
+                values.push(String.valueOf(lastResult & t));
+            }else if(lastToken == 12){
+                values.push(String.valueOf(lastResult | t));
+            }
+        }
+        while (values.size() != 1) {
+            String s1 = values.pollLast();
+            String s2 = values.pollLast();
+            values.addLast(calculate(s1, exp.pollLast(), s2));
+        }
+        String result = values.pop();
+        if (exp.size() > 0) result = exp.pop() + result;
+        if (result.indexOf("\"") == 0 || result.lastIndexOf("\"") == result.length() - 1) {
+            result = result.substring(1, result.length() - 1);
+        }
+        return result;
+    }
+
+    private int executeToken(int token) {
         if (token > 0) {
             if (values.size() == 2) {
                 String s1 = values.pollLast();
@@ -168,25 +272,15 @@ public class ReversePolish {
                             values.push(String.valueOf(!s1.equals(s2)));
                             break;
                         default:
-                            System.out.println("parse error");
+                            System.out.println("parse error number");
                             break;
                     }
                 }
             } else {
-                System.out.println("parse error");
+                System.out.println("parse error token");
             }
         }
-        while (values.size() != 1) {
-            String s1 = values.pollLast();
-            String s2 = values.pollLast();
-            values.addLast(calculate(s1, exp.pollLast(), s2));
-        }
-        String result = values.pop();
-        if (exp.size() > 0) result = exp.pop() + result;
-        if (result.indexOf("\"") == 0 || result.lastIndexOf("\"") == result.length() - 1) {
-            result = result.substring(1, result.length() - 1);
-        }
-        return result;
+        return 0;
     }
 
     private void mulDiv() {
