@@ -87,7 +87,7 @@ public class ParserDefined {
                 isExpressionOpen = true;
                 PROGRAM_STAT = 2;
                 continue;
-            }else if(c == '(')skipBracket++;
+            }else if(isFuncParse && isExpressionOpen && c == '(')skipBracket++;
 
             if (!isFuncParse && skipBrace == 0 && isProgramOpen && c == '}') {
                 isProgramOpen = false;

@@ -7,7 +7,6 @@
     <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/After.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Before.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Controller.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Injection.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/RequestBody.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/anotations/Router.java" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />

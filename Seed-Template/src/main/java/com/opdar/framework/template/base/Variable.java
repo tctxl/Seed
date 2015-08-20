@@ -1,5 +1,9 @@
 package com.opdar.framework.template.base;
 
+import com.opdar.framework.template.utils.TemplateUtil;
+
+import java.util.HashMap;
+
 /**
  * Created by 俊帆 on 2015/8/4.
  */
@@ -14,8 +18,8 @@ public class Variable {
         this.name = name;
     }
 
-    public Object getExp() {
-        return exp;
+    public Object getExp(Object o,HashMap<String, Object> vars) {
+        return TemplateUtil.getExp(o,vars,exp.toString());
     }
 
     public void setExp(Object exp) {

@@ -28,7 +28,7 @@ public class TemplateUtil {
                 parser.get(((Printf) o).getValue());
                 parser.parse(object, sw ,vars);
             }else if (o instanceof Variable) {
-                vars.put(((Variable) o).getName(),polish.execute((String) ((Variable) o).getExp()));
+                vars.put(((Variable) o).getName(),polish.execute((String) ((Variable) o).getExp(object,vars)));
             }else if(o instanceof Expression){
                 if(((Expression) o).getName().equals("for")){
                     try {
@@ -58,23 +58,7 @@ public class TemplateUtil {
                     if(condition.matches("[0-9]")){
                         gotoInt = Integer.valueOf(condition);
                     }else{
-                        String param = ((Expression) o).getCondition();
-                        Object oi = "-1";
-                        if(param.indexOf(".") > 0){
-                            String[] par = param.split("\\.");
-                            oi = ValueUtil.get(vars, param);
-                            if(oi == null)
-                                oi = object;
-                            for(String s:par){
-                                oi = ValueUtil.get(oi,s);
-                            }
-                            if(oi == null)oi = "";
-                        }else{
-                            oi = ValueUtil.get(vars,param);
-                            if(oi == null)
-                                oi = ValueUtil.get(object,param);
-                            if(oi == null)oi = "";
-                        }
+                        Object oi = getParamValue(object, vars, ((Expression) o).getCondition());
                         gotoInt = Integer.valueOf(oi.toString());
                     }
                     HashMap map = new HashMap();
@@ -83,10 +67,66 @@ public class TemplateUtil {
                 }else if(((Expression) o).getName().equals("if")){
                     HashMap map = new HashMap();
                     map.putAll(vars);
-                    part(((Expression) o).getProgram(), object, sw, open, close, loader, map);
+
+                    if(Boolean.parseBoolean(polish.execute(getExp(o,vars,((Expression) o).getCondition()).toString()))){
+                        part(((Expression) o).getProgram(), object, sw, open, close, loader, map);
+                    }
                 }
             }
         }
     }
 
+    public static Object getParamValue(Object object, HashMap<String, Object> vars,String paramName) {
+        String param = paramName;
+        Object oi = "-1";
+        if(param.indexOf(".") > 0){
+            String[] par = param.split("\\.");
+            oi = ValueUtil.get(vars, param);
+            if(oi == null)
+                oi = object;
+            for(String s:par){
+                oi = ValueUtil.get(oi,s);
+            }
+            if(oi == null)oi = "";
+        }else{
+            oi = ValueUtil.get(vars,param);
+            if(oi == null)
+                oi = ValueUtil.get(object,param);
+            if(oi == null)oi = "";
+        }
+        return oi;
+    }
+
+    public static Object getExp(Object o,HashMap<String, Object> vars,String exp) {
+        boolean isVar = false;
+        StringBuilder expBuilder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
+        for(int i=0;i<exp.length();i++){
+            char c = exp.charAt(i);
+            if(!isVar && ((c >'a' && c<'z') || (c >'A' && c <'Z') || c == '_')){
+                isVar = true;
+                builder.append(c);
+                continue;
+            }else if(isVar && ((c >'a' && c<'z') || (c >'A' && c <'Z') || c == '_'|| (c > '0' && c < '9')) ){
+                builder.append(c);
+                continue;
+            }else{
+                isVar = executeVar(o, vars, expBuilder, builder);
+            }
+            expBuilder.append(c);
+        }
+        executeVar(o, vars, expBuilder, builder);
+        return expBuilder.toString();
+    }
+
+    private static boolean executeVar(Object o, HashMap<String, Object> vars, StringBuilder expBuilder, StringBuilder builder) {
+        boolean isVar;
+        isVar = false;
+        if(builder.length() > 0){
+            Object oi = TemplateUtil.getParamValue(o, vars, builder.toString());
+            expBuilder.append(oi);
+            builder.delete(0,builder.length());
+        }
+        return isVar;
+    }
 }

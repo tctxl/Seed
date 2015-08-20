@@ -19,7 +19,7 @@ public class ReversePolish {
     private LinkedList<Character> exp = new LinkedList<Character>();
 
     public static void main(String[] args) {
-        System.out.println(new ReversePolish().execute("1 != 1 | false | false"));
+        System.out.println(new ReversePolish().execute("(1+1)==2"));
     }
 
     public String execute(String s) {
@@ -147,6 +147,7 @@ public class ReversePolish {
                         buffer.position(buffer.position()-1);
                     }
 
+                    if(builder.length() > 0)
                     values.push(builder.toString());
                     builder.delete(0, builder.length());
                     continue;
@@ -207,7 +208,7 @@ public class ReversePolish {
         if (isMulDiv) {
             mulDiv();
         }
-        token = executeToken(token);
+        executeToken(token);
         if(lastToken != - 1){
             boolean t = Boolean.parseBoolean(values.pollLast());
             if(lastToken == 11){
