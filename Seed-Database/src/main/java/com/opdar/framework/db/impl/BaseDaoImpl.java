@@ -168,7 +168,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private HashMap<String,IDao> extendDaos = new HashMap<String, IDao>();
 
     @Override
-    public <D>IDao<D> EXTEND(Class<D> clz) {
+    public <D>IDao<D> extend(Class<D> clz) {
         BaseDaoImpl dao = (BaseDaoImpl) baseDatabase.getDao(clz);
         dao.connection = this.connection;
         extendDaos.put(clz.getName(),dao);
@@ -176,7 +176,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> CloseExtend() {
+    public IDao<T> closeExtend() {
         for(Iterator<String> it = extendDaos.keySet().iterator();it.hasNext();){
             String key = it.next();
             BaseDaoImpl dao = (BaseDaoImpl) extendDaos.get(key);
@@ -187,7 +187,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> INSERT(T o) {
+    public IDao<T> insert(T o) {
         clear();
         if (tableName != null) {
             StringBuilder valueBuilder = new StringBuilder();
@@ -234,13 +234,13 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> JOIN(Join join, String tableName, String synx) {
+    public IDao<T> join(Join join, String tableName, String synx) {
         sqlBuilder.append(" ").append(join.name()).append(" JOIN ").append(tableName).append(" ON ").append(synx);
         return this;
     }
 
     @Override
-    public IDao<T> UPDATE(T o) {
+    public IDao<T> update(T o) {
         clear();
         if (tableName != null) {
             sqlBuilder.append("update ").append(tableName).append(" set ");
@@ -269,7 +269,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao<T> DELETE() {
+    public IDao<T> delete() {
         clear();
         sqlBuilder.append("DELETE FROM ").append(tableName);
         return this;
@@ -282,7 +282,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IDao SELECT() {
+    public IDao select() {
         clear();
         if (tableName != null) {
             sqlBuilder.append("select  ");
@@ -318,21 +318,21 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public IWhere<T> WHERE(String name, String value) {
+    public IWhere<T> where(String name, String value) {
         BaseWhere baseWhere = new BaseWhere();
         baseWhere.IS(name, value);
-        return WHERE(baseWhere);
+        return where(baseWhere);
     }
 
     @Override
-    public IWhere<T> WHERE(IWhere where) {
+    public IWhere<T> where(IWhere where) {
         where.setDao(this);
         wheres.add(where);
         return where;
     }
 
     @Override
-    public IDao<T> END() {
+    public IDao<T> end() {
         if (wheres.size() > 0) sqlBuilder.append(" where ");
         for (Iterator<IWhere> it = wheres.iterator(); it.hasNext(); ) {
             sqlBuilder.append(it.next());

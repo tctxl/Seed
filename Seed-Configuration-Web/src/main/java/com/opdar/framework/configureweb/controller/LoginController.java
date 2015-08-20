@@ -28,7 +28,7 @@ public class LoginController {
     @Router(value = "users")
     public List<ConfigureEntity> findUser() {
         IDao<ConfigureEntity> dao = Context.get(BaseDatabase.class).getDao(ConfigureEntity.class);
-        List<ConfigureEntity> array = dao.SELECT().END().findAll();
+        List<ConfigureEntity> array = dao.select().end().findAll();
         return array;
     }
 }
