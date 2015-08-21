@@ -117,7 +117,14 @@ public class ParamsUtil {
                                                 packageName.length() + 1, name
                                                         .length() - 6);
                                         try {
-                                            classes.add(loader.loadClass(packageName + '.' + className));
+                                            if(packageName != null && packageName.trim().length() > 0){
+                                                if(packageName.charAt(packageName.length()-1) != '.'){
+                                                    packageName = packageName.concat(".");
+                                                }
+                                            }
+                                            classes.add(loader.loadClass(packageName + className));
+                                        } catch (NoClassDefFoundError e) {
+                                            e.printStackTrace();
                                         } catch (ClassNotFoundException e) {
                                             e.printStackTrace();
                                         }
@@ -159,15 +166,20 @@ public class ParamsUtil {
             }
         });
         for (File file : dirfiles) {
+            if(packageName != null && packageName.trim().length() > 0){
+
+                if(packageName.charAt(packageName.length()-1) != '.'){
+                    packageName = packageName.concat(".");
+                }
+            }
             if (file.isDirectory()) {
-                findAndAddClassesInPackageByFile(loader, packageName + "."
-                                + file.getName(), file.getAbsolutePath(), recursive,
+                findAndAddClassesInPackageByFile(loader, packageName+file.getName(), file.getAbsolutePath(), recursive,
                         classes);
             } else {
                 String className = file.getName().substring(0,
                         file.getName().length() - 6);
                 try {
-                    classes.add(loader.loadClass(packageName + '.' + className));
+                    classes.add(loader.loadClass(packageName + className));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

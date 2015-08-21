@@ -1,5 +1,7 @@
 package com.opdar.framework.web.common;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -10,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Context {
     private static ConcurrentHashMap<String, Object> pObjects = new ConcurrentHashMap<String, Object>();
+    private static Map<String, ComponentInit> components = new HashMap<String, ComponentInit>();
 
     public static void print() {
         System.out.println(pObjects);
@@ -41,6 +44,22 @@ public class Context {
 
     public static void add(String key, Object o) {
         pObjects.put(key, o);
+    }
+
+    public static void addComponent(Class clz) {
+        addComponent(new ComponentInit(clz));
+    }
+
+    public static void addComponent(ComponentInit component) {
+        for(String name : component.getComponentName()){
+            components.put(name , component);
+        }
+    }
+
+    public static Object getComponent(String componentName) {
+        ComponentInit init = components.get(componentName);
+        if(init == null)return null;
+        return init.getComponentObject();
     }
 
     public static boolean constains(Class<?> type) {

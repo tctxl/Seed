@@ -36,7 +36,7 @@ public class SeedHttpHandler extends SimpleChannelInboundHandler<Object> {
     public static SeedWeb web = new SeedWeb();
 
     public SeedHttpHandler(){
-        web.scanController(NettySupport.config.get(IConfig.CONTROLLER_PATH));
+        web.loadComponent(NettySupport.config.get(IConfig.CONTROLLER_PATH));
         web.setWebHtml(NettySupport.config.get(IConfig.PAGES));
         web.setWebPublic(NettySupport.config.get(IConfig.PUBLIC));
         web.setDefaultPages(NettySupport.config.get(IConfig.DEFAULT_PAGES));

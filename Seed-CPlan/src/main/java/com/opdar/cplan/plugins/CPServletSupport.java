@@ -50,7 +50,7 @@ public class CPServletSupport extends ServletSupport {
                     String controllers = object.get("controllers").toString();
                     web.setClassLoader(loader);
                     loader.defineCls(className, context);
-                    web.scanController(controllers, false, module);
+                    web.loadComponent(controllers, false, module);
                 }
                 IConfig config = entry.getConfig();
                 if(config !=null){

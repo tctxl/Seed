@@ -10,6 +10,7 @@ import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.PrimaryUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
+import com.opdar.framework.web.anotations.Component;
 import com.opdar.framework.web.anotations.Inject;
 import com.opdar.framework.web.common.*;
 import com.opdar.framework.web.exceptions.ParamUnSupportException;
@@ -44,10 +45,7 @@ import java.util.*;
  * QQ:362116120
  */
 public class SeedWeb {
-    private final Log log = LogFactory.getLog("SeedWeb");
-
-    private ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
+    public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
     //所有路由
     private static final HashMap<String, ThreadLocal<Object>> threadMaps = new HashMap<String, ThreadLocal<Object>>();
     //转换器
@@ -56,12 +54,12 @@ public class SeedWeb {
     private static final Map<String, HttpParser> parsers = new HashMap<String, HttpParser>();
     //默认页
     private static final HashSet<String> defaultPages = new HashSet<String>();
-    public static String WEB_HTML_PATH = "";
-    public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
-    public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
     private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
-
-    ControllerInvoke controllerInvoke = new ControllerInvoke();
+    private static final Map<String, String> contentTypes = new HashMap<String, String>();
+    public static String WEB_HTML_PATH = "";
+    public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
+    private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
+    private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
 
     static {
         defaultPages.add("INDEX.HTML");
@@ -72,12 +70,21 @@ public class SeedWeb {
         }
     }
 
-    private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
-    private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
+    private final Log log = LogFactory.getLog("SeedWeb");
+    ControllerInvoke controllerInvoke = new ControllerInvoke();
+    private ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
     public SeedWeb() {
         log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
         setParser(new FormParser());
+    }
+
+    public static ThreadLocal<SeedResponse> SharedResponse() {
+        return sharedResponse;
+    }
+
+    public static ThreadLocal<SeedRequest> SharedRequest() {
+        return sharedRequest;
     }
 
     public void destory() {
@@ -170,9 +177,8 @@ public class SeedWeb {
         return null;
     }
 
-
-    public void scanController(String packageName) {
-        scanController(packageName, true, null);
+    public void loadComponent(String packageName) {
+        loadComponent(packageName, true, null);
     }
 
     /**
@@ -180,21 +186,35 @@ public class SeedWeb {
      *
      * @param packageName 包名
      */
-    public void scanController(String packageName, boolean isClear, String perfix) {
+    public void loadComponent(String packageName, boolean isClear, String perfix) {
         synchronized (this) {
             if (isClear) controllerInvoke = new ControllerInvoke();
             controllerInvoke.scan(packageName, perfix, loader);
+            invokeComponent();
         }
     }
 
-    private static final Map<String, String> contentTypes = new HashMap<String, String>();
-
-    public static ThreadLocal<SeedResponse> SharedResponse() {
-        return sharedResponse;
-    }
-
-    public static ThreadLocal<SeedRequest> SharedRequest() {
-        return sharedRequest;
+    private void invokeComponent() {
+        Set<Class<?>> components = ParamsUtil.getClasses(loader, "");
+        for (Class<?> clz : components) {
+            Component component = clz.getAnnotation(Component.class);
+            if (component != null) {
+                Class context = null;
+                try {
+                    context = loader.loadClass(Context.class.getName());
+                    Method method = context.getMethod("addComponent", Class.class);
+                    method.invoke(null, clz);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void execute(String routerName, SeedRequest request, final IResponse response) {
@@ -377,15 +397,20 @@ public class SeedWeb {
             try {
                 threadLocal.set(router.getClassBean().getSeedClz().newInstance());
                 ClassBean bean = router.getClassBean();
-                for(ClassBean.FieldInfo fieldInfo:bean.getField()){
+                for (ClassBean.FieldInfo fieldInfo : bean.getField()) {
                     Inject inject = fieldInfo.getField().getAnnotation(Inject.class);
-                    if(inject != null){
+                    if (inject != null) {
                         try {
                             ClassLoader loader = router.getClassBean().getSeedClz().getClassLoader();
                             Class context = loader.loadClass(Context.class.getName());
                             Method method = context.getMethod("get", Class.class);
                             Object o = method.invoke(null, fieldInfo.getField().getType());
-                            fieldInfo.getField().set(threadLocal.get(),o);
+                            if(o == null){
+                                method = context.getMethod("getComponent", String.class);
+                                method.setAccessible(true);
+                                o = method.invoke(null, fieldInfo.getField().getType().getName());
+                            }
+                            fieldInfo.getField().set(threadLocal.get(), o);
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         } catch (NoSuchMethodException e) {
