@@ -16,10 +16,10 @@ public class TemplateView implements View {
     String contentType = "text/html";
 
     String templatePath = null;
-    Map<String, ?> dataModels = null;
+    Object dataModels = null;
     private ClassLoader classLoader = TemplateView.class.getClassLoader();
 
-    public TemplateView(String templatePath, Map<String, ?> dataModels) {
+    public TemplateView(String templatePath, Object dataModels) {
         this.templatePath = templatePath;
         this.dataModels = dataModels;
     }
