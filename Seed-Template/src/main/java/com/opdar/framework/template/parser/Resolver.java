@@ -41,6 +41,10 @@ public class Resolver {
         template = new BaseTemplate(content, contentBuffer ,loader);
     }
 
+    public void setPath(String path){
+        template.setCurrentPath(path);
+    }
+
     public String parse(Object object){
         return template.parse(object);
     }

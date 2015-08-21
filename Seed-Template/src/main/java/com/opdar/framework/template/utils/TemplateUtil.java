@@ -6,6 +6,7 @@ import com.opdar.framework.template.base.Printf;
 import com.opdar.framework.template.base.Variable;
 import com.opdar.framework.template.expressions.Foreach;
 import com.opdar.framework.template.expressions.Include;
+import com.opdar.framework.template.parser.BaseTemplate;
 import com.opdar.framework.template.parser.Parser;
 import com.opdar.framework.template.res.Loader;
 import com.opdar.framework.utils.Utils;
@@ -19,7 +20,7 @@ import java.util.*;
  */
 public class TemplateUtil {
 
-    public static void part(Part part, Object object, StringWriter sw, String open, String close, Loader loader, HashMap<String,Object> vars){
+    public static void part(Part part, Object object, StringWriter sw, String open, String close, Loader loader, HashMap<String,Object> vars,BaseTemplate template){
         if(part == null)return;
         ReversePolish polish = new ReversePolish();
         for (Object o : part.getParts()) {
@@ -40,7 +41,7 @@ public class TemplateUtil {
                             data.put(foreach.getValueName(), o1);
                             HashMap map = new HashMap();
                             map.putAll(vars);
-                            part(((Expression) o).getProgram(), data, sw, open, close, loader, map);
+                            part(((Expression) o).getProgram(), data, sw, open, close, loader, map,template);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -48,7 +49,7 @@ public class TemplateUtil {
                 }else if(((Expression) o).getName().equals("include")){
                     Include include = new Include(((Expression) o).getCondition());
                     try {
-                        sw.write(new String(Utils.is2byte(loader.load(loader.getCurrentPath() + include.getValue())),loader.getCharsetName()));
+                        sw.write(new String(Utils.is2byte(loader.load(template.getCurrentPath() + include.getValue())),loader.getCharsetName()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -63,13 +64,13 @@ public class TemplateUtil {
                     }
                     HashMap map = new HashMap();
                     map.putAll(vars);
-                    part(((Expression) o).getProgram(gotoInt), object, sw, open, close, loader, map);
+                    part(((Expression) o).getProgram(gotoInt), object, sw, open, close, loader, map,template);
                 }else if(((Expression) o).getName().equals("if")){
                     HashMap map = new HashMap();
                     map.putAll(vars);
 
                     if(Boolean.parseBoolean(polish.execute(getExp(o,vars,((Expression) o).getCondition()).toString()))){
-                        part(((Expression) o).getProgram(), object, sw, open, close, loader, map);
+                        part(((Expression) o).getProgram(), object, sw, open, close, loader, map,template);
                     }
                 }
             }

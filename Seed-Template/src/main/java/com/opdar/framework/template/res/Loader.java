@@ -8,12 +8,17 @@ import java.util.Map;
  * Created by 俊帆 on 2015/8/4.
  */
 public abstract class Loader {
-    protected String currentPath = "";
+    protected String basePath = "";
+
     protected String charsetName = "utf-8";
     public abstract InputStream load(String path) throws FileNotFoundException;
 
-    public String getCurrentPath() {
-        return currentPath;
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
     }
 
     public String getCharsetName() {

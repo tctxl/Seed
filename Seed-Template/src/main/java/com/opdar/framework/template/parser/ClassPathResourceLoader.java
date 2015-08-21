@@ -19,10 +19,8 @@ public class ClassPathResourceLoader extends Loader {
 
     public String parse(String path,Object dataModel){
         try {
-            if(path.lastIndexOf("/") > 0){
-                currentPath = path.substring(0,path.lastIndexOf("/")+1);
-            }
             Resolver resolver = new Resolver(new String(Utils.is2byte(load(path)),super.charsetName),this);
+            resolver.setPath(path);
             return resolver.parse(dataModel);
         } catch (IOException e) {
             e.printStackTrace();
@@ -32,7 +30,7 @@ public class ClassPathResourceLoader extends Loader {
 
     @Override
     public InputStream load(String path) {
-        return loader.getResourceAsStream(path);
+        return loader.getResourceAsStream(basePath+path);
     }
 
 }

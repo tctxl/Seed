@@ -318,6 +318,15 @@ public class BaseDaoImpl<T> implements IDao<T> {
     }
 
     @Override
+    public IDao<T> count() {
+        clear();
+        if (tableName != null) {
+            sqlBuilder.append("select count(1) from ").append(tableName).append(" ").append(this.simpleTableName);
+        }
+        return this;
+    }
+
+    @Override
     public IWhere<T> where(String name, String value) {
         BaseWhere baseWhere = new BaseWhere();
         baseWhere.IS(name, value);
@@ -333,6 +342,12 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
     @Override
     public IDao<T> end() {
+        end(cls);
+        return this;
+    }
+
+    @Override
+    public IDao<T> end(Class<?> cls) {
         if (wheres.size() > 0) sqlBuilder.append(" where ");
         for (Iterator<IWhere> it = wheres.iterator(); it.hasNext(); ) {
             sqlBuilder.append(it.next());
@@ -340,7 +355,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
         }
         if (wheres.size() > 0)
             sqlBuilder.delete(sqlBuilder.length() - 5, sqlBuilder.length());
-        excute(sqlBuilder.toString());
+        excute(sqlBuilder.toString(),cls);
         filter = null;
         return this;
     }

@@ -20,9 +20,6 @@ public class FilePathResourceLoader extends Loader {
         InputStream is = null;
         try {
             is = load(path);
-            if (path.lastIndexOf("/") > 0) {
-                currentPath = path.substring(0, path.lastIndexOf("/") + 1);
-            }
             Resolver resolver = new Resolver(new String(Utils.is2byte(is), super.charsetName), this);
             return resolver.parse(dataModel);
         } catch (Exception e) {

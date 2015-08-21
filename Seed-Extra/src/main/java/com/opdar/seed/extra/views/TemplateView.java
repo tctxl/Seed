@@ -17,7 +17,9 @@ public class TemplateView implements View {
 
     String templatePath = null;
     Object dataModels = null;
-    private ClassLoader classLoader = TemplateView.class.getClassLoader();
+    private static ClassLoader classLoader = TemplateView.class.getClassLoader();
+
+    private static final  ClassPathResourceLoader loader = new ClassPathResourceLoader(classLoader);
 
     public TemplateView(String templatePath, Object dataModels) {
         this.templatePath = templatePath;
@@ -37,7 +39,6 @@ public class TemplateView implements View {
     }
 
     public byte[] renderView() {
-        ClassPathResourceLoader loader = new ClassPathResourceLoader(classLoader);
         try {
             return loader.parse(templatePath, dataModels).getBytes("utf-8");
         } catch (UnsupportedEncodingException e) {

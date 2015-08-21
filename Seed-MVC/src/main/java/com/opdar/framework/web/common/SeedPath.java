@@ -40,7 +40,7 @@ public class SeedPath {
                 if(url != null){
                     String protocol = url.getProtocol();
                     if(protocol.equals("jar")){
-                        jar = ((JarURLConnection)loader.getResource(key.substring(1)).openConnection()).getJarFile();;
+                        jar = ((JarURLConnection)loader.getResource(key.substring(1)).openConnection()).getJarFile();
                         Enumeration<JarEntry> entries = jar.entries();
                         while (entries.hasMoreElements()) {
                             JarEntry entry = entries.nextElement();
@@ -51,6 +51,8 @@ public class SeedPath {
                                 pathMappings.put(name.toUpperCase(),name);
                             }
                         }
+                    }else{
+                        findInFileSystem(key.substring(1),url.getPath());
                     }
                 }
             } catch (IOException e) {
@@ -62,6 +64,19 @@ public class SeedPath {
         }
         this.loader = loader;
         this.path = Utils.testRouter(path.replace(".","/")).substring(1);
+    }
+
+    public void findInFileSystem(String baseName,String filePath){
+        File f = new File(filePath);
+        if(f.isDirectory()){
+            File[] files = f.listFiles();
+            for(File ff:files){
+                String bn = baseName+"/"+ff.getName();
+                findInFileSystem(bn,ff.getAbsolutePath());
+            }
+        }else{
+            pathMappings.put(baseName.toUpperCase(),baseName);
+        }
     }
 
     public String getMapping() {
@@ -101,9 +116,9 @@ public class SeedPath {
             }
             return new FileInputStream(f);
         }else if(pathType == 1){
-            if(pathMappings.containsKey(file.toUpperCase())){
-                file = pathMappings.get(file.toUpperCase());
-                path = this.path + file;
+            if(pathMappings.containsKey(path.toUpperCase())){
+                file = pathMappings.get(path.toUpperCase());
+                path = file;
             }
             return loader.getResourceAsStream(path);
         }

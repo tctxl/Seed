@@ -5,6 +5,7 @@ import com.opdar.framework.template.base.Part;
 import com.opdar.framework.template.res.Loader;
 import com.opdar.framework.template.utils.TemplateUtil;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.CharBuffer;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.HashMap;
  * Created by 俊帆 on 2015/8/3.
  */
 public class BaseTemplate implements Template {
+    private String currentPath = "",path="";
 
     //程序外变量标签
     private String PARAM_LEFT_SYMBOL = "${";
@@ -38,11 +40,30 @@ public class BaseTemplate implements Template {
         this.resourceLoader = loader;
     }
 
+    public void setCurrentPath(String path) {
+        if(path.lastIndexOf("/") > 0){
+            currentPath = path.substring(0,path.lastIndexOf("/")+1);
+        }
+        this.path = path;
+    }
+
     @Override
     public String parse(Object object) {
         StringWriter sw = new StringWriter();
-        TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL, resourceLoader, globalVars);
-        return sw.toString();
+        try{
+            TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL, resourceLoader, globalVars,this);
+            return sw.toString();
+        }finally {
+            sw.flush();
+            try {
+                sw.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public String getCurrentPath() {
+        return currentPath;
     }
 
     protected void findProgram(CharBuffer contentBuffer) {

@@ -86,6 +86,12 @@ public interface IDao<T>{
     IDao<T> select();
 
     /**
+     * count语句
+     * @return
+     */
+    IDao<T> count();
+
+    /**
      * where条件
      * @param name
      * @param value
@@ -107,10 +113,16 @@ public interface IDao<T>{
     IDao<T> end();
 
     /**
+     * 结束语句
+     * @return
+     */
+    IDao<T> end(Class<?> cls);
+
+    /**
      * 找到所有返回条目
      * @return
      */
-    List<T> findAll();
+    <K>List<K> findAll();
 
     /**
      * 获得枚举类型
@@ -122,7 +134,7 @@ public interface IDao<T>{
      * 获得一个对象
      * @return
      */
-    T findOne();
+    <K>K findOne();
 
     /**
      * C/U状态
