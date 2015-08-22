@@ -112,6 +112,10 @@ public class SeedRouter {
         return argMapped.get(name);
     }
 
+    public HashMap<String, ClassBean> getArgMapped() {
+        return argMapped;
+    }
+
     public boolean containsArgsMapped(String name) {
         return argMapped.containsKey(name);
     }

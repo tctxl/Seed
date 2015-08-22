@@ -35,6 +35,7 @@ public class TemplateUtil {
                     try {
                         Foreach foreach = new Foreach(((Expression) o).getCondition());
                         Collection collection = (Collection) ValueUtil.get(object, foreach.getParamName());
+                        if(collection == null) System.out.println(foreach.getParamName()+" is null");
                         for(Iterator it = collection.iterator();it.hasNext();){
                             Object o1 = it.next();
                             Map<String,Object> data = new HashMap<String,Object>();

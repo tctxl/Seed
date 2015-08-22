@@ -7,6 +7,7 @@ import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 俊帆 on 2015/8/4.
@@ -53,7 +54,11 @@ public class Parser {
         }
     }
 
-    public void parse(Object object, StringWriter sw, HashMap<String, Object> vars){
+    public void parse(Object object, StringWriter sw){
+        parse(object,sw,new HashMap<String, Object>());
+    }
+
+    public void parse(Object object, StringWriter sw, Map<String, Object> vars){
         for(int i=0;i<contentTable.size();i++){
             sw.write(contentTable.get(i));
             if(i!=contentTable.size()-1){

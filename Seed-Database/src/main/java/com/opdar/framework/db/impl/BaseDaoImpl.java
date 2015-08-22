@@ -204,7 +204,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 try {
                     Object value = field.get(o);
                     if(value != null){
-                        sqlBuilder.append(dbFieldName);
+                        sqlBuilder.append("`").append(dbFieldName).append("`");
                         sqlBuilder.append(",");
                         valueBuilder.append("'");
                         valueBuilder.append(value);

@@ -56,25 +56,32 @@ public class YesonParser {
             toJSONStringWithArray(builder, (Collection) o);
         }else{
             builder.append("{");
-            Field[] fields = clz.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                try {
-                    String key = field.getName();
-                    builder.append("\"").append(key).append("\":");
-                    if (Collection.class.isAssignableFrom(field.getType())) {
-                        Collection collection = (Collection) field.get(o);
-                        toJSONStringWithArray(builder,collection);
-                    } else if (converts.containsKey(field.getType())) {
-                        JSONConvert convert = converts.get(field.getType());
-                        Object result = convert.convert(field.get(o));
-                        builder.append(result);
-                    }else{
-                        builder.append("null");
+            if(o instanceof Map){
+                Map<String,Object> map = (Map<String,Object>) o;
+                for(Iterator<String> it = map.keySet().iterator();it.hasNext();){
+                    String key = it.next();
+                    Object fieldResult = map.get(key);
+                    Class<?> fieldType = Void.class;
+                    if(fieldResult != null){
+                        fieldType = fieldResult.getClass();
                     }
-                    builder.append(",");
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    exeObjectResult(builder, key, fieldResult, fieldType);
+                }
+            }else{
+                Field[] fields = clz.getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    try {
+                        String key = field.getName();
+                        Object fieldResult = field.get(o);
+                        Class<?> fieldType = Void.class;
+                        if(fieldResult != null){
+                            fieldType = fieldResult.getClass();
+                        }
+                        exeObjectResult(builder, key, fieldResult, fieldType);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if (builder.length() > 0) {
@@ -83,6 +90,23 @@ public class YesonParser {
             builder.append("}");
         }
         return builder.toString();
+    }
+
+    private void exeObjectResult(StringBuilder builder, String key, Object fieldResult, Class<?> fieldType) {
+        builder.append("\"").append(key).append("\":");
+        if (Collection.class.isAssignableFrom(fieldType)) {
+            Collection collection = (Collection) fieldResult;
+            toJSONStringWithArray(builder, collection);
+        } else if(Map.class.isAssignableFrom(fieldType)){
+            builder.append(toJSONString(fieldResult));
+        } else if (converts.containsKey(fieldType)) {
+            JSONConvert convert = converts.get(fieldType);
+            Object result = convert.convert(fieldResult);
+            builder.append(result);
+        }else{
+            builder.append("null");
+        }
+        builder.append(",");
     }
 
     private void toJSONStringWithArray(StringBuilder builder,Collection collection){

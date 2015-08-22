@@ -18,6 +18,7 @@ import com.opdar.framework.web.interfaces.HttpConvert;
 import com.opdar.framework.web.interfaces.View;
 import com.opdar.framework.web.parser.FormParser;
 import com.opdar.framework.web.parser.HttpParser;
+import com.opdar.framework.web.utils.ArgInvoke;
 import com.opdar.framework.web.utils.ControllerInvoke;
 import com.opdar.framework.web.utils.RestfulInvoke;
 import com.opdar.framework.web.views.DefaultView;
@@ -405,7 +406,7 @@ public class SeedWeb {
                             Class context = loader.loadClass(Context.class.getName());
                             Method method = context.getMethod("get", Class.class);
                             Object o = method.invoke(null, fieldInfo.getField().getType());
-                            if(o == null){
+                            if (o == null) {
                                 method = context.getMethod("getComponent", String.class);
                                 method.setAccessible(true);
                                 o = method.invoke(null, fieldInfo.getField().getType().getName());
@@ -456,58 +457,46 @@ public class SeedWeb {
     private Object[] execLogicNormal(String routerName, Map<String, Object> values, SeedRouter router, HashMap<String, String> restfulResult, Object controller) {
         Object[] params = new Object[router.getMethodInfo().getArgs().length];
         HashMap<String, Integer> sorts = router.getMethodInfo().getArgsSort();
-        for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
+        Map<Integer, SeedExcuteItrf> os = new HashMap<Integer, SeedExcuteItrf>();
+        for (Iterator<String> it = router.getArgMapped().keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             ClassBean classBean = router.getArgsMapped(key);
-            if (!router.getMethodInfo().getArgsSort().containsKey(key)) continue;
-            Integer index = router.getMethodInfo().getArgsSort().get(key);
-            ClassBean.MethodInfo.LocalVar var = router.getMethodInfo().getLocalVars().get(index);
-            ClassLoader classLoader = controller.getClass().getClassLoader();
-            try {
-                Class clz = classLoader.loadClass(var.getType().getClassName());
-                if (classBean == null && (Number.class.isAssignableFrom(clz) || String.class.isAssignableFrom(clz))) {
-                    if (sorts.containsKey(key))
-                        params[sorts.get(key)] = PrimaryUtil.cast(values.get(key), var.getType());
-                    continue;
-                } else if (Collection.class.isAssignableFrom(clz) && var.getSignatureTypes().size() == 2) {
-                    String className = var.getSignatureTypes().get(0).replace("/", ".");
-                    Class genicClz = classLoader.loadClass(className);
-
-                    if (Number.class.isAssignableFrom(genicClz) || String.class.isAssignableFrom(genicClz)) {
-                        Collection list = null;
-                        if (clz.isInterface()) {
-                            list = new LinkedList();
-                        } else {
-                            list = (Collection) clz.newInstance();
-                        }
-                        Collection result = (Collection) values.get(key);
-                        for (Iterator it2 = result.iterator(); it2.hasNext(); ) {
-                            Object val = it2.next();
-                            list.add(PrimaryUtil.cast(val, genicClz));
-                        }
-                        params[sorts.get(key)] = list;
-                        continue;
-                    }
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            if (classBean != null) {
+                ArgInvoke.invokeObjectArgs(values, os, key, classBean);
             }
 
-            try {
-                SeedExcuteItrf execute = (SeedExcuteItrf) classBean.getSeedClz().newInstance();
-                execute.invokeMethod(productSetMethodName(key), values.get(key));
+            if (router.getMethodInfo().getArgsSort().containsKey(key)) {
+                Integer index = router.getMethodInfo().getArgsSort().get(key);
+                ClassBean.MethodInfo.LocalVar var = router.getMethodInfo().getLocalVars().get(index);
+                ClassLoader classLoader = controller.getClass().getClassLoader();
+
+                Class clz = null;
+                try {
+                    clz = classLoader.loadClass(var.getType().getClassName());
+                    if ((Number.class.isAssignableFrom(clz) || String.class.isAssignableFrom(clz))) {
+                        ArgInvoke.invokeNormalArgs(values, params, sorts, key, var);
+                        continue;
+                    } else if (Collection.class.isAssignableFrom(clz) && var.getSignatureTypes().size() == 2) {
+                        ArgInvoke.invokeCollectionArgs(values, params, sorts, key, var, classLoader, clz);
+                        continue;
+                    }
+                } catch (ClassNotFoundException e) {
+                } catch (InstantiationException e) {
+                } catch (IllegalAccessException e) {
+                }
+            }
+        }
+        if(os.size()>0){
+            for(Iterator<Integer> it = os.keySet().iterator();it.hasNext();){
+                Integer hashCode = it.next();
+                SeedExcuteItrf exe = os.get(hashCode);
+                String name = exe.getClass().getSuperclass().getName();
                 for (ClassBean.MethodInfo.LocalVar localVar : router.getMethodInfo().getLocalVars()) {
-                    if (localVar.getType().getClassName().equals(classBean.getSeedClz().getSuperclass().getName())) {
-                        params[sorts.get(localVar.getName())] = (execute);
+                    if (localVar.getType().getClassName().equals(name)) {
+                        params[sorts.get(localVar.getName())] = (exe);
                         break;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         if (restfulResult.size() > 0) {
@@ -519,17 +508,6 @@ public class SeedWeb {
         return params;
     }
 
-    private String productSetMethodName(String fieldName) {
-        if (fieldName.length() < 3) return "set".concat(fieldName);
-        char c1 = Character.toUpperCase(fieldName.charAt(0));
-        boolean c2IsUpper = Character.isUpperCase(fieldName.charAt(1));
-        if (c2IsUpper) return "set".concat(fieldName);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("set");
-        stringBuilder.append(c1);
-        stringBuilder.append(fieldName.substring(1, fieldName.length()));
-        return stringBuilder.toString();
-    }
 
     public void setWebHtml(String webHtml) {
         SeedWeb.WEB_HTML_PATH = webHtml.replace(".", "/");

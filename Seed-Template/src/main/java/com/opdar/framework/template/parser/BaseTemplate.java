@@ -32,8 +32,8 @@ public class BaseTemplate implements Template {
 
     private Loader resourceLoader;
 
-    public BaseTemplate(String content, CharBuffer contentBuffer, Loader loader) {
-        this.content = content;
+    public BaseTemplate(CharBuffer contentBuffer, Loader loader) {
+        this.content = contentBuffer.toString();
         findProgram(contentBuffer);
         ParserDefined parserDefined = new ParserDefined();
         part = parserDefined.parse(contentBuilder.toString());

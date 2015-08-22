@@ -212,4 +212,17 @@ public class Utils {
         }
 
     }
+
+
+    public static String setMethodName(String fieldName) {
+        if (fieldName.length() < 2) return "set".concat(fieldName);
+        char c1 = Character.toUpperCase(fieldName.charAt(0));
+        boolean c2IsUpper = Character.isUpperCase(fieldName.charAt(1));
+        if (c2IsUpper) return "set".concat(fieldName);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("set");
+        stringBuilder.append(c1);
+        stringBuilder.append(fieldName.substring(1, fieldName.length()));
+        return stringBuilder.toString();
+    }
 }

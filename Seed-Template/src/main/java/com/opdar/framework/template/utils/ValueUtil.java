@@ -18,7 +18,7 @@ public class ValueUtil {
             if(values instanceof SeedExcuteItrf){
                 Object value = ((SeedExcuteItrf) values).invokeMethod("get".concat(Utils.testField(fieldName)));
                 return value;
-            }else{
+            }else if(values != null){
                 Class clz = values.getClass();
                 try {
                     Field field = clz.getDeclaredField(fieldName);

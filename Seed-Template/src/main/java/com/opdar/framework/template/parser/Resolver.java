@@ -38,7 +38,7 @@ public class Resolver {
 
     public Resolver(String content, Loader loader) {
         CharBuffer contentBuffer = CharBuffer.wrap(content);
-        template = new BaseTemplate(content, contentBuffer ,loader);
+        template = new BaseTemplate(contentBuffer ,loader);
     }
 
     public void setPath(String path){
