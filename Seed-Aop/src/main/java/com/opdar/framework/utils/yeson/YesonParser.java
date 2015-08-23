@@ -55,9 +55,11 @@ public class YesonParser {
         if(o instanceof Collection){
             toJSONStringWithArray(builder, (Collection) o);
         }else{
-            builder.append("{");
             if(o instanceof Map){
                 Map<String,Object> map = (Map<String,Object>) o;
+                if(map == null || map.size() == 0){
+                    return "null";
+                }
                 for(Iterator<String> it = map.keySet().iterator();it.hasNext();){
                     String key = it.next();
                     Object fieldResult = map.get(key);
@@ -86,8 +88,11 @@ public class YesonParser {
             }
             if (builder.length() > 0) {
                 builder.delete(builder.length() - 1, builder.length());
+                builder.insert(0,"{");
+                builder.append("}");
+            }else{
+                builder.append("null");
             }
-            builder.append("}");
         }
         return builder.toString();
     }

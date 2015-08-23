@@ -252,7 +252,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 java.lang.reflect.Field field = model.getField();
                 try {
                     Object value = field.get(o);
-                    if(value != null && value.toString().length()>0)
+                    if(value != null)
                         values.append(dbFieldName).append("=").append("'").append(value).append("'").append(",");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
