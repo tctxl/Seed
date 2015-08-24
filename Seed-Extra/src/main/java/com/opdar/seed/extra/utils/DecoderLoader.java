@@ -36,7 +36,7 @@ public class DecoderLoader extends URLClassLoader {
         if(packages.containsKey(module)){
             JSONObject object = packages.get(module);
             try {
-                return getLoader(module).findClass(object.get("main").toString());
+                return getLoader(module).loadClass(object.get("main").toString());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

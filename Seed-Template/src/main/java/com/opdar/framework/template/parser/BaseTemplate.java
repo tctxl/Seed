@@ -28,7 +28,6 @@ public class BaseTemplate implements Template {
 
     private StringBuilder contentBuilder = new StringBuilder();
     Part part;
-    private HashMap globalVars = new HashMap();
 
     private Loader resourceLoader;
 
@@ -51,7 +50,7 @@ public class BaseTemplate implements Template {
     public String parse(Object object) {
         StringWriter sw = new StringWriter();
         try{
-            TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL, resourceLoader, globalVars,this);
+            TemplateUtil.part(part, object, sw, PARAM_LEFT_SYMBOL, PARAM_RIGHT_SYMBOL, resourceLoader, resourceLoader.getGlobalVars(),this);
             return sw.toString();
         }finally {
             sw.flush();

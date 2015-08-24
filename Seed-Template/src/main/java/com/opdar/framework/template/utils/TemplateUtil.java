@@ -8,6 +8,7 @@ import com.opdar.framework.template.expressions.Foreach;
 import com.opdar.framework.template.expressions.Include;
 import com.opdar.framework.template.parser.BaseTemplate;
 import com.opdar.framework.template.parser.Parser;
+import com.opdar.framework.template.parser.Resolver;
 import com.opdar.framework.template.res.Loader;
 import com.opdar.framework.utils.Utils;
 
@@ -50,7 +51,10 @@ public class TemplateUtil {
                 }else if(((Expression) o).getName().equals("include")){
                     Include include = new Include(((Expression) o).getCondition());
                     try {
-                        sw.write(new String(Utils.is2byte(loader.load(template.getCurrentPath() + include.getValue())),loader.getCharsetName()));
+                        String str = new String(Utils.is2byte(loader.load(template.getCurrentPath() + include.getValue())),loader.getCharsetName());
+                        Resolver resolver = new Resolver(str,loader);
+                        str = resolver.parse(object);
+                        sw.write(str);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
