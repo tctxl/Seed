@@ -265,6 +265,7 @@ public class YesonParser {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());
+                        if(value.equals("null"))value = null;
                         root.put(key, value);
                         isKey = true;
                         root.lastchar = RIGHT_CURLY_BRACE;
@@ -273,6 +274,7 @@ public class YesonParser {
                 }
                 if (ch == LEFT_SQUARE_BRACE) {
                     value = toJSONArray();
+                    if(value.equals("null"))value = null;
                     root.put(key, value);
                     i = index;
                     isKey = true;
@@ -289,6 +291,7 @@ public class YesonParser {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());
+                        if(value.equals("null"))value = null;
                         root.put(key, value);
                         isKey = true;
                         root.lastchar = COMMA;

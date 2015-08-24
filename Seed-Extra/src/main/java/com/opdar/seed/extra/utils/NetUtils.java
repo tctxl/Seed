@@ -14,15 +14,12 @@ import java.util.Map;
 public class NetUtils {
 
     public static class NetResult{
+        private Decoder decoder;
         private byte[] result;
         private int code;
 
-        public NetResult() {
-        }
-
-        public NetResult(byte[] result, int code) {
-            this.result = result;
-            this.code = code;
+        public NetResult(Decoder decoder) {
+            this.decoder = decoder;
         }
 
         public byte[] getResult() {
@@ -39,7 +36,7 @@ public class NetUtils {
 
 
         public void setResult(byte[] result) {
-            this.result = result;
+            this.result = decoder.decoder(result);
         }
 
         public int getCode() {
@@ -51,9 +48,9 @@ public class NetUtils {
         }
     }
 
-    public synchronized static NetResult post(String reqUrl, Map<String, Object> parameters, Map<String, Object> headers, String body) throws Exception {
+    public synchronized static NetResult post(String reqUrl, Map<String, Object> parameters, Map<String, Object> headers, String body,Decoder decoder) throws Exception {
         HttpURLConnection urlConn = null;
-        NetResult responseContent = new NetResult();
+        NetResult responseContent = new NetResult(decoder);
         try {
             StringBuffer params = new StringBuffer();
             for (Iterator iter = parameters.keySet().iterator(); iter.hasNext(); ) {
@@ -93,7 +90,7 @@ public class NetUtils {
             if(StringUtils.isBlank(body)){
                 urlConn.getOutputStream().write(b, 0, b.length);
             }else{
-                byte[] b2 = params.toString().getBytes();
+                byte[] b2 = body.toString().getBytes();
                 urlConn.getOutputStream().write(b2, 0, b2.length);
             }
             urlConn.getOutputStream().flush();

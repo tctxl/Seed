@@ -6,6 +6,7 @@ import com.opdar.framework.utils.Utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class JSONObject implements Map<String,Object> {
@@ -81,9 +82,9 @@ public class JSONObject implements Map<String,Object> {
 		SeedExcuteItrf execute = SeedInvoke.buildObject(clz);
 		for (Iterator<String> it = object.keySet().iterator(); it.hasNext(); ) {
 			String key = it.next();
+			Field field = clz.getDeclaredField(key);
 			Object o = object.get(key);
 			if (o instanceof JSONArray) {
-				Field field = clz.getDeclaredField(key);
 				Class cls = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 				Class rawType = (Class) ((ParameterizedType) field.getGenericType()).getRawType();
 				Collection collection = null;
@@ -100,6 +101,18 @@ public class JSONObject implements Map<String,Object> {
 				}
 				execute.invokeMethod("set" + Utils.testField(key), collection);
 			} else {
+				if(o != null){
+					Class<?> type = field.getType();
+					if(Integer.class.isAssignableFrom(type)){
+						o = Integer.valueOf(o.toString());
+					}
+					if(Float.class.isAssignableFrom(type)){
+						o = Float.valueOf(o.toString());
+					}
+					if(Double.class.isAssignableFrom(type)){
+						o = Double.valueOf(o.toString());
+					}
+				}
 				execute.invokeMethod("set" + Utils.testField(key), o);
 			}
 		}

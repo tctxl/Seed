@@ -165,15 +165,17 @@ public class SeedWeb {
     }
 
     public HttpParser getParser(String contentType) {
-        String[] cs = null;
-        if (contentType.indexOf(";") != -1) {
-            cs = contentType.split(";");
-        } else {
-            cs = new String[]{contentType};
-        }
-        for (String s : cs) {
-            if (parsers.containsKey(s))
-                return parsers.get(s);
+        if(contentType != null){
+            String[] cs = null;
+            if (contentType.indexOf(";") != -1) {
+                cs = contentType.split(";");
+            } else {
+                cs = new String[]{contentType};
+            }
+            for (String s : cs) {
+                if (parsers.containsKey(s))
+                    return parsers.get(s);
+            }
         }
         return null;
     }
