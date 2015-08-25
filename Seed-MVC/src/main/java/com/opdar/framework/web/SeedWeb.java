@@ -349,11 +349,11 @@ public class SeedWeb {
         if (router != null) {
             try {
                 Object ret = router.getControllerAct().invokeBefore();
-                if (ret != null && (!(ret instanceof Boolean) || (Boolean) ret)) {
+                if (ret != null && (!(ret instanceof Boolean) || !(Boolean) ret)) {
                     return (View) ret;
                 }
                 ret = router.invokeBefore();
-                if (ret != null && (!(ret instanceof Boolean) || (Boolean) ret)) {
+                if (ret != null && (!(ret instanceof Boolean) || !(Boolean) ret)) {
                     return (View) ret;
                 }
                 ThreadLocal<Object> threadLocal = getController(router);
