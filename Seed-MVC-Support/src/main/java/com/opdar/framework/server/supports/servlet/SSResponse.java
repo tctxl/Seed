@@ -2,6 +2,7 @@ package com.opdar.framework.server.supports.servlet;
 
 import com.opdar.framework.web.common.IResponse;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Iterator;
@@ -56,5 +57,10 @@ public class SSResponse implements IResponse {
             Map.Entry<String, String> entry = it.next();
             res.setHeader(entry.getKey(),entry.getValue());
         }
+    }
+
+    @Override
+    public void addCookie(String key, String value) {
+        res.addCookie(new Cookie(key,value));
     }
 }

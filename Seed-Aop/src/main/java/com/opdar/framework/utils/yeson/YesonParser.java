@@ -261,7 +261,7 @@ public class YesonParser {
                     continue;
                 }
 
-                if (ch == RIGHT_CURLY_BRACE) {
+                if (root.type != 1 && ch == RIGHT_CURLY_BRACE) {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());
@@ -272,7 +272,7 @@ public class YesonParser {
                     }
                     return root;
                 }
-                if (ch == LEFT_SQUARE_BRACE) {
+                if (root.type != 1 && ch == LEFT_SQUARE_BRACE) {
                     value = toJSONArray();
                     if(value.equals("null"))value = null;
                     root.put(key, value);
@@ -283,11 +283,11 @@ public class YesonParser {
                 // if(ch == RIGHT_SQUARE_BRACE){
                 // continue;
                 // }
-                if (ch == COLON) {
+                if (root.type != 1 && ch == COLON) {
                     root.lastchar = COLON;
                     continue;
                 }
-                if (ch == COMMA) {
+                if (root.type != 1 && ch == COMMA) {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());

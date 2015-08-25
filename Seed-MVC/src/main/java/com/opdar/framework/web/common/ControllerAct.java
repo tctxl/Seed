@@ -12,30 +12,24 @@ import com.opdar.framework.web.views.ErrorView;
 public class ControllerAct {
     private ThreadLocal<SeedExcuteItrf> before = new ThreadLocal<SeedExcuteItrf>();
     private ThreadLocal<SeedExcuteItrf> after = new ThreadLocal<SeedExcuteItrf>();
-
+    Class<?> beforeClz = null,afterClz = null;
     public void setBefore(Class before) {
-        if (before != null) {
-            try {
-                if (this.before.get() == null)
-                    this.before.set(SeedInvoke.buildObject(before));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        beforeClz = before;
     }
 
     public void setAfter(Class after) {
-        if (after != null) {
+        afterClz = after;
+    }
+
+    public void invokeAfter() {
+        if (afterClz != null) {
             try {
                 if (this.after.get() == null)
-                    this.after.set(SeedInvoke.buildObject(after));
+                    this.after.set(SeedInvoke.buildObject(afterClz));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void invokeAfter() {
         if (after.get() != null) {
             try {
                 after.get().invokeMethod("after");
@@ -47,6 +41,15 @@ public class ControllerAct {
 
     public Object invokeBefore() {
         Object ret = null;
+
+        if (beforeClz != null) {
+            try {
+                if (this.before.get() == null)
+                    this.before.set(SeedInvoke.buildObject(beforeClz));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (before.get() != null) {
             try {
                 ret = before.get().invokeMethod("before");

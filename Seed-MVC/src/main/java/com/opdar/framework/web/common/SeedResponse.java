@@ -18,6 +18,10 @@ public class SeedResponse implements IResponse {
         this.response = response;
     }
 
+    public void addCookie(String key,String value){
+        response.addCookie(key,value);
+    }
+
     public boolean isWrite() {
         return isWrite;
     }

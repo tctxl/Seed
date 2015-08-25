@@ -1,5 +1,6 @@
 package com.opdar.framework.server.supports.netty;
 
+import com.opdar.framework.utils.yeson.convert.StringConvert;
 import com.opdar.framework.web.common.IResponse;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +19,7 @@ public class SeedSession implements IResponse {
 	private ChannelHandlerContext ctx;
 	private String socketId;
     private Map<String,String> headers = new HashMap<String, String>();
+    private Map<String,String> cookies = new HashMap<String, String>();
 
     public SeedSession(){}
 	public SeedSession(ChannelHandlerContext ctx) {
@@ -42,6 +44,13 @@ public class SeedSession implements IResponse {
         }
         response.headers().set(HttpHeaders.Names.CONTENT_TYPE, contentType);
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
+
+        for (Iterator<String> it = cookies.keySet().iterator();it.hasNext();) {
+            String key = it.next();
+            String value = cookies.get(key);
+            Cookie cookie = new DefaultCookie(key,value);
+            response.headers().add(HttpHeaders.Names.SET_COOKIE, ServerCookieEncoder.encode(cookie));
+        }
         return writeAndAddListener(response, ChannelFutureListener.CLOSE);
     }
 
@@ -86,6 +95,11 @@ public class SeedSession implements IResponse {
     @Override
     public void setHeaders(Map<String, String> headers) {
         this.headers.putAll(headers);
+    }
+
+    @Override
+    public void addCookie(String key, String value) {
+        cookies.put(key,value);
     }
 
 

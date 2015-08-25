@@ -25,6 +25,8 @@ public class SeedRouter {
     private List<String> restfulPar;
     private ThreadLocal<SeedExcuteItrf> before = new ThreadLocal<SeedExcuteItrf>();
     private ThreadLocal<SeedExcuteItrf> after = new ThreadLocal<SeedExcuteItrf>();
+    private Class<?> beforeClz = null,afterClz = null;
+
     private ControllerAct controllerAct;
     private HashMap<String, ClassBean> argMapped = new HashMap<String, ClassBean>();
 
@@ -75,25 +77,11 @@ public class SeedRouter {
 
 
     public void setBefore(Class before) {
-        if (before != null) {
-            try {
-                if (this.before.get() == null)
-                    this.before.set(SeedInvoke.buildObject(before));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        beforeClz = before;
     }
 
     public void setAfter(Class after) {
-        if (after != null) {
-            try {
-                if (this.after.get() == null)
-                    this.after.set(SeedInvoke.buildObject(after));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        afterClz = after;
     }
 
     public void setControllerAct(ControllerAct controllerAct) {
@@ -121,6 +109,14 @@ public class SeedRouter {
     }
 
     public void invokeAfter() {
+        if (afterClz != null) {
+            try {
+                if (this.after.get() == null)
+                    this.after.set(SeedInvoke.buildObject(afterClz));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (after.get() != null) {
             try {
                 after.get().invokeMethod("after");
@@ -132,6 +128,15 @@ public class SeedRouter {
 
     public Object invokeBefore() {
         Object ret = null;
+
+        if (beforeClz != null) {
+            try {
+                if (this.before.get() == null)
+                    this.before.set(SeedInvoke.buildObject(beforeClz));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (before.get() != null) {
             try {
                 before.get().invokeMethod("before");

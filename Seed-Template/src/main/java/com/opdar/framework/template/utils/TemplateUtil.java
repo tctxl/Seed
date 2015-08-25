@@ -109,19 +109,30 @@ public class TemplateUtil {
         StringBuilder builder = new StringBuilder();
         for(int i=0;i<exp.length();i++){
             char c = exp.charAt(i);
-            if(!isVar && ((c >'a' && c<'z') || (c >'A' && c <'Z') || c == '_')){
+            if(!isVar && ((c >='a' && c<='z') || (c >='A' && c <='Z') || c == '_')){
                 isVar = true;
                 builder.append(c);
                 continue;
-            }else if(isVar && ((c >'a' && c<'z') || (c >'A' && c <'Z') || c == '_'|| (c > '0' && c < '9')) ){
+            }else if(isVar && ((c >='a' && c<='z') || (c >='A' && c <='Z') || c == '_'|| (c >= '0' && c <= '9')) ){
                 builder.append(c);
                 continue;
             }else{
-                isVar = executeVar(o, vars, expBuilder, builder);
+                if(builder.toString().equals("true")||builder.toString().equals("false")){
+                    expBuilder.append(builder);
+                    builder.delete(0,builder.length());
+                }else{
+                    isVar = executeVar(o, vars, expBuilder, builder);
+                }
             }
             expBuilder.append(c);
         }
-        executeVar(o, vars, expBuilder, builder);
+
+        if(builder.toString().equals("true")||builder.toString().equals("false")){
+            expBuilder.append(builder);
+            builder.delete(0,builder.length());
+        }else{
+            executeVar(o, vars, expBuilder, builder);
+        }
         return expBuilder.toString();
     }
 

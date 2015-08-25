@@ -13,4 +13,5 @@ public interface IResponse {
     void setHeader(String key, String value);
     void setHeaders(Map<String,String> headers);
 
+    void addCookie(String key, String value);
 }
