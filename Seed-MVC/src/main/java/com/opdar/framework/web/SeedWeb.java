@@ -7,7 +7,6 @@ import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.db.impl.DaoMap;
 import com.opdar.framework.db.impl.OnDataSourceCloseListener;
 import com.opdar.framework.utils.ParamsUtil;
-import com.opdar.framework.utils.PrimaryUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.Component;
@@ -27,8 +26,8 @@ import com.opdar.framework.web.views.FileView;
 import com.opdar.framework.web.views.HtmlView;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.sql.DataSource;
@@ -71,8 +70,8 @@ public class SeedWeb {
         }
     }
 
-    private final Log log = LogFactory.getLog("SeedWeb");
-    ControllerInvoke controllerInvoke = new ControllerInvoke();
+    private final Logger log = LoggerFactory.getLogger("SeedWeb");
+    private ControllerInvoke controllerInvoke = new ControllerInvoke();
     private ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
     public SeedWeb() {
@@ -165,7 +164,7 @@ public class SeedWeb {
     }
 
     public HttpParser getParser(String contentType) {
-        if(contentType != null){
+        if (contentType != null) {
             String[] cs = null;
             if (contentType.indexOf(";") != -1) {
                 cs = contentType.split(";");
@@ -488,8 +487,8 @@ public class SeedWeb {
                 }
             }
         }
-        if(os.size()>0){
-            for(Iterator<Integer> it = os.keySet().iterator();it.hasNext();){
+        if (os.size() > 0) {
+            for (Iterator<Integer> it = os.keySet().iterator(); it.hasNext(); ) {
                 Integer hashCode = it.next();
                 SeedExcuteItrf exe = os.get(hashCode);
                 String name = exe.getClass().getSuperclass().getName();

@@ -11,6 +11,8 @@ import com.opdar.framework.db.interfaces.IDao;
 import com.opdar.framework.db.interfaces.IWhere;
 import com.opdar.framework.utils.PrimaryUtil;
 import com.opdar.framework.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -29,6 +31,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
     private String prefix = "t_";
     private Connection connection;
     private MappingFilter filter;
+    private Logger logger = LoggerFactory.getLogger(IDao.class);
 
     public enum FieldRule {
         UPPER_R_UNDERLINE
@@ -438,7 +441,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
 
     @Override
     public void excute(String sql,Class<?> cls) {
-        System.out.println(sql);
+        logger.debug(sql);
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
