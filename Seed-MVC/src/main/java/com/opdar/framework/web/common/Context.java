@@ -1,5 +1,8 @@
 package com.opdar.framework.web.common;
 
+import com.opdar.framework.utils.CloseCallback;
+import com.opdar.framework.utils.ThreadLocalUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Context {
     private static ConcurrentHashMap<String, Object> pObjects = new ConcurrentHashMap<String, Object>();
     private static Map<String, ComponentInit> components = new HashMap<String, ComponentInit>();
+
+    static {
+        ThreadLocalUtils.addCloseCallback(new CloseCallback() {
+            @Override
+            public void close() {
+                for (Map.Entry<String, ComponentInit> entry : components.entrySet()) {
+                    ComponentInit component = entry.getValue();
+                    component.remove();
+                }
+            }
+        });
+    }
 
     public static void print() {
         System.out.println(pObjects);
@@ -51,14 +66,14 @@ public class Context {
     }
 
     public static void addComponent(ComponentInit component) {
-        for(String name : component.getComponentName()){
-            components.put(name , component);
+        for (String name : component.getComponentName()) {
+            components.put(name, component);
         }
     }
 
     public static Object getComponent(String componentName) {
         ComponentInit init = components.get(componentName);
-        if(init == null)return null;
+        if (init == null) return null;
         return init.getComponentObject();
     }
 

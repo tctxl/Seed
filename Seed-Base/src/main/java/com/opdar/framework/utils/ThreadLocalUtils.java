@@ -2,10 +2,7 @@ package com.opdar.framework.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Jeffrey on 2015/4/25.
@@ -14,6 +11,13 @@ import java.util.Map;
  * QQ:362116120
  */
 public class ThreadLocalUtils {
+
+    public static List<CloseCallback> closeCallbacks = new LinkedList<CloseCallback>();
+
+    public static void addCloseCallback(CloseCallback closeCallback){
+        closeCallbacks.add(closeCallback);
+    }
+
     private static Map<String,HashSet<Thread>> map = new HashMap<String, HashSet<Thread>>();
     public static void record(String threadsKey){
         HashSet<Thread> threads = null;

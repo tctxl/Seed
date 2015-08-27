@@ -3,6 +3,8 @@ package com.opdar.framework.web.common;
 import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
+import com.opdar.framework.utils.CloseCallback;
+import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.web.interfaces.View;
 import com.opdar.framework.web.views.DefaultView;
 import com.opdar.framework.web.views.ErrorView;
@@ -25,10 +27,21 @@ public class SeedRouter {
     private List<String> restfulPar;
     private ThreadLocal<SeedExcuteItrf> before = new ThreadLocal<SeedExcuteItrf>();
     private ThreadLocal<SeedExcuteItrf> after = new ThreadLocal<SeedExcuteItrf>();
-    private Class<?> beforeClz = null,afterClz = null;
+    private Class<?> beforeClz = null, afterClz = null;
+    private static final String ROUTER_KEY = "ROUTER_KEY";
 
     private ControllerAct controllerAct;
     private HashMap<String, ClassBean> argMapped = new HashMap<String, ClassBean>();
+
+    public SeedRouter() {
+        ThreadLocalUtils.addCloseCallback(new CloseCallback() {
+            @Override
+            public void close() {
+                ThreadLocalUtils.clearThreadLocals(ROUTER_KEY,after);
+                ThreadLocalUtils.clearThreadLocals(ROUTER_KEY,before);
+            }
+        });
+    }
 
     public ClassBean.MethodInfo.LocalVar getRequestBodyVar() {
         return requestBodyVar;
@@ -111,8 +124,10 @@ public class SeedRouter {
     public void invokeAfter() {
         if (afterClz != null) {
             try {
-                if (this.after.get() == null)
+                if (this.after.get() == null) {
+                    ThreadLocalUtils.record(ROUTER_KEY);
                     this.after.set(SeedInvoke.buildObject(afterClz));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -131,8 +146,10 @@ public class SeedRouter {
 
         if (beforeClz != null) {
             try {
-                if (this.before.get() == null)
+                if (this.before.get() == null) {
+                    ThreadLocalUtils.record(ROUTER_KEY);
                     this.before.set(SeedInvoke.buildObject(beforeClz));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

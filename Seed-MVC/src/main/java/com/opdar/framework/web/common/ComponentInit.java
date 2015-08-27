@@ -1,5 +1,6 @@
 package com.opdar.framework.web.common;
 
+import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.web.anotations.Component;
 import com.opdar.framework.web.anotations.Inject;
 
@@ -19,7 +20,7 @@ public class ComponentInit {
     private String[] componentNames;
     private Object[] initArgs;
     private List<ComponentMethod> methods = new LinkedList<ComponentMethod>();
-
+    private static final String COMPONENT_KEY = "COMPONENT_KEY";
     public ComponentInit(Class<?> component) {
         this.component = component;
         componentNames = new String[component.getInterfaces().length+1];
@@ -29,13 +30,18 @@ public class ComponentInit {
         }
     }
 
+    public void remove(){
+        ThreadLocalUtils.clearThreadLocals(COMPONENT_KEY,componentLoad);
+    }
+
     public String[] getComponentName() {
         return componentNames;
     }
 
     public Object getComponentObject() {
-        ClassLoader loader = component.getClassLoader();
+        ThreadLocalUtils.record(COMPONENT_KEY);
 
+        ClassLoader loader = component.getClassLoader();
         Class context = null;
         Method getComponentMethod = null,getMethod = null;
         try {

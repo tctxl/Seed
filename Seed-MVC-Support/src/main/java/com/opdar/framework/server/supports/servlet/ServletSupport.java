@@ -4,6 +4,8 @@ import com.opdar.framework.server.base.IConfig;
 import com.opdar.framework.server.base.ISupport;
 import com.opdar.framework.server.exceptions.NoConfigException;
 import com.opdar.framework.server.supports.DefaultSupport;
+import com.opdar.framework.utils.CloseCallback;
+import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.web.converts.JSONConvert;
 
 import javax.servlet.ServletContextEvent;
@@ -13,8 +15,8 @@ import java.io.File;
 /**
  * Created by shiju_000 on 2015/4/8.
  */
-public class ServletSupport extends DefaultSupport implements ServletContextListener{
-    public ServletSupport(){
+public class ServletSupport extends DefaultSupport implements ServletContextListener {
+    public ServletSupport() {
     }
 
     public ISupport start() {
@@ -24,8 +26,8 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        if(ServletSupport.config == null){
-            System.setProperty("seed.root",new File(servletContextEvent.getServletContext().getRealPath("/")).getAbsolutePath());
+        if (ServletSupport.config == null) {
+            System.setProperty("seed.root", new File(servletContextEvent.getServletContext().getRealPath("/")).getAbsolutePath());
             String config = servletContextEvent.getServletContext().getInitParameter("config");
             try {
                 IConfig tempConfig = (IConfig) Class.forName(config).newInstance();
@@ -38,13 +40,13 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
                 e.printStackTrace();
             }
         }
-        if(ServletSupport.config == null){
+        if (ServletSupport.config == null) {
             try {
                 throw new NoConfigException();
             } catch (NoConfigException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             SeedServlet.web.loadComponent(ServletSupport.config.get(IConfig.CONTROLLER_PATH));
             SeedServlet.web.setWebHtml(ServletSupport.config.get(IConfig.PAGES));
             SeedServlet.web.setWebPublic(ServletSupport.config.get(IConfig.PUBLIC));
@@ -58,9 +60,9 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
             String datasource = ServletSupport.config.get(IConfig.JDBC_DATASOURCE);
             String host = ServletSupport.config.get(IConfig.JDBC_HOST);
             String openurl = ServletSupport.config.get(IConfig.JDBC_OPENURL);
-            if(activeRecord == null)activeRecord = "0";
-            if(openurl == null)openurl = "0";
-            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord,database,datasource,host,openurl);
+            if (activeRecord == null) activeRecord = "0";
+            if (openurl == null) openurl = "0";
+            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord, database, datasource, host, openurl);
         }
         SeedServlet.web.setHttpConvert(JSONConvert.class);
         ServletSupport.config.onCreate();
@@ -68,7 +70,7 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        if(ServletSupport.config !=null)
+        if (ServletSupport.config != null)
             ServletSupport.config.onDestory();
         SeedServlet.web.destory();
     }

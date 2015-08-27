@@ -6,6 +6,7 @@ import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.db.impl.DaoMap;
 import com.opdar.framework.db.impl.OnDataSourceCloseListener;
+import com.opdar.framework.utils.CloseCallback;
 import com.opdar.framework.utils.ParamsUtil;
 import com.opdar.framework.utils.ThreadLocalUtils;
 import com.opdar.framework.utils.Utils;
@@ -98,6 +99,12 @@ public class SeedWeb {
         if (database != null) {
             database.close();
         }
+
+        for (CloseCallback callback : ThreadLocalUtils.closeCallbacks) {
+            if (callback != null)
+                callback.close();
+        }
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
