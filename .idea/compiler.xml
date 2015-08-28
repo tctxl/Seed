@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <excludeFromCompile>
+      <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
+    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
@@ -25,11 +28,10 @@
         <processorPath useClasspath="true" />
         <module name="seed-aop" />
         <module name="seed-base" />
-        <module name="seed-configuration-web" />
-        <module name="Seed-Configuration-Web-Tomcat" />
         <module name="Seed-CPlan" />
         <module name="seed-database" />
         <module name="seed-extra" />
+        <module name="Seed-IO" />
         <module name="seed-mvc" />
         <module name="seed-mvc-server" />
         <module name="seed-mvc-support" />
@@ -46,6 +48,7 @@
       <module name="Seed-CPlan" target="1.6" />
       <module name="seed-database" target="1.6" />
       <module name="seed-extra" target="1.6" />
+      <module name="Seed-IO" target="1.6" />
       <module name="seed-mvc" target="1.6" />
       <module name="seed-mvc-support" target="1.6" />
       <module name="seed-template" target="1.6" />

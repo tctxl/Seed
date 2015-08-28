@@ -25,6 +25,7 @@ public class NetUtils {
         public byte[] getResult() {
             return result;
         }
+
         public String getResultStr() {
             try {
                 return new String(result,"utf-8");
@@ -35,7 +36,7 @@ public class NetUtils {
         }
 
 
-        public void setResult(byte[] result) {
+        protected void setResult(byte[] result) {
             this.result = decoder.decoder(result);
         }
 
@@ -43,12 +44,22 @@ public class NetUtils {
             return code;
         }
 
-        public void setCode(int code) {
+        protected void setCode(int code) {
             this.code = code;
         }
     }
 
-    public synchronized static NetResult post(String reqUrl, Map<String, Object> parameters, Map<String, Object> headers, String body,Decoder decoder) throws Exception {
+    /**
+     * POST请求
+     * @param reqUrl 请求地址
+     * @param parameters 参数
+     * @param headers 头
+     * @param body 消息体
+     * @param decoder 解码器
+     * @return
+     * @throws Exception
+     */
+    public static NetResult post(String reqUrl, Map<String, Object> parameters, Map<String, Object> headers, String body,Decoder decoder) throws Exception {
         HttpURLConnection urlConn = null;
         NetResult responseContent = new NetResult(decoder);
         try {
@@ -114,6 +125,40 @@ public class NetUtils {
             }
         }
         return responseContent;
+    }
+
+    /**
+     * GET请求
+     * @param url 请求地址
+     * @param headers 头
+     * @param decoder 解码器
+     * @return
+     * @throws Exception
+     */
+    public static NetResult get(String url,Map<String, Object> headers, Decoder decoder) throws Exception {
+        URL requestUrl = new URL(url);
+        HttpURLConnection urlConnection = (HttpURLConnection) requestUrl
+                .openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setConnectTimeout(45 * 1000);
+
+        if(headers != null){
+            for(Iterator<String> it = headers.keySet().iterator();it.hasNext();){
+                String key = it.next();
+                urlConnection.setRequestProperty(key,headers.get(key).toString());
+            }
+        }
+
+        if (urlConnection.getResponseCode() == 200) {
+            byte[] bytes = read(urlConnection.getInputStream());
+            urlConnection.disconnect();
+
+            NetResult result = new NetResult(decoder);
+            result.setResult(bytes);
+            result.setCode(urlConnection.getResponseCode());
+            return result;
+        }
+        return null;
     }
 
     public static byte[] read(InputStream inputStream) throws IOException {

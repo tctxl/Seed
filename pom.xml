@@ -17,10 +17,8 @@
         <module>Seed-MVC-Support</module>
         <module>Seed-Base</module>
         <module>Seed-Template</module>
-        <module>Seed-Configuration-Web</module>
-        <module>Seed-Configuration-Web-Tomcat</module>
         <module>Seed-CPlan</module>
-        <!--<module>Seed-Configuration-Web-Plugin</module>-->
+        <module>Seed-IO</module>
     </modules>
     <build>
         <plugins>

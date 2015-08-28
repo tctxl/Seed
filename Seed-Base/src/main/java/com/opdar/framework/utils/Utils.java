@@ -214,6 +214,13 @@ public class Utils {
     }
 
 
+    public static byte[] byteMerger(byte[] bytes1, byte[] bytes2) {
+        byte[] byte_3 = new byte[bytes1.length + bytes2.length];
+        System.arraycopy(bytes1, 0, byte_3, 0, bytes1.length);
+        System.arraycopy(bytes2, 0, byte_3, bytes1.length, bytes2.length);
+        return byte_3;
+    }
+
     public static String setMethodName(String fieldName) {
         if (fieldName.length() < 2) return "set".concat(fieldName);
         char c1 = Character.toUpperCase(fieldName.charAt(0));

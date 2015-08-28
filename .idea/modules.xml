@@ -4,10 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Seed.iml" filepath="$PROJECT_DIR$/Seed.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-CPlan/Seed-CPlan.iml" filepath="$PROJECT_DIR$/Seed-CPlan/Seed-CPlan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/Seed-Configuration-Web-Tomcat.iml" filepath="$PROJECT_DIR$/Seed-Configuration-Web-Tomcat/Seed-Configuration-Web-Tomcat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Seed-IO/Seed-IO.iml" filepath="$PROJECT_DIR$/Seed-IO/Seed-IO.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Aop/seed-aop.iml" filepath="$PROJECT_DIR$/Seed-Aop/seed-aop.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Base/seed-base.iml" filepath="$PROJECT_DIR$/Seed-Base/seed-base.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" filepath="$PROJECT_DIR$/Seed-Configuration-Web/seed-configuration-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Database/seed-database.iml" filepath="$PROJECT_DIR$/Seed-Database/seed-database.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-Extra/seed-extra.iml" filepath="$PROJECT_DIR$/Seed-Extra/seed-extra.iml" />
       <module fileurl="file://$PROJECT_DIR$/Seed-MVC/seed-mvc.iml" filepath="$PROJECT_DIR$/Seed-MVC/seed-mvc.iml" />
