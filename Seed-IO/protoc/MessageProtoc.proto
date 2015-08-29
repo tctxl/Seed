@@ -1,0 +1,24 @@
+package com.opdar.seed.io.protocol;
+
+message ActionBean {
+
+  enum Action {
+    LOGIN = 0;
+    LOGOUT = 1;
+    MSG = 2;
+    REPLY = 3;
+    HEARTBEAT = 4;
+  }
+
+  required Action action = 1;
+  required MessageBean message = 2;
+}
+
+message MessageBean {
+  required string id = 1;
+  required string content = 2;
+  required string fromId = 3;
+  required string toId = 4;
+  required int64 createTime = 5;
+  required int32 type = 6;
+}

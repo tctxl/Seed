@@ -47,25 +47,8 @@ public class ServletSupport extends DefaultSupport implements ServletContextList
                 e.printStackTrace();
             }
         } else {
-            SeedServlet.web.loadComponent(ServletSupport.config.get(IConfig.CONTROLLER_PATH));
-            SeedServlet.web.setWebHtml(ServletSupport.config.get(IConfig.PAGES));
-            SeedServlet.web.setWebPublic(ServletSupport.config.get(IConfig.PUBLIC));
-            SeedServlet.web.setDefaultPages(ServletSupport.config.get(IConfig.DEFAULT_PAGES));
-            String activeRecord = ServletSupport.config.get(IConfig.ACTIVE_RECORD);
-            String jdbcUrl = ServletSupport.config.get(IConfig.JDBC_URL);
-            String userName = ServletSupport.config.get(IConfig.JDBC_USERNAME);
-            String passWord = ServletSupport.config.get(IConfig.JDBC_PASSWORD);
-            String driver = ServletSupport.config.get(IConfig.JDBC_DRIVER);
-            String database = ServletSupport.config.get(IConfig.JDBC_DATABASE);
-            String datasource = ServletSupport.config.get(IConfig.JDBC_DATASOURCE);
-            String host = ServletSupport.config.get(IConfig.JDBC_HOST);
-            String openurl = ServletSupport.config.get(IConfig.JDBC_OPENURL);
-            if (activeRecord == null) activeRecord = "0";
-            if (openurl == null) openurl = "0";
-            SeedServlet.web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord, database, datasource, host, openurl);
+            loadConfig(ServletSupport.config,SeedServlet.getWeb());
         }
-        SeedServlet.web.setHttpConvert(JSONConvert.class);
-        ServletSupport.config.onCreate();
     }
 
     @Override

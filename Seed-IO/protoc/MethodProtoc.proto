@@ -1,0 +1,13 @@
+package com.opdar.seed.io.protocol;
+
+message Method {
+  required string name = 1;
+  required string params = 2;
+  required string type = 3;
+}
+
+message Response {
+  required int32 code = 1;
+  required bytes content = 2;
+  required string type = 3;
+}

@@ -46,25 +46,23 @@ import java.util.*;
  * QQ:362116120
  */
 public class SeedWeb {
-    public static final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
+    public final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
     //所有路由
-    private static final HashMap<String, ThreadLocal<Object>> threadMaps = new HashMap<String, ThreadLocal<Object>>();
+    private final HashMap<String, ThreadLocal<Object>> threadMaps = new HashMap<String, ThreadLocal<Object>>();
     //转换器
-    private static final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
+    private final HashMap<String, HttpConvert> converts = new HashMap<String, HttpConvert>();
     //输入流解析器
-    private static final Map<String, HttpParser> parsers = new HashMap<String, HttpParser>();
+    private final Map<String, HttpParser> parsers = new HashMap<String, HttpParser>();
     //默认页
-    private static final HashSet<String> defaultPages = new HashSet<String>();
+    private final HashSet<String> defaultPages = new HashSet<String>();
     private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
-    private static final Map<String, String> contentTypes = new HashMap<String, String>();
+    private final Map<String, String> contentTypes = new HashMap<String, String>();
     public static String WEB_HTML_PATH = "";
     public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
     private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
     private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
 
     static {
-        defaultPages.add("INDEX.HTML");
-        defaultPages.add("DEFAULT.HTML");
         String seedRoot = System.getProperty("seed.root");
         if (seedRoot == null) {
             System.setProperty("seed.root", seedRoot = SeedWeb.class.getResource("/").getPath());
@@ -76,6 +74,8 @@ public class SeedWeb {
     private ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
     public SeedWeb() {
+        defaultPages.add("INDEX.HTML");
+        defaultPages.add("DEFAULT.HTML");
         log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
         setParser(new FormParser());
     }
@@ -290,8 +290,8 @@ public class SeedWeb {
         int pNameIndex = -1;
         if ((pNameIndex = routerName.indexOf("/", 1)) != -1) {
             String publicPathKey = routerName.substring(0, pNameIndex);
-            if (SeedWeb.publicPaths.containsKey(publicPathKey))
-                publicPath = SeedWeb.publicPaths.get(publicPathKey);
+            if (publicPaths.containsKey(publicPathKey))
+                publicPath = publicPaths.get(publicPathKey);
         }
         return publicPath;
     }

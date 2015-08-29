@@ -54,18 +54,7 @@ public class CPServletSupport extends ServletSupport {
                 }
                 IConfig config = entry.getConfig();
                 if(config !=null){
-                    String activeRecord = config.get(IConfig.ACTIVE_RECORD);
-                    String jdbcUrl = config.get(IConfig.JDBC_URL);
-                    String userName = config.get(IConfig.JDBC_USERNAME);
-                    String passWord = config.get(IConfig.JDBC_PASSWORD);
-                    String driver = config.get(IConfig.JDBC_DRIVER);
-                    String database = config.get(IConfig.JDBC_DATABASE);
-                    String datasource = config.get(IConfig.JDBC_DATASOURCE);
-                    String host = config.get(IConfig.JDBC_HOST);
-                    String openurl = config.get(IConfig.JDBC_OPENURL);
-                    if(activeRecord == null)activeRecord = "0";
-                    if(openurl == null)openurl = "0";
-                    web.setDatabase(activeRecord, driver, jdbcUrl, userName, passWord,database,datasource,host,openurl);
+                    loadConfig(config,web);
                 }
                 entry.entry();
             } catch (Exception e) {
