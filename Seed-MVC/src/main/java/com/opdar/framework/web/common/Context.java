@@ -17,17 +17,21 @@ public class Context {
     private static ConcurrentHashMap<String, Object> pObjects = new ConcurrentHashMap<String, Object>();
     private static Map<String, ComponentInit> components = new HashMap<String, ComponentInit>();
 
-    static {
-        ThreadLocalUtils.addCloseCallback(new CloseCallback() {
-            @Override
-            public void close() {
-                for (Map.Entry<String, ComponentInit> entry : components.entrySet()) {
-                    ComponentInit component = entry.getValue();
-                    component.remove();
-                }
-            }
-        });
+    public static void setCloseCallback(){
+        ThreadLocalUtils.addCloseCallback(new ContextCloseListener());
     }
+
+    public static class ContextCloseListener implements CloseCallback{
+
+        @Override
+        public void close() {
+            for (Map.Entry<String, ComponentInit> entry : components.entrySet()) {
+                ComponentInit component = entry.getValue();
+                component.remove();
+            }
+        }
+    }
+
 
     public static void print() {
         System.out.println(pObjects);

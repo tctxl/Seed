@@ -21,8 +21,11 @@ public abstract class DefaultSupport implements ISupport {
     }
 
     protected void loadConfig(IConfig config,SeedWeb web) {
+        loadConfig(config,web,true,null);
+    }
+    protected void loadConfig(IConfig config,SeedWeb web,boolean isClear,String perfix) {
         web.setHttpConvert(JSONConvert.class);
-        web.loadComponent(config.get(IConfig.CONTROLLER_PATH));
+        web.loadComponent(config.get(IConfig.CONTROLLER_PATH),isClear,perfix);
         web.setWebHtml(config.get(IConfig.PAGES));
         web.setWebPublic(config.get(IConfig.PUBLIC));
         web.setDefaultPages(config.get(IConfig.DEFAULT_PAGES));

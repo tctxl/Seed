@@ -2,6 +2,7 @@ package com.opdar.seed.io.base;
 
 import com.opdar.framework.utils.Utils;
 import com.opdar.seed.io.protocol.MethodProtoc;
+import com.opdar.seed.io.protocol.MethodProtocol;
 import com.opdar.seed.io.protocol.Protocol;
 import com.opdar.seed.io.token.Token;
 import com.opdar.seed.io.token.TokenUtil;
@@ -122,26 +123,13 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
 
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 18081);
-            MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();
-            method.setName("/test/param.run");
-            method.setParams("p1=1&p2=2");
-            method.setType("application/x-www-form-urlencoded");
-
-            byte[] result = method.build().toByteArray();
-            String s = Integer.toString(result.length, 36);
-            int k = 4 - s.length();
-            StringBuilder len = new StringBuilder();
-            len.append("M");
-            while (k != 0) {
-                k--;
-                len.append(0);
-            }
-            len.append(s);
-            socket.getOutputStream().write(Utils.byteMerger(len.toString().getBytes(), result));
+            Socket socket = new Socket("localhost", 8176);
+            String name = "/test/param.run";
+            String params = "p1=1&p2=2";
+            String type = "application/x-www-form-urlencoded";
+            socket.getOutputStream().write(MethodProtocol.create(name,params,type));
             socket.getOutputStream().flush();
             socket.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

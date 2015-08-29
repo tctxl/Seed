@@ -13,6 +13,7 @@ import com.opdar.framework.web.common.Context;
 
 import javax.servlet.ServletContextEvent;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -46,15 +47,16 @@ public class CPServletSupport extends ServletSupport {
                 Entry entry = (Entry) cls.newInstance();
                 SeedWeb web = SeedServlet.getWeb();
 
-                if (object.containsKey("controllers")) {
-                    String controllers = object.get("controllers").toString();
-                    web.setClassLoader(loader);
-                    loader.defineCls(className, context);
-                    web.loadComponent(controllers, false, module);
+                web.setClassLoader(loader);
+                Class clz = loader.defineCls(className, context);
+                if(clz != null){
+                    Method method = clz.getMethod("setCloseCallback");
+                    method.invoke(null);
                 }
+
                 IConfig config = entry.getConfig();
                 if(config !=null){
-                    loadConfig(config,web);
+                    loadConfig(config,web,false, module);
                 }
                 entry.entry();
             } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.opdar.seed.io.protocol;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.common.IResponse;
 import com.opdar.seed.io.base.IoSession;
 import org.slf4j.Logger;
@@ -17,6 +18,25 @@ public class MethodProtocol implements Protocol {
     private static final Logger logger = LoggerFactory.getLogger(MethodProtocol.class);
 
     public MethodProtocol() {
+    }
+
+    public static byte[] create(String name,String params,String type){
+        MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();
+        method.setName(name);
+        method.setParams(params);
+        method.setType(type);
+
+        byte[] result = method.build().toByteArray();
+        String s = Integer.toString(result.length, 36);
+        int k = 4 - s.length();
+        StringBuilder len = new StringBuilder();
+        len.append("M");
+        while (k != 0) {
+            k--;
+            len.append(0);
+        }
+        len.append(s);
+        return Utils.byteMerger(len.toString().getBytes(), result);
     }
 
     @Override

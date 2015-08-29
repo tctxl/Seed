@@ -78,6 +78,7 @@ public class SeedWeb {
         defaultPages.add("DEFAULT.HTML");
         log.debug("seed.root path is ".concat(System.getProperty("seed.root")));
         setParser(new FormParser());
+        Context.setCloseCallback();
     }
 
     public static ThreadLocal<SeedResponse> SharedResponse() {
