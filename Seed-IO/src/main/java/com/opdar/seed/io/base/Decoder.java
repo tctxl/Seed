@@ -1,7 +1,6 @@
 package com.opdar.seed.io.base;
 
 import com.opdar.framework.utils.Utils;
-import com.opdar.seed.io.protocol.MethodProtoc;
 import com.opdar.seed.io.protocol.MethodProtocol;
 import com.opdar.seed.io.protocol.Protocol;
 import com.opdar.seed.io.token.Token;
@@ -10,8 +9,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import io.netty.util.NetUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,15 +69,19 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
 
             if (remain == 0 && token != null && merge != null) {
                 Protocol protocol = token.getProtocol();
-                Object content = protocol.execute(merge);
-                HAS_PARSER = false;
-                merge = null;
-                token = null;
-                if (content != null) result.add(content);
+                try{
+                    Object content = protocol.execute(merge);
+                    if (content != null) result.add(content);
+                }finally {
+                    HAS_PARSER = false;
+                    merge = null;
+                    token = null;
+                }
             }
         }
 
         if (remain == 0) {
+            if(list == null)return;
             list.addAll(result);
             result.clear();
         }
@@ -123,12 +128,17 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
 
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 8176);
+            Socket socket = new Socket("localhost", 18081);
             String name = "/test/param.run";
             String params = "p1=1&p2=2";
             String type = "application/x-www-form-urlencoded";
-            socket.getOutputStream().write(MethodProtocol.create(name,params,type));
+            socket.getOutputStream().write(MethodProtocol.create(name, params, type));
             socket.getOutputStream().flush();
+            while (socket.getInputStream().available() >= 0){
+                InputStream in = socket.getInputStream();
+                String result = new String(Utils.is2byte(in));
+                System.out.println(result);
+            }
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

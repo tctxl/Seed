@@ -1,0 +1,15 @@
+package com.opdar.seed.io.protocol;
+
+message Message {
+  optional string from = 1;
+  optional string messageId = 2;
+  optional string to = 3;
+  required Act act = 4;
+  enum Act{
+    JOIN=0;
+    HEARTBEAT=1;
+    MESSAGE=2;
+    REACHER=3;
+    EXIT=4;
+  }
+}

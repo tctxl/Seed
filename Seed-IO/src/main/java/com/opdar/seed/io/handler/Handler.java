@@ -4,7 +4,9 @@ import com.opdar.framework.web.SeedWeb;
 import com.opdar.framework.web.common.SeedRequest;
 import com.opdar.framework.web.common.SeedResponse;
 import com.opdar.framework.web.parser.HttpParser;
+import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.IoSession;
+import com.opdar.seed.io.protocol.ClusterProtoc;
 import com.opdar.seed.io.protocol.MessageProtoc;
 import com.opdar.seed.io.protocol.MethodProtoc;
 import com.opdar.seed.io.protocol.MethodProtocol;
@@ -12,6 +14,7 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
+import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +27,7 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
     private static final Logger logger = LoggerFactory.getLogger(Handler.class);
     public static AttributeKey<IoSession> SESSION_FLAG = AttributeKey.valueOf("session");
     private SeedWeb web;
+    private com.opdar.seed.io.IOPlugin IOPlugin;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -52,7 +56,7 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         super.handlerRemoved(ctx);
         IoSession session = ctx.attr(SESSION_FLAG).get();
-//        session.downline();
+        session.downline();
     }
 
     @Override
@@ -88,10 +92,13 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object object) throws Exception {
         IoSession session = ctx.attr(SESSION_FLAG).get();
-        if (object instanceof MessageProtoc.ActionBean) {
-            System.out.println(object);
-        }
-        if (object instanceof MethodProtoc.Method) {
+        if (object instanceof MessageProtoc.Action) {
+            if (IOPlugin.getMessageCallback() != null)
+                IOPlugin.getMessageCallback().callback(((MessageProtoc.Action) object).getType(), ((MessageProtoc.Action) object).getMessageId(),session);
+        } else if (object instanceof ClusterProtoc.Message) {
+            ReferenceCountUtil.retain(object);
+            ctx.fireChannelRead(object);
+        } else if (object instanceof MethodProtoc.Method) {
             MethodProtoc.Method method = (MethodProtoc.Method) object;
             String name = method.getName();
             String type = method.getType();
@@ -99,15 +106,15 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
 
             SeedRequest request = new SeedRequest();
             SeedResponse response = new SeedResponse(mr);
-            if(web != null){
+            if (web != null) {
                 HttpParser parser = web.getParser(type);
 
                 Object result = null;
-                if(parser != null){
+                if (parser != null) {
                     result = parser.execute(method.getParamsBytes().toByteArray());
                 }
 
-                if(result!= null && result instanceof Map) {
+                if (result != null && result instanceof Map) {
                     request.putValues((Map<String, Object>) result);
                 }
                 request.setBody(method.getParamsBytes().toByteArray());
@@ -118,5 +125,10 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
 
     public void setSeedWeb(SeedWeb seedWeb) {
         this.web = seedWeb;
+    }
+
+    public Handler setIOPlugin(IOPlugin IOPlugin) {
+        this.IOPlugin = IOPlugin;
+        return this;
     }
 }

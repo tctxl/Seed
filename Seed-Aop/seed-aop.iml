@@ -12,5 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="seed-base" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.8" level="project" />
   </component>
 </module>

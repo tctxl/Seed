@@ -4,6 +4,8 @@
     <option name="DEFAULT_COMPILER" value="Javac" />
     <excludeFromCompile>
       <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
+      <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/views/HtmlView.java" />
+      <file url="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedPath.java" />
     </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>

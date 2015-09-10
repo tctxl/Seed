@@ -28,7 +28,6 @@
           <element id="archive" name="seed-database-0.1.0.jar">
             <element id="module-output" name="seed-database" />
           </element>
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.8" />
         </element>
       </element>
       <element id="directory" name="META-INF">

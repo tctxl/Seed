@@ -62,6 +62,10 @@ public class SeedWeb {
     private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
     private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
 
+    private static final Logger log = LoggerFactory.getLogger("SeedWeb");
+    private ControllerInvoke controllerInvoke = new ControllerInvoke();
+    private ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
     static {
         String seedRoot = System.getProperty("seed.root");
         if (seedRoot == null) {
@@ -69,9 +73,6 @@ public class SeedWeb {
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger("SeedWeb");
-    private ControllerInvoke controllerInvoke = new ControllerInvoke();
-    private ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
     public SeedWeb() {
         defaultPages.add("INDEX.HTML");

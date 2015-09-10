@@ -182,6 +182,8 @@ public class ParamsUtil {
                     classes.add(loader.loadClass(packageName + className));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                } catch (NoClassDefFoundError e){
+                    e.printStackTrace();
                 }
             }
         }

@@ -24,4 +24,8 @@ public class IoSession {
     public void writeAndFlush(byte[] bytes) {
         ctx.writeAndFlush(bytes);
     }
+
+    public void downline() {
+        ctx.close();
+    }
 }

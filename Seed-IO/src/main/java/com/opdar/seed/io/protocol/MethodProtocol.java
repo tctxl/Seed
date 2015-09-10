@@ -20,23 +20,34 @@ public class MethodProtocol implements Protocol {
     public MethodProtocol() {
     }
 
-    public static byte[] create(String name,String params,String type){
+    public static byte[] create(String name, String params, String type) {
         MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();
         method.setName(name);
         method.setParams(params);
         method.setType(type);
 
         byte[] result = method.build().toByteArray();
-        String s = Integer.toString(result.length, 36);
-        int k = 4 - s.length();
-        StringBuilder len = new StringBuilder();
-        len.append("M");
-        while (k != 0) {
-            k--;
-            len.append(0);
+        return Utils.byteMerger(convertLen(result.length), result);
+    }
+
+    public static byte[] convertLen(int i) {
+        int radix = 36;
+        byte buf[] = new byte[]{'M', '0', '0', '0', '0'};
+        boolean negative = (i < 0);
+        int charPos = 4;
+        if (!negative) {
+            i = -i;
         }
-        len.append(s);
-        return Utils.byteMerger(len.toString().getBytes(), result);
+        while (i <= -radix) {
+            buf[charPos--] = (byte) digits[-(i % radix)];
+            i = i / radix;
+        }
+        buf[charPos] = (byte) digits[-i];
+
+        if (negative) {
+            buf[--charPos] = '-';
+        }
+        return buf;
     }
 
     @Override
@@ -50,10 +61,6 @@ public class MethodProtocol implements Protocol {
             }
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-        new MethodProtocol().execute("test\nk=1&a=2\napplication/json".getBytes());
     }
 
     public static class MethodResponse implements IResponse {
