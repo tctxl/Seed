@@ -8,8 +8,9 @@ message Message {
   enum Act{
     JOIN=0;
     HEARTBEAT=1;
-    MESSAGE=2;
-    REACHER=3;
-    EXIT=4;
+    REPLY_HEARTBEAT=2;
+    MESSAGE=3;
+    REACHER=4;
+    EXIT=5;
   }
 }

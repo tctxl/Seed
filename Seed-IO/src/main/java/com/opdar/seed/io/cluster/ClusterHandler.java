@@ -2,19 +2,18 @@ package com.opdar.seed.io.cluster;
 
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
-import com.opdar.seed.io.protocol.ActionProtocol;
-import com.opdar.seed.io.protocol.ClusterProtoc;
-import com.opdar.seed.io.protocol.MessageProtoc;
-import com.opdar.seed.io.protocol.OnlineProtoc;
+import com.opdar.seed.io.protocol.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
+import io.netty.util.concurrent.EventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 @Sharable
 public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
@@ -68,9 +67,11 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
     protected void channelRead0(ChannelHandlerContext ctx, Object object) throws Exception {
         Cluster cluster = ctx.attr(SESSION_FLAG).get();
         if (object instanceof ClusterProtoc.Message) {
+            if(cluster != null) cluster.clearHeartbeat();
             switch (((ClusterProtoc.Message) object).getAct()) {
                 case JOIN: {
                     ctx.attr(SESSION_FLAG).set(cluster = new Cluster(ctx));
+                    cluster.heartbeat();
                     logger.info("节点[{}:{}]加入成功", cluster.getIp(), cluster.getPort());
                     cluster.reacher();
                 }
@@ -94,6 +95,16 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
 
                     //告知服务消息已送至队列
                     cluster.write(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.INQUEUE).setMessageId(messageId).build()));
+                }
+                break;
+                case REPLY_HEARTBEAT:{
+                    //收到客户端响应
+                    cluster.clearHeartbeat();
+                }
+                break;
+                case HEARTBEAT:{
+                    //客户端接收到心跳,对服务端响应
+                    ctx.write(ClusterProtocol.create(ClusterProtoc.Message.newBuilder().setAct(ClusterProtoc.Message.Act.REPLY_HEARTBEAT).build()));
                 }
                 break;
             }

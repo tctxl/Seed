@@ -197,17 +197,21 @@ public final class ClusterProtoc {
        */
       HEARTBEAT(1, 1),
       /**
-       * <code>MESSAGE = 2;</code>
+       * <code>REPLY_HEARTBEAT = 2;</code>
        */
-      MESSAGE(2, 2),
+      REPLY_HEARTBEAT(2, 2),
       /**
-       * <code>REACHER = 3;</code>
+       * <code>MESSAGE = 3;</code>
        */
-      REACHER(3, 3),
+      MESSAGE(3, 3),
       /**
-       * <code>EXIT = 4;</code>
+       * <code>REACHER = 4;</code>
        */
-      EXIT(4, 4),
+      REACHER(4, 4),
+      /**
+       * <code>EXIT = 5;</code>
+       */
+      EXIT(5, 5),
       ;
 
       /**
@@ -219,17 +223,21 @@ public final class ClusterProtoc {
        */
       public static final int HEARTBEAT_VALUE = 1;
       /**
-       * <code>MESSAGE = 2;</code>
+       * <code>REPLY_HEARTBEAT = 2;</code>
        */
-      public static final int MESSAGE_VALUE = 2;
+      public static final int REPLY_HEARTBEAT_VALUE = 2;
       /**
-       * <code>REACHER = 3;</code>
+       * <code>MESSAGE = 3;</code>
        */
-      public static final int REACHER_VALUE = 3;
+      public static final int MESSAGE_VALUE = 3;
       /**
-       * <code>EXIT = 4;</code>
+       * <code>REACHER = 4;</code>
        */
-      public static final int EXIT_VALUE = 4;
+      public static final int REACHER_VALUE = 4;
+      /**
+       * <code>EXIT = 5;</code>
+       */
+      public static final int EXIT_VALUE = 5;
 
 
       public final int getNumber() { return value; }
@@ -238,9 +246,10 @@ public final class ClusterProtoc {
         switch (value) {
           case 0: return JOIN;
           case 1: return HEARTBEAT;
-          case 2: return MESSAGE;
-          case 3: return REACHER;
-          case 4: return EXIT;
+          case 2: return REPLY_HEARTBEAT;
+          case 3: return MESSAGE;
+          case 4: return REACHER;
+          case 5: return EXIT;
           default: return null;
         }
       }
@@ -1017,11 +1026,12 @@ public final class ClusterProtoc {
   static {
     String[] descriptorData = {
       "\n\023ClusterProtoc.proto\022\032com.opdar.seed.io" +
-      ".protocol\"\260\001\n\007Message\022\014\n\004from\030\001 \001(\t\022\021\n\tm" +
+      ".protocol\"\305\001\n\007Message\022\014\n\004from\030\001 \001(\t\022\021\n\tm" +
       "essageId\030\002 \001(\t\022\n\n\002to\030\003 \001(\t\0224\n\003act\030\004 \002(\0162" +
       "\'.com.opdar.seed.io.protocol.Message.Act" +
-      "\"B\n\003Act\022\010\n\004JOIN\020\000\022\r\n\tHEARTBEAT\020\001\022\013\n\007MESS" +
-      "AGE\020\002\022\013\n\007REACHER\020\003\022\010\n\004EXIT\020\004"
+      "\"W\n\003Act\022\010\n\004JOIN\020\000\022\r\n\tHEARTBEAT\020\001\022\023\n\017REPL" +
+      "Y_HEARTBEAT\020\002\022\013\n\007MESSAGE\020\003\022\013\n\007REACHER\020\004\022" +
+      "\010\n\004EXIT\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
