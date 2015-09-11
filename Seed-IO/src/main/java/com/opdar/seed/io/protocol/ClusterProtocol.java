@@ -6,13 +6,13 @@ import com.opdar.framework.utils.Utils;
 /**
  * Created by 俊帆 on 2015/8/31.
  */
-public class ClusterProtocol implements Protocol {
+public class ClusterProtocol implements Protocol<ClusterProtoc.Message> {
     @Override
-    public <A> A execute(byte[] buf) {
+    public ClusterProtoc.Message execute(byte[] buf) {
         if (buf != null) {
             try {
                 ClusterProtoc.Message clusterMsg = ClusterProtoc.Message.parseFrom(buf);
-                return (A) clusterMsg;
+                return clusterMsg;
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }

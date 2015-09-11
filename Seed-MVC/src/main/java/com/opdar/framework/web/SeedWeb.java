@@ -228,7 +228,7 @@ public class SeedWeb {
         }
     }
 
-    public void execute(String routerName, SeedRequest request, final IResponse response) {
+    public synchronized void execute(String routerName, SeedRequest request, final IResponse response) {
         ThreadLocalUtils.record(HTTP_THREAD_KEY);
         final SeedResponse seedResponse = (SeedResponse) response;
         try {

@@ -29,7 +29,7 @@
     </dependency>
     <dependency>
         <groupId>com.opdar.seed</groupId>
-        <artifactId>seed-base</artifactId>
+        <artifactId>seed-extra</artifactId>
         <version>0.1.0</version>
     </dependency>
     <dependency>

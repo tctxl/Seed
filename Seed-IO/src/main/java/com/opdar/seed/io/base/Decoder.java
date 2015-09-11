@@ -8,8 +8,9 @@ import com.opdar.seed.io.token.TokenUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageDecoder;
-import io.netty.util.NetUtil;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.DecoderException;
+import io.netty.util.ReferenceCountUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,20 +22,46 @@ import java.util.List;
  * Created by 俊帆 on 2015/8/27.
  */
 @ChannelHandler.Sharable
-public class Decoder extends MessageToMessageDecoder<ByteBuf> {
+public class Decoder extends ChannelInboundHandlerAdapter {
+
+    public Decoder() {
+    }
+
     private Token token = null;
     private boolean HAS_PARSER = false;
     private static int remain = 0;
     private byte[] merge = null;
     private byte[] lengthBytes = null;
-    private List<Object> result = new LinkedList<Object>();
     int length = 0;
+    List<Object> objects = new LinkedList<Object>();
 
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        super.channelReadComplete(ctx);
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        try {
+            @SuppressWarnings("unchecked")
+            ByteBuf cast = (ByteBuf) msg;
+            try {
+                decode(ctx, cast);
+            } finally {
+                ReferenceCountUtil.release(cast);
+            }
+        } catch (DecoderException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DecoderException(e);
+        }
+    }
+
+    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
         while (byteBuf.readableBytes() != 0) {
             if (!HAS_PARSER) {
-                if (lengthBytes == null) {
+                if (lengthBytes == null && token == null) {
                     while (byteBuf.isReadable()) {
                         int i = byteBuf.readByte();
                         if (TokenUtil.contains(i)) {
@@ -68,22 +95,21 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
             }
 
             if (remain == 0 && token != null && merge != null) {
+
                 Protocol protocol = token.getProtocol();
-                try{
+                try {
                     Object content = protocol.execute(merge);
-                    if (content != null) result.add(content);
-                }finally {
+                    if (content != null) {
+                        channelHandlerContext.fireChannelRead(content);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
                     HAS_PARSER = false;
                     merge = null;
                     token = null;
                 }
             }
-        }
-
-        if (remain == 0) {
-            if(list == null)return;
-            list.addAll(result);
-            result.clear();
         }
     }
 
@@ -128,7 +154,7 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
 
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 18081);
+            Socket socket = new Socket("192.168.1.178", 18081);
             String name = "/test/param.run";
             String params = "p1=1&p2=2";
             String type = "application/x-www-form-urlencoded";
@@ -139,6 +165,7 @@ public class Decoder extends MessageToMessageDecoder<ByteBuf> {
                 String result = new String(Utils.is2byte(in));
                 System.out.println(result);
             }
+
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

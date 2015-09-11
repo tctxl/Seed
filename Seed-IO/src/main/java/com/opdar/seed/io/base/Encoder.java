@@ -1,9 +1,7 @@
 package com.opdar.seed.io.base;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
 import java.util.List;
@@ -19,6 +17,6 @@ public class Encoder extends MessageToMessageEncoder<Object> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
-        out.add(wrappedBuffer((byte[])msg));
+        out.add(wrappedBuffer((byte[]) msg));
     }
 }

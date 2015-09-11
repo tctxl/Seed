@@ -10,14 +10,14 @@ import java.io.IOException;
  * 36进制解码
  * Created by 俊帆 on 2015/8/28.
  */
-public class ActionProtocol implements Protocol {
+public class ActionProtocol implements Protocol<MessageProtoc.Action> {
 
     @Override
-    public <A> A execute(byte[] buf) {
+    public MessageProtoc.Action execute(byte[] buf) {
         try {
             if(buf != null){
                 MessageProtoc.Action actionBean = MessageProtoc.Action.parseFrom(new BASE64Decoder().decodeBuffer(new String(buf)));
-                return (A) actionBean;
+                return actionBean;
             }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();

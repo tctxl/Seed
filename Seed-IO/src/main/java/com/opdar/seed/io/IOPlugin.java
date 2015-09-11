@@ -35,6 +35,7 @@ public class IOPlugin extends DefaultSupport implements Plugin {
 
     public interface MessageCallback {
         void callback(MessageProtoc.Action.Type type, String messageId, IoSession session);
+        void otherMessage(Object o, IoSession session);
     }
 
     private MessageCallback callback;

@@ -4,16 +4,20 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.common.IResponse;
+import com.opdar.seed.extra.utils.crypto.Base64;
 import com.opdar.seed.io.base.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
  * Created by 俊帆 on 2015/8/28.
  */
-public class MethodProtocol implements Protocol {
+public class MethodProtocol implements Protocol<MethodProtoc.Method> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodProtocol.class);
 
@@ -51,11 +55,11 @@ public class MethodProtocol implements Protocol {
     }
 
     @Override
-    public <A> A execute(byte[] buf) {
+    public MethodProtoc.Method execute(byte[] buf) {
         if (buf != null) {
             try {
                 MethodProtoc.Method method = MethodProtoc.Method.parseFrom(buf);
-                return (A) method;
+                return method;
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }

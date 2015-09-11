@@ -3,7 +3,7 @@ package com.opdar.seed.io.protocol;
 /**
  * Created by 俊帆 on 2015/8/28.
  */
-public interface Protocol {
+public interface Protocol<A> {
 
     char[] digits = {
             '0' , '1' , '2' , '3' , '4' , '5' ,
@@ -14,5 +14,5 @@ public interface Protocol {
             'u' , 'v' , 'w' , 'x' , 'y' , 'z'
     };
 
-    public <A> A execute(byte[] buf);
+    A execute(byte[] buf);
 }

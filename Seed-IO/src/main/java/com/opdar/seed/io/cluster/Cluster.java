@@ -27,7 +27,7 @@ public class Cluster {
     private boolean isOverTime = false;
     private long heartTime = 0;
 
-    private static final int OVERTIME = 60;
+    private static final int OVERTIME = 300;
 
     public Cluster(ChannelHandlerContext ctx) {
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
@@ -91,7 +91,6 @@ public class Cluster {
 
     public void heartbeat() {
         if(heartTime == 0){
-            logger.debug("Start Heartbeat!");
             ctx.executor().schedule(heartbeat, OVERTIME, TimeUnit.SECONDS);
         }else{
             clearHeartbeat();
@@ -112,13 +111,13 @@ public class Cluster {
                 sec = OVERTIME;
                 if(isOverTime){
                     downline();
+                    logger.debug("!!!!!!!!主机[{}:{}]渡劫失败，已失去生命气息!!!!!!!!",ip,port);
                 }else{
                     write(ClusterProtocol.create(ClusterProtoc.Message.newBuilder().setAct(ClusterProtoc.Message.Act.HEARTBEAT).build()));
                     isOverTime = true;
                 }
             }
             ctx.executor().schedule(this, sec, TimeUnit.SECONDS);
-            logger.debug("heartbeat::next sec {} , isOverTime [{}]",sec,isOverTime);
         }
 
     };

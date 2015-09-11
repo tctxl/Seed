@@ -12,6 +12,7 @@ import com.opdar.seed.io.protocol.MethodProtoc;
 import com.opdar.seed.io.protocol.MethodProtocol;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Sharable
-public class Handler extends SimpleChannelInboundHandler<Object> {
+public class Handler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(Handler.class);
     public static AttributeKey<IoSession> SESSION_FLAG = AttributeKey.valueOf("session");
@@ -60,27 +61,6 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-//        IdleStateEvent ise = (IdleStateEvent) evt;
-//        SheySession session = ctx.attr(SESSION_FLAG).get();
-//        if (ise.state() == IdleState.WRITER_IDLE) {
-//            session.setHeartBeat(new HeartBeat());
-//            IhygeiaProtocol ihygeiaProtocol = IhygeiaProtocol.createProtocol(Constants.Type.HEARTBEAT, session.getHeartBeat().toString());
-//            session.write(ihygeiaProtocol);
-//        }
-//
-//        if (ise.state() == IdleState.READER_IDLE) {
-//            if (session.getHeartBeat() != null && session.getHeartBeat().overtime()) {
-//                session.downline();
-//            }
-//        }
-//
-//        if (ise.state() == IdleState.ALL_IDLE) {
-//            session.downline();
-//        }
-    }
-
-    @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         ctx.attr(SESSION_FLAG).set(new IoSession(ctx));
     }
@@ -88,9 +68,8 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
     }
-
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object object) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object object) throws Exception {
         IoSession session = ctx.attr(SESSION_FLAG).get();
         if (object instanceof MessageProtoc.Action) {
             if (IOPlugin.getMessageCallback() != null)
@@ -100,12 +79,11 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
             ctx.fireChannelRead(object);
         } else if (object instanceof MethodProtoc.Method) {
             MethodProtoc.Method method = (MethodProtoc.Method) object;
-            String name = method.getName();
+            final String name = method.getName();
             String type = method.getType();
             MethodProtocol.MethodResponse mr = new MethodProtocol.MethodResponse(session);
-
-            SeedRequest request = new SeedRequest();
-            SeedResponse response = new SeedResponse(mr);
+            final SeedRequest request = new SeedRequest();
+            final SeedResponse response = new SeedResponse(mr);
             if (web != null) {
                 HttpParser parser = web.getParser(type);
 
@@ -118,8 +96,15 @@ public class Handler extends SimpleChannelInboundHandler<Object> {
                     request.putValues((Map<String, Object>) result);
                 }
                 request.setBody(method.getParamsBytes().toByteArray());
-                web.execute(name, request, response);
+                ctx.executor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        web.execute(name, request, response);
+                    }
+                });
             }
+        }else{
+            IOPlugin.getMessageCallback().otherMessage(object,session);
         }
     }
 
