@@ -17,12 +17,26 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     protected static final Encoder ENCODER = new Encoder();
     protected static final Handler HANDLER = new Handler();
     protected static final ClusterHandler CLUSTER_HANDLER = new ClusterHandler();
-
+    private boolean isClient = false;
     private static final Logger logger = LoggerFactory.getLogger(Initializer.class);
     private com.opdar.seed.io.IOPlugin ioPlugin;
 
     public Initializer(SeedWeb web) {
+        this(web,false);
+    }
+
+    public Initializer(SeedWeb web,boolean isClient) {
         HANDLER.setSeedWeb(web);
+        this.isClient = isClient;
+    }
+
+    public boolean isClient() {
+        return isClient;
+    }
+
+    public Initializer setIsClient(boolean isClient) {
+        this.isClient = isClient;
+        return this;
     }
 
     @Override
@@ -31,7 +45,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("decoder", DECODER);
         pipeline.addLast("encoder", ENCODER);
         pipeline.addLast("handler", HANDLER.setIOPlugin(ioPlugin));
-        if (TokenUtil.contains('c')) {
+        if (TokenUtil.contains('c') || isClient) {
             pipeline.addLast("clusters", CLUSTER_HANDLER.setIOPlugin(ioPlugin));
         }
     }

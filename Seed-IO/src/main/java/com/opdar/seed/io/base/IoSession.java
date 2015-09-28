@@ -2,15 +2,22 @@ package com.opdar.seed.io.base;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.UUID;
+
 /**
  * Created by 俊帆 on 2015/8/28.
  */
 public class IoSession {
 
     private ChannelHandlerContext ctx;
-
+    private String id;
     public IoSession(ChannelHandlerContext ctx) {
         this.ctx = ctx;
+        id = UUID.randomUUID().toString();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void write(byte[] bytes) {

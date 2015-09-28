@@ -5,13 +5,13 @@ import com.opdar.framework.server.base.ISupport;
 import com.opdar.framework.server.supports.DefaultSupport;
 import com.opdar.framework.utils.Plugin;
 import com.opdar.framework.web.SeedWeb;
-import com.opdar.seed.io.act.Act;
 import com.opdar.seed.io.base.Initializer;
 import com.opdar.seed.io.base.IoSession;
 import com.opdar.seed.io.cluster.ClusterPool;
 import com.opdar.seed.io.messagepool.MessagePool;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
 import com.opdar.seed.io.messagepool.SSDBOnlinePool;
+import com.opdar.seed.io.p2p.P2pServer;
 import com.opdar.seed.io.protocol.ClusterProtoc;
 import com.opdar.seed.io.protocol.MessageProtoc;
 import com.opdar.seed.io.protocol.OnlineProtoc;
@@ -23,6 +23,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultPromise;
 
+import java.util.UUID;
+
 /**
  * Created by 俊帆 on 2015/8/27.
  */
@@ -32,9 +34,11 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     private ChannelFuture channelFuture;
     private SeedWeb web = new SeedWeb();
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    private String serverName;
 
     public interface MessageCallback {
         void callback(MessageProtoc.Action.Type type, String messageId, IoSession session);
+
         void otherMessage(Object o, IoSession session);
     }
 
@@ -44,6 +48,24 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     private MessagePool<ClusterProtoc.Message> msgPool = SSDBMessagePool.getInstance();
     private MessagePool<OnlineProtoc.Online> onlinePool = SSDBOnlinePool.getInstance();
     private int port;
+    private boolean isP2P = false;
+
+    public String getServerName() {
+        if (serverName == null) serverName = UUID.randomUUID().toString();
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public boolean isP2P() {
+        return isP2P;
+    }
+
+    public void setIsP2P(boolean isP2P) {
+        this.isP2P = isP2P;
+    }
 
     public MessagePool<ClusterProtoc.Message> getMsgPool() {
         return msgPool;
@@ -83,13 +105,16 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     @Override
     public boolean install() throws Exception {
         loadToken(MethodToken.class);
-        if (!TokenUtil.contains('c')) {
-            ClusterPool.join(IOPlugin.CLUSTER_HOST, IOPlugin.CLUSTER_PORT);
+        Initializer initializer = new Initializer(web).setIOPlugin(this);
+        if (isP2P) {
+            new P2pServer(port, this).start();
+        } else if (!TokenUtil.contains('c')) {
+            ClusterPool.join(IOPlugin.CLUSTER_HOST, IOPlugin.CLUSTER_PORT, getServerName(), initializer.setIsClient(true));
         }
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new Initializer(web).setIOPlugin(this));
+                .childHandler(initializer);
         channelFuture = b.bind(port).sync().channel().closeFuture().sync();
         return true;
     }

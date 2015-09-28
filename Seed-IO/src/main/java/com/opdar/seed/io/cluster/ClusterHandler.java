@@ -2,18 +2,17 @@ package com.opdar.seed.io.cluster;
 
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
+import com.opdar.seed.io.p2p.P2PClusterPool;
 import com.opdar.seed.io.protocol.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
-import io.netty.util.concurrent.EventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 @Sharable
 public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
@@ -67,12 +66,13 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
     protected void channelRead0(ChannelHandlerContext ctx, Object object) throws Exception {
         Cluster cluster = ctx.attr(SESSION_FLAG).get();
         if (object instanceof ClusterProtoc.Message) {
-            if(cluster != null) cluster.clearHeartbeat();
+            if (cluster != null) cluster.clearHeartbeat();
             switch (((ClusterProtoc.Message) object).getAct()) {
                 case JOIN: {
-                    ctx.attr(SESSION_FLAG).set(cluster = new Cluster(ctx));
+                    String serverName = ((ClusterProtoc.Message) object).getFrom();
+                    ctx.attr(SESSION_FLAG).set(cluster = new Cluster(ctx,serverName));
                     cluster.heartbeat();
-                    logger.info("节点[{}:{}]加入成功", cluster.getIp(), cluster.getPort());
+                    logger.info("节点({})[{}:{}]加入成功",cluster.getServerName(), cluster.getIp(), cluster.getPort());
                     cluster.reacher();
                 }
                 break;
@@ -89,20 +89,27 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
                     ClusterProtoc.Message message = IOPlugin.getMsgPool().get(messageId);
                     String to = message.getTo();
                     //
-                    OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
-                    Cluster toCluster = ClusterPool.get(online.getHost().concat(":").concat(String.valueOf(online.getPort())));
-                    toCluster.write(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build()));
+                    byte[] notifyMsg = ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build());
 
-                    //告知服务消息已送至队列
-                    cluster.write(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.INQUEUE).setMessageId(messageId).build()));
+                    OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
+                    if(IOPlugin.isP2P()){
+                        P2PClusterPool.get(online.getServerName()).send(notifyMsg);
+                    }else{
+                        Cluster toCluster = ClusterPool.get(online.getServerName());
+                        toCluster.write(notifyMsg);
+                        //告知服务消息已送至队列
+                        if (cluster != null) {
+                            cluster.write(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.INQUEUE).setMessageId(messageId).build()));
+                        }
+                    }
                 }
                 break;
-                case REPLY_HEARTBEAT:{
+                case REPLY_HEARTBEAT: {
                     //收到客户端响应
                     cluster.clearHeartbeat();
                 }
                 break;
-                case HEARTBEAT:{
+                case HEARTBEAT: {
                     //客户端接收到心跳,对服务端响应
                     ctx.write(ClusterProtocol.create(ClusterProtoc.Message.newBuilder().setAct(ClusterProtoc.Message.Act.REPLY_HEARTBEAT).build()));
                 }

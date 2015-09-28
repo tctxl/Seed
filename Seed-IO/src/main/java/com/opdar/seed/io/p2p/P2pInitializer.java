@@ -1,5 +1,6 @@
 package com.opdar.seed.io.p2p;
 
+import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.Decoder;
 import com.opdar.seed.io.base.Encoder;
 import com.opdar.seed.io.cluster.ClusterHandler;
@@ -15,8 +16,8 @@ public class P2pInitializer extends ChannelInitializer<NioDatagramChannel> {
     protected static final DatagramDecoder DECODER1 = new DatagramDecoder();
     protected static final Decoder DECODER2 = new Decoder();
     protected static final Encoder ENCODER = new Encoder();
-    protected static final Handler HANDLER = new Handler();
-    protected static final ClusterHandler CLUSTER_HANDLER = new ClusterHandler();
+    protected static final P2PHandler HANDLER = new P2PHandler();
+    private IOPlugin ioPlugin;
 
     @Override
     public void initChannel(NioDatagramChannel ch) throws Exception {
@@ -24,7 +25,16 @@ public class P2pInitializer extends ChannelInitializer<NioDatagramChannel> {
         pipeline.addLast("decoder1",DECODER1);
         pipeline.addLast("decoder2", DECODER2);
         pipeline.addLast("encoder", ENCODER);
-        pipeline.addLast("handler", HANDLER);
-        pipeline.addLast("clusters", CLUSTER_HANDLER);
+        pipeline.addLast("handler", HANDLER.setIoPlugin(ioPlugin));
+//        pipeline.addLast("clusters", CLUSTER_HANDLER.setIOPlugin(ioPlugin));
+    }
+
+    public P2pInitializer setIOPlugin(IOPlugin ioPlugin) {
+        this.ioPlugin = ioPlugin;
+        return this;
+    }
+
+    public IOPlugin getIOPlugin() {
+        return ioPlugin;
     }
 }

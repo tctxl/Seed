@@ -20,7 +20,7 @@ public class Utils {
         ByteArrayOutputStream arrayBuffer = new ByteArrayOutputStream();
         byte[] b = new byte[1024];
         int len = -1;
-        while ((len = inputStream.read()) != -1) {
+        while ((len = inputStream.read(b)) != -1) {
             arrayBuffer.write(b, 0, len);
         }
         inputStream.close();

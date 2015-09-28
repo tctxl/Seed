@@ -4,6 +4,5 @@ message Online {
   required string userId = 1;
   required string socketId = 2;
   required int64 createTime = 3;
-  optional string host = 4;
-  optional int32 port = 5;
+  optional string serverName = 4;
 }

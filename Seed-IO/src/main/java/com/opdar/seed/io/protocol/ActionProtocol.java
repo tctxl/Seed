@@ -16,12 +16,10 @@ public class ActionProtocol implements Protocol<MessageProtoc.Action> {
     public MessageProtoc.Action execute(byte[] buf) {
         try {
             if(buf != null){
-                MessageProtoc.Action actionBean = MessageProtoc.Action.parseFrom(new BASE64Decoder().decodeBuffer(new String(buf)));
+                MessageProtoc.Action actionBean = MessageProtoc.Action.parseFrom(buf);
                 return actionBean;
             }
         } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;

@@ -26,18 +26,27 @@ public class Cluster {
     private String socketId;
     private boolean isOverTime = false;
     private long heartTime = 0;
-
+    private String serverName;
     private static final int OVERTIME = 300;
 
-    public Cluster(ChannelHandlerContext ctx) {
+    public Cluster(ChannelHandlerContext ctx, String serverName) {
         InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
         if (address != null) {
             ip = address.getHostName();
             port = address.getPort();
         }
         this.ctx = ctx;
-        ClusterPool.add(this);
+        this.serverName = serverName;
         socketId = UUID.randomUUID().toString();
+        ClusterPool.add(this);
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
     public String getSocketId() {

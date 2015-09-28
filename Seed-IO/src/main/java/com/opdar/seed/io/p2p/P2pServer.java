@@ -1,5 +1,8 @@
 package com.opdar.seed.io.p2p;
 
+import com.opdar.seed.io.IOPlugin;
+import com.opdar.seed.io.token.ActionToken;
+import com.opdar.seed.io.token.TokenUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -10,8 +13,10 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  */
 public class P2pServer implements Runnable{
     int port;
-    public P2pServer(int port){
+    IOPlugin ioPlugin;
+    public P2pServer(int port,IOPlugin ioPlugin){
         this.port = port;
+        this.ioPlugin = ioPlugin;
     }
 
     public void start(){
@@ -20,17 +25,21 @@ public class P2pServer implements Runnable{
 
     @Override
     public void run() {
+        TokenUtil.add(new ActionToken());
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioDatagramChannel.class)
-                    .handler(new P2pInitializer());
+                    .handler(new P2pInitializer().setIOPlugin(ioPlugin));
             b.bind(port).sync().channel().closeFuture().await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
         }
+    }
+
+    public static void main(String[] args) {
     }
 }

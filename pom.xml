@@ -4,10 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <version>0.1.1</version>
+    </properties>
+
     <groupId>com.opdar.seed</groupId>
     <artifactId>com.opdar.seed</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0</version>
+    <version>${version}</version>
 
     <modules>
         <module>Seed-Database</module>

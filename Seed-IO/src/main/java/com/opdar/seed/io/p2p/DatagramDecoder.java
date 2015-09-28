@@ -11,6 +11,7 @@ import io.netty.channel.socket.DatagramPacket;
  */
 @ChannelHandler.Sharable
 public class DatagramDecoder extends SimpleChannelInboundHandler<DatagramPacket> {
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
         ByteBuf byteBuf = msg.copy().content();

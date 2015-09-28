@@ -50,27 +50,18 @@ public final class OnlineProtoc {
     long getCreateTime();
 
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
-    boolean hasHost();
+    boolean hasServerName();
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
-    String getHost();
+    String getServerName();
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
     com.google.protobuf.ByteString
-        getHostBytes();
-
-    /**
-     * <code>optional int32 port = 5;</code>
-     */
-    boolean hasPort();
-    /**
-     * <code>optional int32 port = 5;</code>
-     */
-    int getPort();
+        getServerNameBytes();
   }
   /**
    * Protobuf type {@code com.opdar.seed.io.protocol.Online}
@@ -144,12 +135,7 @@ public final class OnlineProtoc {
             case 34: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
-              host_ = bs;
-              break;
-            }
-            case 40: {
-              bitField0_ |= 0x00000010;
-              port_ = input.readInt32();
+              serverName_ = bs;
               break;
             }
           }
@@ -291,19 +277,19 @@ public final class OnlineProtoc {
       return createTime_;
     }
 
-    public static final int HOST_FIELD_NUMBER = 4;
-    private Object host_;
+    public static final int SERVERNAME_FIELD_NUMBER = 4;
+    private Object serverName_;
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
-    public boolean hasHost() {
+    public boolean hasServerName() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
-    public String getHost() {
-      Object ref = host_;
+    public String getServerName() {
+      Object ref = serverName_;
       if (ref instanceof String) {
         return (String) ref;
       } else {
@@ -311,49 +297,33 @@ public final class OnlineProtoc {
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          host_ = s;
+          serverName_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string host = 4;</code>
+     * <code>optional string serverName = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getHostBytes() {
-      Object ref = host_;
+        getServerNameBytes() {
+      Object ref = serverName_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
-        host_ = b;
+        serverName_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int PORT_FIELD_NUMBER = 5;
-    private int port_;
-    /**
-     * <code>optional int32 port = 5;</code>
-     */
-    public boolean hasPort() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional int32 port = 5;</code>
-     */
-    public int getPort() {
-      return port_;
-    }
-
     private void initFields() {
       userId_ = "";
       socketId_ = "";
       createTime_ = 0L;
-      host_ = "";
-      port_ = 0;
+      serverName_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -390,10 +360,7 @@ public final class OnlineProtoc {
         output.writeInt64(3, createTime_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, getHostBytes());
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, port_);
+        output.writeBytes(4, getServerNameBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -418,11 +385,7 @@ public final class OnlineProtoc {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getHostBytes());
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, port_);
+          .computeBytesSize(4, getServerNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -547,10 +510,8 @@ public final class OnlineProtoc {
         bitField0_ = (bitField0_ & ~0x00000002);
         createTime_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
-        host_ = "";
+        serverName_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        port_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -594,11 +555,7 @@ public final class OnlineProtoc {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.host_ = host_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.port_ = port_;
+        result.serverName_ = serverName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -628,13 +585,10 @@ public final class OnlineProtoc {
         if (other.hasCreateTime()) {
           setCreateTime(other.getCreateTime());
         }
-        if (other.hasHost()) {
+        if (other.hasServerName()) {
           bitField0_ |= 0x00000008;
-          host_ = other.host_;
+          serverName_ = other.serverName_;
           onChanged();
-        }
-        if (other.hasPort()) {
-          setPort(other.getPort());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -859,24 +813,24 @@ public final class OnlineProtoc {
         return this;
       }
 
-      private Object host_ = "";
+      private Object serverName_ = "";
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
-      public boolean hasHost() {
+      public boolean hasServerName() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
-      public String getHost() {
-        Object ref = host_;
+      public String getServerName() {
+        Object ref = serverName_;
         if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            host_ = s;
+            serverName_ = s;
           }
           return s;
         } else {
@@ -884,85 +838,53 @@ public final class OnlineProtoc {
         }
       }
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getHostBytes() {
-        Object ref = host_;
+          getServerNameBytes() {
+        Object ref = serverName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
-          host_ = b;
+          serverName_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
-      public Builder setHost(
+      public Builder setServerName(
           String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        host_ = value;
+        serverName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
-      public Builder clearHost() {
+      public Builder clearServerName() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        host_ = getDefaultInstance().getHost();
+        serverName_ = getDefaultInstance().getServerName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string host = 4;</code>
+       * <code>optional string serverName = 4;</code>
        */
-      public Builder setHostBytes(
+      public Builder setServerNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000008;
-        host_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int port_ ;
-      /**
-       * <code>optional int32 port = 5;</code>
-       */
-      public boolean hasPort() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional int32 port = 5;</code>
-       */
-      public int getPort() {
-        return port_;
-      }
-      /**
-       * <code>optional int32 port = 5;</code>
-       */
-      public Builder setPort(int value) {
-        bitField0_ |= 0x00000010;
-        port_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 port = 5;</code>
-       */
-      public Builder clearPort() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        port_ = 0;
+        serverName_ = value;
         onChanged();
         return this;
       }
@@ -993,9 +915,9 @@ public final class OnlineProtoc {
   static {
     String[] descriptorData = {
       "\n\022OnlineProtoc.proto\022\032com.opdar.seed.io." +
-      "protocol\"Z\n\006Online\022\016\n\006userId\030\001 \002(\t\022\020\n\010so" +
-      "cketId\030\002 \002(\t\022\022\n\ncreateTime\030\003 \002(\003\022\014\n\004host" +
-      "\030\004 \001(\t\022\014\n\004port\030\005 \001(\005"
+      "protocol\"R\n\006Online\022\016\n\006userId\030\001 \002(\t\022\020\n\010so" +
+      "cketId\030\002 \002(\t\022\022\n\ncreateTime\030\003 \002(\003\022\022\n\nserv" +
+      "erName\030\004 \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1014,7 +936,7 @@ public final class OnlineProtoc {
     internal_static_com_opdar_seed_io_protocol_Online_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_opdar_seed_io_protocol_Online_descriptor,
-        new String[] { "UserId", "SocketId", "CreateTime", "Host", "Port", });
+        new String[] { "UserId", "SocketId", "CreateTime", "ServerName", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

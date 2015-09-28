@@ -30,6 +30,14 @@ public class ComponentInit {
         }
     }
 
+    public Object[] getInitArgs() {
+        return initArgs;
+    }
+
+    public void setInitArgs(Object[] initArgs) {
+        this.initArgs = initArgs;
+    }
+
     public void remove(){
         ThreadLocalUtils.clearThreadLocals(COMPONENT_KEY,componentLoad);
     }
