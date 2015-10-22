@@ -12,8 +12,36 @@ import java.util.UUID;
  */
 public class P2pClient {
     private String host;
-    private int port;
+    private Integer port;
+    private String name;
     private Callback callback;
+
+    public String getHost() {
+        return host;
+    }
+
+    public P2pClient setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public P2pClient setPort(Integer port) {
+        this.port = port;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public P2pClient setName(String name) {
+        this.name = name;
+        return this;
+    }
 
     public interface Callback {
         void back();
@@ -27,9 +55,12 @@ public class P2pClient {
         this.callback = callback;
     }
 
-    public P2pClient(String host, int port) {
+    public P2pClient(String host, Integer port) {
         this.host = host;
         this.port = port;
+    }
+
+    public P2pClient() {
     }
 
     public void send(byte[] data) {

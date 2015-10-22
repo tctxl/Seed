@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <version>0.1.1</version>
+        <version>0.1.2b1-SNAPSHOT</version>
     </properties>
 
     <groupId>com.opdar.seed</groupId>
     <artifactId>com.opdar.seed</artifactId>
     <packaging>pom</packaging>
-    <version>${version}</version>
+    <version>0.1.2b1-SNAPSHOT</version>
 
     <modules>
         <module>Seed-Database</module>
@@ -24,6 +24,7 @@
         <module>Seed-CPlan</module>
         <module>Seed-IO</module>
     </modules>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

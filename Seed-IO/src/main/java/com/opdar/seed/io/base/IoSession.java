@@ -16,6 +16,10 @@ public class IoSession {
         id = UUID.randomUUID().toString();
     }
 
+    public ChannelHandlerContext getContext() {
+        return ctx;
+    }
+
     public String getId() {
         return id;
     }

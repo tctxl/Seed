@@ -7,6 +7,7 @@ import com.opdar.framework.utils.Plugin;
 import com.opdar.framework.web.SeedWeb;
 import com.opdar.seed.io.base.Initializer;
 import com.opdar.seed.io.base.IoSession;
+import com.opdar.seed.io.base.SessionStateCallback;
 import com.opdar.seed.io.cluster.ClusterPool;
 import com.opdar.seed.io.messagepool.MessagePool;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
@@ -35,6 +36,7 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     private SeedWeb web = new SeedWeb();
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     private String serverName;
+    private SessionStateCallback sessionStateCallback;
 
     public interface MessageCallback {
         void callback(MessageProtoc.Action.Type type, String messageId, IoSession session);
@@ -93,6 +95,15 @@ public class IOPlugin extends DefaultSupport implements Plugin {
 
     public IOPlugin(int port) {
         this.port = port;
+    }
+
+    public IOPlugin setSessionStateCallback(SessionStateCallback sessionStateCallback) {
+        this.sessionStateCallback = sessionStateCallback;
+        return this;
+    }
+
+    public SessionStateCallback getSessionStateCallback() {
+        return sessionStateCallback;
     }
 
     public void loadConfig(IConfig config) {

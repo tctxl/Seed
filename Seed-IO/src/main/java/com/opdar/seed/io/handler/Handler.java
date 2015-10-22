@@ -57,12 +57,15 @@ public class Handler extends ChannelInboundHandlerAdapter {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         super.handlerRemoved(ctx);
         IoSession session = ctx.attr(SESSION_FLAG).get();
+        IOPlugin.getSessionStateCallback().unregist(session);
         session.downline();
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        ctx.attr(SESSION_FLAG).set(new IoSession(ctx));
+        IoSession session = null;
+        ctx.attr(SESSION_FLAG).set(session =new IoSession(ctx));
+        IOPlugin.getSessionStateCallback().regist(session);
     }
 
     @Override

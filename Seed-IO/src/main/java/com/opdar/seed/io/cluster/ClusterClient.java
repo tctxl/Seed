@@ -39,6 +39,7 @@ public class ClusterClient {
 
     public void stop() {
         isStop = true;
+        es.shutdown();
         if(ch != null){
             ch.close();
             ((NioSocketChannel) ch).shutdownOutput();

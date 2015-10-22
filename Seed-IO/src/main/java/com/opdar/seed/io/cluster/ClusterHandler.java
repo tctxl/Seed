@@ -3,6 +3,7 @@ package com.opdar.seed.io.cluster;
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
 import com.opdar.seed.io.p2p.P2PClusterPool;
+import com.opdar.seed.io.p2p.P2pClient;
 import com.opdar.seed.io.protocol.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -93,7 +94,12 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
 
                     OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
                     if(IOPlugin.isP2P()){
-                        P2PClusterPool.get(online.getServerName()).send(notifyMsg);
+                        P2pClient client = P2PClusterPool.get(online.getServerName());
+                        if(client != null){
+                            client.send(notifyMsg);
+                        }else{
+                            logger.debug("【"+online.getServerName()+"】 服务已丢失");
+                        }
                     }else{
                         Cluster toCluster = ClusterPool.get(online.getServerName());
                         toCluster.write(notifyMsg);

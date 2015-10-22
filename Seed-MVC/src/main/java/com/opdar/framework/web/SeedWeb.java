@@ -69,7 +69,7 @@ public class SeedWeb {
     static {
         String seedRoot = System.getProperty("seed.root");
         if (seedRoot == null) {
-            System.setProperty("seed.root", seedRoot = SeedWeb.class.getResource("/").getPath());
+            System.setProperty("seed.root", SeedWeb.class.getResource("").getPath());
         }
     }
 

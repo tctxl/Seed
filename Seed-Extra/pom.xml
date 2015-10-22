@@ -5,7 +5,7 @@
     <parent>
         <artifactId>com.opdar.seed</artifactId>
         <groupId>com.opdar.seed</groupId>
-        <version>0.1.1</version>
+        <version>0.1.2b1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,13 +15,13 @@
         <dependency>
             <groupId>com.opdar.seed</groupId>
             <artifactId>seed-mvc</artifactId>
-            <version>0.1.1</version>
+            <version>${version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.opdar.seed</groupId>
             <artifactId>seed-template</artifactId>
-            <version>0.1.1</version>
+            <version>${version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
