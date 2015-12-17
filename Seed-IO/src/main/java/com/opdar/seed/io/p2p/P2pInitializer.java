@@ -3,8 +3,6 @@ package com.opdar.seed.io.p2p;
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.Decoder;
 import com.opdar.seed.io.base.Encoder;
-import com.opdar.seed.io.cluster.ClusterHandler;
-import com.opdar.seed.io.handler.Handler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -22,7 +20,7 @@ public class P2pInitializer extends ChannelInitializer<NioDatagramChannel> {
     @Override
     public void initChannel(NioDatagramChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast("decoder1",DECODER1);
+        pipeline.addLast("decoder1", DECODER1);
         pipeline.addLast("decoder2", DECODER2);
         pipeline.addLast("encoder", ENCODER);
         pipeline.addLast("handler", HANDLER.setIoPlugin(ioPlugin));

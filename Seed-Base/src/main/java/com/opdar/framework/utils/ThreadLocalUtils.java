@@ -36,7 +36,7 @@ public class ThreadLocalUtils {
                     java.lang.reflect.Field field = Thread.class.getDeclaredField("threadLocals");
                     field.setAccessible(true);
                     Object map = field.get(thread);
-                    Method method = map.getClass().getDeclaredMethod("remove",new Class[]{ThreadLocal.class});
+                    Method method = map.getClass().getDeclaredMethod("remove", ThreadLocal.class);
                     method.setAccessible(true);
                     method.invoke(map,threadLocal);
                     thread.interrupt();

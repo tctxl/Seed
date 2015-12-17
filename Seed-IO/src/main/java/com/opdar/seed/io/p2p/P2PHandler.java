@@ -1,17 +1,13 @@
 package com.opdar.seed.io.p2p;
 
 import com.opdar.seed.io.IOPlugin;
-import com.opdar.seed.io.base.IoSession;
-import com.opdar.seed.io.cluster.Cluster;
-import com.opdar.seed.io.cluster.ClusterPool;
-import com.opdar.seed.io.protocol.ActionProtocol;
-import com.opdar.seed.io.protocol.ClusterProtoc;
+import com.opdar.seed.io.base.Result;
+import com.opdar.seed.io.base.UdpIoSession;
+import com.opdar.seed.io.hole.HoleMaker;
 import com.opdar.seed.io.protocol.MessageProtoc;
-import com.opdar.seed.io.protocol.OnlineProtoc;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
+import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +17,7 @@ import java.io.IOException;
  * Created by 俊帆 on 2015/9/16.
  */
 @ChannelHandler.Sharable
-public class P2PHandler extends ChannelInboundHandlerAdapter {
+public class P2PHandler extends SimpleChannelInboundHandler<Result> {
 
     private static final Logger logger = LoggerFactory.getLogger(P2PHandler.class);
     IOPlugin ioPlugin;
@@ -35,8 +31,24 @@ public class P2PHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object object) throws Exception {
-        IoSession session = new IoSession(ctx);
+    public void channelRead0(ChannelHandlerContext ctx, Result result) throws Exception {
+        UdpIoSession session = new UdpIoSession(ctx, result.getAddress());
+        Object object = result.get();
+        logger.info("SENDER : [{}]", result.getAddress());
+//        if (object instanceof Command) {
+//            logger.info("COMMAND:[{}] VALUE:[{}]",((Command) object).getCommand(),((Command) object).getValue());
+//            if (((Command) object).getCommand().equals("DIGPORT")) {
+//                String clientName = ((Command) object).getValue();
+//                byte[] data = zk.getData("/seed/io/udp/hole/client/" + clientName, null, null);
+//                String[] clientDesc = new String(data).split("\\|");
+//                byte[] serverdata = zk.getData("/seed/io/udp/hole/server/" + ioPlugin.getServerName(), null, null);
+//                String[] serverDesc = new String(serverdata).split("\\|");
+////                P2pClient client = new P2pClient();
+//                logger.info("SEND MESSAGE [DIGPORT SUCCESS!!],SERVER[{}],PORT[{}]",clientDesc[0],clientDesc[1]);
+////                client.send("DIAPORT SUCCESS!!".getBytes(),clientDesc[0],Integer.valueOf(clientDesc[1]),Integer.valueOf(serverDesc[1]));
+//                ctx.channel().writeAndFlush(new DatagramPacket(Unpooled.wrappedBuffer("DIGPORT SUCCESS!!".getBytes()),new InetSocketAddress(clientDesc[0],Integer.valueOf(clientDesc[1]))));
+//            }
+//        } else
         if (object instanceof MessageProtoc.Action) {
             //终端
             if (ioPlugin != null && ioPlugin.getMessageCallback() != null)
@@ -44,6 +56,9 @@ public class P2PHandler extends ChannelInboundHandlerAdapter {
         } else {
             //终端
             ioPlugin.getMessageCallback().otherMessage(object, session);
+        }
+        if(!session.isWrite()){
+//            session.writeAndFlush("SUCCESS".getBytes());
         }
     }
 
@@ -55,4 +70,5 @@ public class P2PHandler extends ChannelInboundHandlerAdapter {
         this.ioPlugin = ioPlugin;
         return this;
     }
+
 }

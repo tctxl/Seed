@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public class IoSession {
 
-    private ChannelHandlerContext ctx;
+    protected ChannelHandlerContext ctx;
     private String id;
     public IoSession(ChannelHandlerContext ctx) {
         this.ctx = ctx;

@@ -1,11 +1,10 @@
 package com.opdar.seed.io.p2p;
 
-import com.opdar.seed.io.protocol.ActionProtocol;
-import com.opdar.seed.io.protocol.MessageProtoc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.UUID;
 
 /**
  * Created by 俊帆 on 2015/9/10.
@@ -15,6 +14,7 @@ public class P2pClient {
     private Integer port;
     private String name;
     private Callback callback;
+    private Integer timeOut = 0;
 
     public String getHost() {
         return host;
@@ -63,12 +63,18 @@ public class P2pClient {
     public P2pClient() {
     }
 
+    DatagramSocket socket;
+
+    public void setTimeOut(Integer timeOut) {
+        this.timeOut = timeOut;
+    }
+
     public void send(byte[] data) {
         try {
-            DatagramSocket socket = new DatagramSocket();
+            socket = new DatagramSocket();
+            if(timeOut > 0)socket.setSoTimeout(timeOut);
             DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(host), port);
             socket.send(packet);
-            socket.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (SocketException e) {
@@ -78,9 +84,81 @@ public class P2pClient {
         }
     }
 
-    public static void main(String[] args) {
-        P2pClient client = new P2pClient("localhost", 1080);
-        String messageId = UUID.randomUUID().toString();
-        client.send(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build()));
+    public void send(byte[] data, String host, Integer port) {
+        send(data, host, port, 0);
     }
+
+    public void send(byte[] data, String host, Integer port, Integer port2) {
+        try {
+            if (port2 == null) port2 = 0;
+            socket = new DatagramSocket(port2);
+            System.out.println("LocalPort : " + socket.getLocalPort());
+            byte[] buf = new byte[2048];
+            DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(host), port);
+            socket.send(packet);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String receive() throws IOException {
+        byte[] buf = new byte[2048];
+        DatagramPacket p = new DatagramPacket(buf, buf.length);
+        socket.receive(p);
+        String result = new String(buf).trim();
+        return result;
+    }
+
+    public void close() {
+        if (socket != null)
+            socket.close();
+    }
+
+    public static final String ZOOKEEPER = "121.199.40.54";
+    public static final String HOST = "121.199.40.54";
+    protected static final Logger logger = LoggerFactory.getLogger(P2pClient.class);
+
+//    public static void main(String[] args) throws Exception {
+//        String ClientName = "CLIENT-1";
+//        String ServerName = null;
+//        ZooKeeper zk = new ZooKeeper(ZOOKEEPER, 5000, new Watcher() {
+//            @Override
+//            public void process(WatchedEvent watchedEvent) {
+//
+//            }
+//        });
+//        ZookeeperUtils.createPath(zk, "/seed/io/udp/hole/client", "");
+//        ZookeeperUtils.createPath(zk, "/seed/io/udp/hole/client/" + ClientName, "", CreateMode.EPHEMERAL);
+//
+//        //请求打洞服务：获取NAT端口
+//        P2pClient client = new P2pClient(HOST, 1011);
+//        client.send(("CLIENT_HOST:" + ClientName).getBytes());
+//        ServerName = client.receive();
+//        byte[] data = zk.getData("/seed/io/udp/hole/server/" + ServerName, null, null);
+//        String[] serverDesc = new String(data).split("\\|");
+//        byte[] clientData = zk.getData("/seed/io/udp/hole/client/" + ClientName, null, null);
+//        String[] clientDesc = new String(clientData).split("\\|");
+////        //访问1080：另一端NAT端口，该包将被抛弃
+//        logger.info("SERVER[{}:{}]", serverDesc[0], Integer.valueOf(serverDesc[1]));
+//        System.out.println("Client Port : " + Integer.valueOf(clientDesc[1]));
+//        client.close();
+//        client.send(P2pProtocol.create("DIGPORT", ClientName), serverDesc[0], Integer.valueOf(serverDesc[1]), Integer.valueOf(clientDesc[1]));
+////        Thread.sleep(5000);
+//        try {
+////            String result = client.receive();
+////            System.out.println("RESULT : "+result);
+//        } catch (Exception e) {
+//        }
+////        //通知打包服务器：要求1080端主动访问HOST
+////        client.send(P2pProtocol.create("DIGPORT",ClientName),serverDesc[0], Integer.valueOf(serverDesc[1]),Integer.valueOf(clientDesc[1]));
+//
+//        P2pClient client3 = new P2pClient();
+//        client3.send(("DIGPORT:" + ServerName + "," + ClientName).getBytes(), HOST, 1011);
+//        String result = client.receive();
+//        System.out.println("RESULT2 : " + result);
+//    }
 }

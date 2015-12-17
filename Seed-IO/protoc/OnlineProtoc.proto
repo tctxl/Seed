@@ -1,8 +1,8 @@
 package com.opdar.seed.io.protocol;
 
 message Online {
-  required string userId = 1;
+  optional string userId = 1;
   required string socketId = 2;
   required int64 createTime = 3;
-  optional string serverName = 4;
+  required string serverName = 4;
 }

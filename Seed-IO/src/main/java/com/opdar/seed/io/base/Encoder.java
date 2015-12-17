@@ -2,7 +2,9 @@ package com.opdar.seed.io.base;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.handler.codec.MessageToMessageEncoder;
+import io.netty.util.ReferenceCountUtil;
 
 import java.util.List;
 
@@ -17,6 +19,11 @@ public class Encoder extends MessageToMessageEncoder<Object> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) throws Exception {
-        out.add(wrappedBuffer((byte[]) msg));
+        if(msg instanceof DatagramPacket){
+            ReferenceCountUtil.retain(msg);
+            out.add(msg);
+        }else{
+            out.add(wrappedBuffer((byte[]) msg));
+        }
     }
 }

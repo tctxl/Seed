@@ -13,15 +13,15 @@ public final class OnlineProtoc {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     boolean hasUserId();
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     java.lang.String getUserId();
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     com.google.protobuf.ByteString
         getUserIdBytes();
@@ -50,15 +50,15 @@ public final class OnlineProtoc {
     long getCreateTime();
 
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     boolean hasServerName();
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     java.lang.String getServerName();
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     com.google.protobuf.ByteString
         getServerNameBytes();
@@ -181,13 +181,13 @@ public final class OnlineProtoc {
     public static final int USERID_FIELD_NUMBER = 1;
     private java.lang.Object userId_;
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     public boolean hasUserId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     public java.lang.String getUserId() {
       java.lang.Object ref = userId_;
@@ -204,7 +204,7 @@ public final class OnlineProtoc {
       }
     }
     /**
-     * <code>required string userId = 1;</code>
+     * <code>optional string userId = 1;</code>
      */
     public com.google.protobuf.ByteString
         getUserIdBytes() {
@@ -280,13 +280,13 @@ public final class OnlineProtoc {
     public static final int SERVERNAME_FIELD_NUMBER = 4;
     private java.lang.Object serverName_;
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     public boolean hasServerName() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     public java.lang.String getServerName() {
       java.lang.Object ref = serverName_;
@@ -303,7 +303,7 @@ public final class OnlineProtoc {
       }
     }
     /**
-     * <code>optional string serverName = 4;</code>
+     * <code>required string serverName = 4;</code>
      */
     public com.google.protobuf.ByteString
         getServerNameBytes() {
@@ -331,15 +331,15 @@ public final class OnlineProtoc {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasUserId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       if (!hasSocketId()) {
         memoizedIsInitialized = 0;
         return false;
       }
       if (!hasCreateTime()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasServerName()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -595,15 +595,15 @@ public final class OnlineProtoc {
       }
 
       public final boolean isInitialized() {
-        if (!hasUserId()) {
-          
-          return false;
-        }
         if (!hasSocketId()) {
           
           return false;
         }
         if (!hasCreateTime()) {
+          
+          return false;
+        }
+        if (!hasServerName()) {
           
           return false;
         }
@@ -631,13 +631,13 @@ public final class OnlineProtoc {
 
       private java.lang.Object userId_ = "";
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public boolean hasUserId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public java.lang.String getUserId() {
         java.lang.Object ref = userId_;
@@ -654,7 +654,7 @@ public final class OnlineProtoc {
         }
       }
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public com.google.protobuf.ByteString
           getUserIdBytes() {
@@ -670,7 +670,7 @@ public final class OnlineProtoc {
         }
       }
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public Builder setUserId(
           java.lang.String value) {
@@ -683,7 +683,7 @@ public final class OnlineProtoc {
         return this;
       }
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public Builder clearUserId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -692,7 +692,7 @@ public final class OnlineProtoc {
         return this;
       }
       /**
-       * <code>required string userId = 1;</code>
+       * <code>optional string userId = 1;</code>
        */
       public Builder setUserIdBytes(
           com.google.protobuf.ByteString value) {
@@ -815,13 +815,13 @@ public final class OnlineProtoc {
 
       private java.lang.Object serverName_ = "";
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public boolean hasServerName() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public java.lang.String getServerName() {
         java.lang.Object ref = serverName_;
@@ -838,7 +838,7 @@ public final class OnlineProtoc {
         }
       }
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public com.google.protobuf.ByteString
           getServerNameBytes() {
@@ -854,7 +854,7 @@ public final class OnlineProtoc {
         }
       }
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public Builder setServerName(
           java.lang.String value) {
@@ -867,7 +867,7 @@ public final class OnlineProtoc {
         return this;
       }
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public Builder clearServerName() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -876,7 +876,7 @@ public final class OnlineProtoc {
         return this;
       }
       /**
-       * <code>optional string serverName = 4;</code>
+       * <code>required string serverName = 4;</code>
        */
       public Builder setServerNameBytes(
           com.google.protobuf.ByteString value) {
@@ -915,9 +915,9 @@ public final class OnlineProtoc {
   static {
     java.lang.String[] descriptorData = {
       "\n\022OnlineProtoc.proto\022\032com.opdar.seed.io." +
-      "protocol\"R\n\006Online\022\016\n\006userId\030\001 \002(\t\022\020\n\010so" +
+      "protocol\"R\n\006Online\022\016\n\006userId\030\001 \001(\t\022\020\n\010so" +
       "cketId\030\002 \002(\t\022\022\n\ncreateTime\030\003 \002(\003\022\022\n\nserv" +
-      "erName\030\004 \001(\t"
+      "erName\030\004 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

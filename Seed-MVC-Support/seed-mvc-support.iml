@@ -18,7 +18,7 @@
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.19.0-GA" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.35" level="project" />
     <orderEntry type="module" module-name="seed-database" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-all:4.0.30.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-all:4.0.32.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jetty:jetty-server:8.1.16.v20140903" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jetty:jetty-http:8.1.16.v20140903" level="project" />

@@ -1,6 +1,7 @@
 package com.opdar.seed.io.cluster;
 
 import com.opdar.seed.io.IOPlugin;
+import com.opdar.seed.io.base.Result;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
 import com.opdar.seed.io.p2p.P2PClusterPool;
 import com.opdar.seed.io.p2p.P2pClient;
@@ -14,9 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 
 @Sharable
-public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
+public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterHandler.class);
     public static AttributeKey<Cluster> SESSION_FLAG = AttributeKey.valueOf("clusters");
@@ -64,7 +66,8 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object object) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Result result) throws Exception {
+        Object object = result.get();
         Cluster cluster = ctx.attr(SESSION_FLAG).get();
         if (object instanceof ClusterProtoc.Message) {
             if (cluster != null) cluster.clearHeartbeat();
@@ -89,16 +92,28 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Object> {
                     //use id to get a message from message pool
                     ClusterProtoc.Message message = IOPlugin.getMsgPool().get(messageId);
                     String to = message.getTo();
+
                     //
                     byte[] notifyMsg = ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build());
 
                     OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
                     if(IOPlugin.isP2P()){
                         P2pClient client = P2PClusterPool.get(online.getServerName());
-                        if(client != null){
-                            client.send(notifyMsg);
-                        }else{
-                            logger.debug("【"+online.getServerName()+"】 服务已丢失");
+                        client.setTimeOut(5000);
+                        int retries = 3;
+                        String ret = null;
+                        while (retries != 0){
+                            try{
+                                client.send(notifyMsg);
+                                ret = client.receive();
+                                break;
+                            }catch (SocketTimeoutException e){
+                                retries--;
+                                logger.info("retries time = "+retries);
+                            }
+                        }
+                        if(ret != null && ret.equals("SUCCESS")){
+
                         }
                     }else{
                         Cluster toCluster = ClusterPool.get(online.getServerName());

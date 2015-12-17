@@ -6,6 +6,7 @@ import com.opdar.framework.web.common.SeedResponse;
 import com.opdar.framework.web.parser.HttpParser;
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.IoSession;
+import com.opdar.seed.io.base.Result;
 import com.opdar.seed.io.protocol.ClusterProtoc;
 import com.opdar.seed.io.protocol.MessageProtoc;
 import com.opdar.seed.io.protocol.MethodProtoc;
@@ -23,7 +24,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Sharable
-public class Handler extends ChannelInboundHandlerAdapter {
+public class Handler extends SimpleChannelInboundHandler<Result> {
 
     private static final Logger logger = LoggerFactory.getLogger(Handler.class);
     public static AttributeKey<IoSession> SESSION_FLAG = AttributeKey.valueOf("session");
@@ -57,29 +58,33 @@ public class Handler extends ChannelInboundHandlerAdapter {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         super.handlerRemoved(ctx);
         IoSession session = ctx.attr(SESSION_FLAG).get();
-        IOPlugin.getSessionStateCallback().unregist(session);
+        if(IOPlugin!= null && IOPlugin.getSessionStateCallback() != null)
+            IOPlugin.getSessionStateCallback().unregist(session);
         session.downline();
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         IoSession session = null;
-        ctx.attr(SESSION_FLAG).set(session =new IoSession(ctx));
-        IOPlugin.getSessionStateCallback().regist(session);
+        ctx.attr(SESSION_FLAG).set(session = new IoSession(ctx));
+        if(IOPlugin!= null && IOPlugin.getSessionStateCallback() != null)
+            IOPlugin.getSessionStateCallback().regist(session);
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
     }
+
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object object) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Result result) throws Exception {
         IoSession session = ctx.attr(SESSION_FLAG).get();
+        Object object = result.get();
         if (object instanceof MessageProtoc.Action) {
             if (IOPlugin.getMessageCallback() != null)
                 IOPlugin.getMessageCallback().callback(((MessageProtoc.Action) object).getType(), ((MessageProtoc.Action) object).getMessageId(),session);
         } else if (object instanceof ClusterProtoc.Message) {
-            ReferenceCountUtil.retain(object);
-            ctx.fireChannelRead(object);
+            ReferenceCountUtil.retain(result);
+            ctx.fireChannelRead(result);
         } else if (object instanceof MethodProtoc.Method) {
             MethodProtoc.Method method = (MethodProtoc.Method) object;
             final String name = method.getName();
@@ -90,13 +95,13 @@ public class Handler extends ChannelInboundHandlerAdapter {
             if (web != null) {
                 HttpParser parser = web.getParser(type);
 
-                Object result = null;
+                Object p = null;
                 if (parser != null) {
-                    result = parser.execute(method.getParamsBytes().toByteArray());
+                    p = parser.execute(method.getParamsBytes().toByteArray());
                 }
 
-                if (result != null && result instanceof Map) {
-                    request.putValues((Map<String, Object>) result);
+                if (p != null && p instanceof Map) {
+                    request.putValues((Map<String, Object>) p);
                 }
                 request.setBody(method.getParamsBytes().toByteArray());
                 ctx.executor().execute(new Runnable() {
@@ -119,4 +124,5 @@ public class Handler extends ChannelInboundHandlerAdapter {
         this.IOPlugin = IOPlugin;
         return this;
     }
+
 }

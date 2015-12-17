@@ -9,12 +9,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.handler.codec.DecoderException;
 import io.netty.util.ReferenceCountUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,10 +47,17 @@ public class Decoder extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         try {
-            @SuppressWarnings("unchecked")
-            ByteBuf cast = (ByteBuf) msg;
+            ByteBuf cast = null;
+            SocketAddress address = null;
+            if(msg instanceof DatagramPacket){
+                cast = ((DatagramPacket) msg).copy().content();
+                address = ((DatagramPacket) msg).sender();
+            }else{
+                cast= (ByteBuf) msg;
+                address = ctx.channel().remoteAddress();
+            }
             try {
-                decode(ctx, cast);
+                decode(ctx, cast,address);
             } finally {
                 ReferenceCountUtil.release(cast);
             }
@@ -58,7 +68,7 @@ public class Decoder extends ChannelInboundHandlerAdapter {
         }
     }
 
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
+    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, SocketAddress address) throws Exception {
         while (byteBuf.readableBytes() != 0) {
             if (!HAS_PARSER) {
                 if (lengthBytes == null && token == null) {
@@ -100,7 +110,8 @@ public class Decoder extends ChannelInboundHandlerAdapter {
                 try {
                     Object content = protocol.execute(merge);
                     if (content != null) {
-                        channelHandlerContext.fireChannelRead(content);
+                        Result result = new Result(content,address);
+                        channelHandlerContext.fireChannelRead(result);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
