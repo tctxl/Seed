@@ -5,8 +5,10 @@ import com.opdar.framework.web.common.SeedRequest;
 import com.opdar.framework.web.common.SeedResponse;
 import com.opdar.framework.web.parser.HttpParser;
 import com.opdar.seed.io.IOPlugin;
+import com.opdar.seed.io.base.Callback;
 import com.opdar.seed.io.base.IoSession;
 import com.opdar.seed.io.base.Result;
+import com.opdar.seed.io.cluster.ClusterClient;
 import com.opdar.seed.io.protocol.ClusterProtoc;
 import com.opdar.seed.io.protocol.MessageProtoc;
 import com.opdar.seed.io.protocol.MethodProtoc;
@@ -30,6 +32,7 @@ public class Handler extends SimpleChannelInboundHandler<Result> {
     public static AttributeKey<IoSession> SESSION_FLAG = AttributeKey.valueOf("session");
     private SeedWeb web;
     private com.opdar.seed.io.IOPlugin IOPlugin;
+    private Callback messageCallback;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -80,8 +83,11 @@ public class Handler extends SimpleChannelInboundHandler<Result> {
         IoSession session = ctx.attr(SESSION_FLAG).get();
         Object object = result.get();
         if (object instanceof MessageProtoc.Action) {
-            if (IOPlugin.getMessageCallback() != null)
-                IOPlugin.getMessageCallback().callback(((MessageProtoc.Action) object).getType(), ((MessageProtoc.Action) object).getMessageId(),session);
+            if(((MessageProtoc.Action) object).getType() == MessageProtoc.Action.Type.INQUEUE){
+                if(messageCallback != null)messageCallback.call(object);
+            }else if (IOPlugin!= null && IOPlugin.getMessageCallback() != null){
+                    IOPlugin.getMessageCallback().callback(((MessageProtoc.Action) object).getType(), ((MessageProtoc.Action) object).getMessageId(),session);
+            }
         } else if (object instanceof ClusterProtoc.Message) {
             ReferenceCountUtil.retain(result);
             ctx.fireChannelRead(result);
@@ -125,4 +131,7 @@ public class Handler extends SimpleChannelInboundHandler<Result> {
         return this;
     }
 
+    public void setMessageCallback(Callback  messageCallback) {
+        this.messageCallback = messageCallback;
+    }
 }

@@ -72,7 +72,7 @@ public class P2pClient {
     public void send(byte[] data) {
         try {
             socket = new DatagramSocket();
-            if(timeOut > 0)socket.setSoTimeout(timeOut);
+            if (timeOut > 0) socket.setSoTimeout(timeOut);
             DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(host), port);
             socket.send(packet);
         } catch (UnknownHostException e) {
@@ -96,12 +96,8 @@ public class P2pClient {
             byte[] buf = new byte[2048];
             DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(host), port);
             socket.send(packet);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -109,8 +105,7 @@ public class P2pClient {
         byte[] buf = new byte[2048];
         DatagramPacket p = new DatagramPacket(buf, buf.length);
         socket.receive(p);
-        String result = new String(buf).trim();
-        return result;
+        return new String(buf).trim();
     }
 
     public void close() {
@@ -118,8 +113,6 @@ public class P2pClient {
             socket.close();
     }
 
-    public static final String ZOOKEEPER = "121.199.40.54";
-    public static final String HOST = "121.199.40.54";
     protected static final Logger logger = LoggerFactory.getLogger(P2pClient.class);
 
 //    public static void main(String[] args) throws Exception {

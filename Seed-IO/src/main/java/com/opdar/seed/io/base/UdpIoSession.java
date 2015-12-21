@@ -14,6 +14,7 @@ public class UdpIoSession extends IoSession {
     boolean isP2P = true;
     SocketAddress address;
     private boolean isWrite = false;
+    private String backMessage = "SUCCESS";
 
     public UdpIoSession(ChannelHandlerContext ctx, SocketAddress address) {
         super(ctx);
@@ -41,7 +42,19 @@ public class UdpIoSession extends IoSession {
         isWrite = true;
     }
 
+    public String getBackMessage() {
+        return backMessage;
+    }
+
+    public void setBackMessage(String backMessage) {
+        this.backMessage = backMessage;
+    }
+
     public boolean isWrite() {
         return isWrite;
+    }
+
+    public void reply() {
+        writeAndFlush(getBackMessage().getBytes());
     }
 }

@@ -25,4 +25,19 @@ public class ClusterInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("clusters", CLUSTER_HANDLER);
     }
 
+    public static Decoder getDECODER() {
+        return DECODER;
+    }
+
+    public static Encoder getENCODER() {
+        return ENCODER;
+    }
+
+    public static Handler getHANDLER() {
+        return HANDLER;
+    }
+
+    public static ClusterHandler getClusterHandler() {
+        return CLUSTER_HANDLER;
+    }
 }

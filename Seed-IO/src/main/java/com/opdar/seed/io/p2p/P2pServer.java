@@ -2,20 +2,17 @@ package com.opdar.seed.io.p2p;
 
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.token.ActionToken;
-import com.opdar.seed.io.token.P2pToken;
 import com.opdar.seed.io.token.TokenUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelConfig;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.DefaultDatagramChannelConfig;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
-import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 俊帆 on 2015/9/10.
@@ -51,7 +48,9 @@ public class P2pServer implements Runnable {
                     ((DefaultDatagramChannelConfig) config).setRecvByteBufAllocator(new FixedRecvByteBufAllocator(UDP_BUFFER_SIZE));
                 }
             }
-
+            if(TokenUtil.contains('c')){
+                channel.eventLoop().schedule(new FailureMessageScanRunnable(ioPlugin,channel),FailureMessageScanRunnable.OUTTIME, FailureMessageScanRunnable.TIMEUNIT);
+            }
 //            ZookeeperUtils.createPath(zk, "/seed", "");
 //            ZookeeperUtils.createPath(zk, "/seed/io", "");
 //            ZookeeperUtils.createPath(zk, "/seed/io/udp", "");

@@ -4,10 +4,13 @@ import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.Result;
 import com.opdar.seed.io.base.UdpIoSession;
 import com.opdar.seed.io.hole.HoleMaker;
+import com.opdar.seed.io.protocol.Command;
 import com.opdar.seed.io.protocol.MessageProtoc;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +37,7 @@ public class P2PHandler extends SimpleChannelInboundHandler<Result> {
     public void channelRead0(ChannelHandlerContext ctx, Result result) throws Exception {
         UdpIoSession session = new UdpIoSession(ctx, result.getAddress());
         Object object = result.get();
-        logger.info("SENDER : [{}]", result.getAddress());
+//        logger.info("SENDER : [{}]", result.getAddress());
 //        if (object instanceof Command) {
 //            logger.info("COMMAND:[{}] VALUE:[{}]",((Command) object).getCommand(),((Command) object).getValue());
 //            if (((Command) object).getCommand().equals("DIGPORT")) {
@@ -58,7 +61,7 @@ public class P2PHandler extends SimpleChannelInboundHandler<Result> {
             ioPlugin.getMessageCallback().otherMessage(object, session);
         }
         if(!session.isWrite()){
-//            session.writeAndFlush("SUCCESS".getBytes());
+            session.reply();
         }
     }
 

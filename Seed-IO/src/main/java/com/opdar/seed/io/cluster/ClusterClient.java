@@ -1,7 +1,8 @@
 package com.opdar.seed.io.cluster;
 
-import com.opdar.seed.io.protocol.ClusterProtoc;
-import com.opdar.seed.io.protocol.ClusterProtocol;
+import com.opdar.seed.io.base.Callback;
+import com.opdar.seed.io.protocol.MessageProtoc;
+import com.opdar.seed.io.token.ActionToken;
 import com.opdar.seed.io.token.ClusterToken;
 import com.opdar.seed.io.token.TokenUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 俊帆 on 2015/9/15.
  */
-public class ClusterClient {
+public class ClusterClient implements Callback<Object, Object> {
 
     private int AUTO_RECONNECT = 1;
     private Channel ch = null;
@@ -29,6 +30,11 @@ public class ClusterClient {
     private final Logger logger = LoggerFactory.getLogger(ClusterClient.class);
     private boolean isStop = false;
     private boolean isConnected = false;
+    private static final Object lock = new Object();
+    int tries = 3;
+    private Object result;
+    private boolean ret = false;
+
     public ClusterClient(String host, Integer port) {
         connect(host, port);
     }
@@ -39,27 +45,82 @@ public class ClusterClient {
 
     public void stop() {
         isStop = true;
+        synchronized (lock){
+            lock.notify();
+        }
         es.shutdown();
-        if(ch != null){
+        if (ch != null) {
             ch.close();
             ((NioSocketChannel) ch).shutdownOutput();
         }
     }
 
-    public void send(final byte[] data){
-        ch.writeAndFlush(data).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if(!future.isSuccess()){
-                    logger.debug("发送失败，正在重试！");
-                    send(data);
+    public MessageProtoc.Action send(final byte[] data) {
+        synchronized (lock) {
+            try {
+                while (isConnected && tries != 0) {
+                    ch.writeAndFlush(data).addListener(new ChannelFutureListener() {
+                        @Override
+                        public void operationComplete(ChannelFuture future) throws Exception {
+                            logger.debug("msg result : [{}]", future.toString());
+                            if (!future.isSuccess()) {
+                                logger.debug("发送失败，正在重试！");
+                                ret = false;
+                                synchronized (lock) {
+                                    lock.notify();
+                                }
+                            }
+                        }
+                    });
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (ret) {
+                        break;
+                    } else {
+                        tries--;
+                    }
                 }
+                return (MessageProtoc.Action) result;
+            } finally {
+                ret = false;
+                tries = 3;
+                result = null;
             }
-        });
+        }
+    }
+
+    static int i = 0;
+
+    public static void main(String[] args) {
+        ExecutorService es = Executors.newFixedThreadPool(1);
+        final Object lock = new Object();
+        int k = 0;
+        while (k != 2000) {
+            es.execute(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("locking i:" + i);
+                    synchronized (lock) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    i++;
+                }
+            });
+            k++;
+        }
     }
 
     public void connect(final String host, final int port) {
-        if(isStop)return;
+        if (isStop) return;
+        ClusterInitializer.getHANDLER().setMessageCallback(this);
+        TokenUtil.add(new ActionToken());
         final EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
@@ -76,7 +137,7 @@ public class ClusterClient {
             @Override
             public void run() {
                 try {
-                    if(ch!=null)
+                    if (ch != null)
                         ch.closeFuture().sync();
                     isConnected = false;
                     logger.debug("链路已断开!");
@@ -84,7 +145,7 @@ public class ClusterClient {
                     logger.error(e.toString());
                 } finally {
                     group.shutdownGracefully();
-                    if (AUTO_RECONNECT == 1) {
+                    if (AUTO_RECONNECT == 1 && !isStop) {
                         logger.debug("正在进行重连...");
                         connect(host, port);
                     }
@@ -95,11 +156,21 @@ public class ClusterClient {
         group.schedule(new Runnable() {
             @Override
             public void run() {
-                logger.debug("检查连接状态...[{}]", !isConnected? "失败" : "成功");
+                logger.debug("检查连接状态...[{}]", !isConnected ? "失败" : "成功");
                 if (AUTO_RECONNECT == 0) {
                     ch.close();
                 }
             }
         }, 3000, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public Object call(Object object) {
+        synchronized (lock) {
+            this.result = object;
+            ret = true;
+            lock.notify();
+        }
+        return null;
     }
 }

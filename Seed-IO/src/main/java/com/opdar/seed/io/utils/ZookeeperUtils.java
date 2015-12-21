@@ -12,14 +12,18 @@ import org.apache.zookeeper.data.Stat;
 public class ZookeeperUtils {
 
     public static void createPath(ZooKeeper zk, String path, String value) throws KeeperException, InterruptedException {
-        ZookeeperUtils.createPath(zk, path, value, null);
+        createPath(zk, path, value, null);
     }
 
     public static void createPath(ZooKeeper zk, String path, String value, CreateMode mode) throws KeeperException, InterruptedException {
+        createPath(zk,path, value.getBytes(), mode);
+    }
+
+    public static void createPath(ZooKeeper zk, String path, byte[] value, CreateMode mode) throws KeeperException, InterruptedException {
         Stat ret = zk.exists(path, false);
         if (ret == null) {
             if (mode == null) mode = CreateMode.PERSISTENT;
-            zk.create(path, value.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, mode);
+            zk.create(path, value, ZooDefs.Ids.OPEN_ACL_UNSAFE, mode);
         }
     }
 }

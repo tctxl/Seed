@@ -3,8 +3,6 @@ package com.opdar.seed.io.cluster;
 import com.opdar.seed.io.IOPlugin;
 import com.opdar.seed.io.base.Result;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
-import com.opdar.seed.io.p2p.P2PClusterPool;
-import com.opdar.seed.io.p2p.P2pClient;
 import com.opdar.seed.io.protocol.*;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketTimeoutException;
 
 @Sharable
 public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
@@ -23,6 +20,7 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
     private static final Logger logger = LoggerFactory.getLogger(ClusterHandler.class);
     public static AttributeKey<Cluster> SESSION_FLAG = AttributeKey.valueOf("clusters");
     private com.opdar.seed.io.IOPlugin IOPlugin;
+    MessageDispatcher dispatcher = null;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -74,9 +72,9 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
             switch (((ClusterProtoc.Message) object).getAct()) {
                 case JOIN: {
                     String serverName = ((ClusterProtoc.Message) object).getFrom();
-                    ctx.attr(SESSION_FLAG).set(cluster = new Cluster(ctx,serverName));
+                    ctx.attr(SESSION_FLAG).set(cluster = new Cluster(ctx, serverName));
                     cluster.heartbeat();
-                    logger.info("节点({})[{}:{}]加入成功",cluster.getServerName(), cluster.getIp(), cluster.getPort());
+                    logger.info("节点({})[{}:{}]加入成功", cluster.getServerName(), cluster.getIp(), cluster.getPort());
                     cluster.reacher();
                 }
                 break;
@@ -91,43 +89,28 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
                     String messageId = ((ClusterProtoc.Message) object).getMessageId();
                     //use id to get a message from message pool
                     ClusterProtoc.Message message = IOPlugin.getMsgPool().get(messageId);
-                    String to = message.getTo();
+                    if (IOPlugin.isP2P()) {
+                        dispatcher.doIt(message);
+                    } else {
+                        String to = message.getTo();
 
-                    //
-                    byte[] notifyMsg = ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build());
+                        //
+                        byte[] notifyMsg = ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build());
 
-                    OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
-                    if(IOPlugin.isP2P()){
-                        P2pClient client = P2PClusterPool.get(online.getServerName());
-                        client.setTimeOut(5000);
-                        int retries = 3;
-                        String ret = null;
-                        while (retries != 0){
-                            try{
-                                client.send(notifyMsg);
-                                ret = client.receive();
-                                break;
-                            }catch (SocketTimeoutException e){
-                                retries--;
-                                logger.info("retries time = "+retries);
-                            }
-                        }
-                        if(ret != null && ret.equals("SUCCESS")){
-
-                        }
-                    }else{
+                        OnlineProtoc.Online online = IOPlugin.getOnlinePool().get(to);
                         Cluster toCluster = ClusterPool.get(online.getServerName());
                         toCluster.write(notifyMsg);
                         //告知服务消息已送至队列
-                        if (cluster != null) {
-                            cluster.write(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.INQUEUE).setMessageId(messageId).build()));
-                        }
                     }
+
+                    ctx.writeAndFlush(ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.INQUEUE).setMessageId(messageId).build()));
                 }
                 break;
                 case REPLY_HEARTBEAT: {
                     //收到客户端响应
-                    cluster.clearHeartbeat();
+                    if (cluster != null) {
+                        cluster.clearHeartbeat();
+                    }
                 }
                 break;
                 case HEARTBEAT: {
@@ -139,14 +122,9 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
         }
     }
 
-    public static void main(String[] args) {
-//        ClusterProtoc.Message message = ClusterProtoc.Message.newBuilder().setAct(ClusterProtoc.Message.Act.MESSAGE).setMessageId("1").setTo("127.0.0.1:53036").setFrom("127.0.0.1:53095").build();
-//        SSDBMessagePool.getInstance().set(message);
-        System.out.println(SSDBMessagePool.getInstance().get("1"));
-    }
-
     public ClusterHandler setIOPlugin(IOPlugin IOPlugin) {
         this.IOPlugin = IOPlugin;
+        dispatcher = new MessageDispatcher(IOPlugin);
         return this;
     }
 

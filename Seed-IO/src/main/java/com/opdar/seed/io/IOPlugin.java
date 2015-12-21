@@ -48,6 +48,7 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     public static String CLUSTER_HOST = "";
     public static int CLUSTER_PORT = 0;
     private MessagePool<ClusterProtoc.Message> msgPool = SSDBMessagePool.getInstance();
+    private MessagePool<ClusterProtoc.Message> msgFailurePool = SSDBMessagePool.getInstance();
     private MessagePool<OnlineProtoc.Online> onlinePool = SSDBOnlinePool.getInstance();
     private int port;
     private boolean isP2P = false;
@@ -100,6 +101,14 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     public IOPlugin setSessionStateCallback(SessionStateCallback sessionStateCallback) {
         this.sessionStateCallback = sessionStateCallback;
         return this;
+    }
+
+    public MessagePool<ClusterProtoc.Message> getMsgFailurePool() {
+        return msgFailurePool;
+    }
+
+    public void setMsgFailurePool(MessagePool<ClusterProtoc.Message> msgFailurePool) {
+        this.msgFailurePool = msgFailurePool;
     }
 
     public SessionStateCallback getSessionStateCallback() {
