@@ -34,13 +34,29 @@ public class ClusterClient implements Callback<Object, Object> {
     int tries = 3;
     private Object result;
     private boolean ret = false;
+    private String host;
+    private Integer port;
+    private Callback<String,Void> callback;
 
     public ClusterClient(String host, Integer port) {
-        connect(host, port);
+        this(host,port,new Callback<String,Void>(){
+            @Override
+            public Void call(String object) {
+                return null;
+            }
+        });
     }
 
-    public ClusterClient(String host, int port) {
-        connect(host, port);
+    public ClusterClient( String host, Integer port,Callback<String, Void> callback) {
+        this.callback = callback;
+        this.host = host;
+        this.port = port;
+        connect();
+    }
+
+    public void setHostAndPort(String host,Integer port) {
+        this.host = host;
+        this.port = port;
     }
 
     public void stop() {
@@ -117,7 +133,7 @@ public class ClusterClient implements Callback<Object, Object> {
         }
     }
 
-    public void connect(final String host, final int port) {
+    public void connect() {
         if (isStop) return;
         ClusterInitializer.getHANDLER().setMessageCallback(this);
         TokenUtil.add(new ActionToken());
@@ -141,13 +157,15 @@ public class ClusterClient implements Callback<Object, Object> {
                         ch.closeFuture().sync();
                     isConnected = false;
                     logger.debug("链路已断开!");
+                    if(callback != null)callback.call("DISCONNECTED");
                 } catch (Exception e) {
                     logger.error(e.toString());
                 } finally {
                     group.shutdownGracefully();
                     if (AUTO_RECONNECT == 1 && !isStop) {
                         logger.debug("正在进行重连...");
-                        connect(host, port);
+                        if(callback != null)callback.call("RECONNECTED");
+                        connect();
                     }
                 }
             }
