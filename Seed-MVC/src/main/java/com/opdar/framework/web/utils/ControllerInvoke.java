@@ -4,6 +4,7 @@ import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.asm.Type;
 import com.opdar.framework.utils.ParamsUtil;
+import com.opdar.framework.utils.ResourceUtils;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.anotations.*;
 import com.opdar.framework.web.common.Context;
@@ -23,51 +24,73 @@ public class ControllerInvoke {
     /**
      * 扫描包下是否有Controller
      */
-    public void scan(String packageName, String perfix ,ClassLoader loader){
-        Set<Class<?>> controllersClz = ParamsUtil.getClasses(loader, packageName);
-        for (Class<?> c : controllersClz) {
-            if (c.isAnonymousClass()) continue;
-            SeedInvoke.init(c);
-            ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
-            Type controllerAfter = null;
-            Type controllerBefore = null;
-            ControllerAct act = new ControllerAct();
-            for (ClassBean.AnotationInfo anotationInfo : classBean.getAnotations()) {
-                boolean isController = isController(anotationInfo);
-                boolean isAfter = isAfter(anotationInfo);
-                boolean isBefore = isBefore(anotationInfo);
-                if (isAfter) {
-                    controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
-                    continue;
-                }
-                if (isBefore) {
-                    controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
-                    continue;
-                }
-                if (isController) {
-//                    controllerSort.put(classBean.getSeedClz().getName(), act);
-                    List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
-                    String controllerRouter = "";
-                    if (anotations.size() > 0) {
-                        ClassBean.AnotationInfo.AnotationValue value = anotations.get(0);
-                        controllerRouter = String.valueOf(value.getValue());
-                    }
-                    String prefixName = "";
-                    if (anotations.size() > 1) {
-                        ClassBean.AnotationInfo.AnotationValue prefix = anotationInfo.getValue().get(1);
-                        if (prefix.getValue().toString().trim().length() > 0) {
-                            prefixName = ".".concat(prefix.getValue().toString().toUpperCase());
-                        }
-                    }
-                    List<ClassBean.MethodInfo> methods = classBean.getMethods();
-
-                    scanRouter(perfix, loader, classBean, controllerRouter, prefixName, methods ,act);
-                    continue;
-                }
+    public void scan(final String packageName, final String perfix , final ClassLoader loader){
+        ResourceUtils.find(new ResourceUtils.FileFinder() {
+            @Override
+            public String suffix() {
+                return perfix == null ? ".class":perfix;
             }
-            controllerAop(loader, controllerAfter, controllerBefore, act);
-        }
+
+            @Override
+            public String getPackageName() {
+                return packageName;
+            }
+
+            @Override
+            public void call(String packageName, String file,String fullName) {
+                createController(packageName+file,loader,perfix);
+            }
+        },loader);
         createRouterArgsMapped(loader);
+    }
+
+    public void createController(String className,ClassLoader loader,String perfix){
+
+        try {
+            Class<?> c = loader.loadClass(className);
+            {
+                if (c.isAnonymousClass()) return;
+                SeedInvoke.init(c);
+                ClassBean classBean = SeedInvoke.getBeanSymbols().get(c);
+                Type controllerAfter = null;
+                Type controllerBefore = null;
+                ControllerAct act = new ControllerAct();
+                for (ClassBean.AnotationInfo anotationInfo : classBean.getAnotations()) {
+                    boolean isController = isController(anotationInfo);
+                    boolean isAfter = isAfter(anotationInfo);
+                    boolean isBefore = isBefore(anotationInfo);
+                    if (isAfter) {
+                        controllerAfter = (Type) anotationInfo.getValue().get(0).getValue();
+                        continue;
+                    }
+                    if (isBefore) {
+                        controllerBefore = (Type) anotationInfo.getValue().get(0).getValue();
+                        continue;
+                    }
+                    if (isController) {
+                        List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
+                        String controllerRouter = "";
+                        if (anotations.size() > 0) {
+                            ClassBean.AnotationInfo.AnotationValue value = anotations.get(0);
+                            controllerRouter = String.valueOf(value.getValue());
+                        }
+                        String prefixName = "";
+                        if (anotations.size() > 1) {
+                            ClassBean.AnotationInfo.AnotationValue prefix = anotationInfo.getValue().get(1);
+                            if (prefix.getValue().toString().trim().length() > 0) {
+                                prefixName = ".".concat(prefix.getValue().toString().toUpperCase());
+                            }
+                        }
+                        List<ClassBean.MethodInfo> methods = classBean.getMethods();
+
+                        scanRouter(perfix, loader, classBean, controllerRouter, prefixName, methods ,act);
+                    }
+                }
+                controllerAop(loader, controllerAfter, controllerBefore, act);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

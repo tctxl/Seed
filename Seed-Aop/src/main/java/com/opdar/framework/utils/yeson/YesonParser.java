@@ -1,14 +1,10 @@
 package com.opdar.framework.utils.yeson;
 
-import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
-import com.opdar.framework.utils.Utils;
+import com.opdar.framework.utils.yeson.annotations.JSONField;
 import com.opdar.framework.utils.yeson.convert.*;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.sql.BatchUpdateException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -43,41 +39,47 @@ public class YesonParser {
     }
 
     public String toJSONString(Object o) {
-        if(o instanceof String) return (String)o;
-        if(o instanceof Boolean) return String.valueOf(o);
-        if(o instanceof Number) return String.valueOf(o);
+        if (o instanceof String) return (String) o;
+        if (o instanceof Boolean) return String.valueOf(o);
+        if (o instanceof Number) return String.valueOf(o);
 
         Class clz = o.getClass();
         if (o instanceof SeedExcuteItrf) {
             clz = clz.getSuperclass();
         }
         StringBuilder builder = new StringBuilder();
-        if(o instanceof Collection){
+        if (o instanceof Collection) {
             toJSONStringWithArray(builder, (Collection) o);
-        }else{
-            if(o instanceof Map){
-                Map<String,Object> map = (Map<String,Object>) o;
-                if(map == null || map.size() == 0){
+        } else {
+            if (o instanceof Map) {
+                Map<String, Object> map = (Map<String, Object>) o;
+                if (map == null || map.size() == 0) {
                     return "null";
                 }
-                for(Iterator<String> it = map.keySet().iterator();it.hasNext();){
+                for (Iterator<String> it = map.keySet().iterator(); it.hasNext(); ) {
                     String key = it.next();
                     Object fieldResult = map.get(key);
                     Class<?> fieldType = Void.class;
-                    if(fieldResult != null){
+                    if (fieldResult != null) {
                         fieldType = fieldResult.getClass();
                     }
                     exeObjectResult(builder, key, fieldResult, fieldType);
                 }
-            }else{
+            } else {
                 Field[] fields = clz.getDeclaredFields();
                 for (Field field : fields) {
                     field.setAccessible(true);
+
                     try {
                         String key = field.getName();
+                        JSONField jsonField = field.getAnnotation(JSONField.class);
+                        if(jsonField != null){
+                            key = jsonField.value();
+                            if(!jsonField.serializable())continue;
+                        }
                         Object fieldResult = field.get(o);
                         Class<?> fieldType = Void.class;
-                        if(fieldResult != null){
+                        if (fieldResult != null) {
                             fieldType = fieldResult.getClass();
                         }
                         exeObjectResult(builder, key, fieldResult, fieldType);
@@ -88,9 +90,9 @@ public class YesonParser {
             }
             if (builder.length() > 0) {
                 builder.delete(builder.length() - 1, builder.length());
-                builder.insert(0,"{");
+                builder.insert(0, "{");
                 builder.append("}");
-            }else{
+            } else {
                 builder.append("null");
             }
         }
@@ -102,28 +104,28 @@ public class YesonParser {
         if (Collection.class.isAssignableFrom(fieldType)) {
             Collection collection = (Collection) fieldResult;
             toJSONStringWithArray(builder, collection);
-        } else if(Map.class.isAssignableFrom(fieldType)){
+        } else if (Map.class.isAssignableFrom(fieldType)) {
             builder.append(toJSONString(fieldResult));
         } else if (converts.containsKey(fieldType)) {
             JSONConvert convert = converts.get(fieldType);
             Object result = convert.convert(fieldResult);
             builder.append(result);
-        }else{
+        } else {
             builder.append("null");
         }
         builder.append(",");
     }
 
-    private void toJSONStringWithArray(StringBuilder builder,Collection collection){
-        if(collection != null){
+    private void toJSONStringWithArray(StringBuilder builder, Collection collection) {
+        if (collection != null) {
             builder.append("[");
-            for(Iterator it = collection.iterator();it.hasNext();){
+            for (Iterator it = collection.iterator(); it.hasNext(); ) {
                 builder.append(toJSONString(it.next()));
-                if(it.hasNext())
+                if (it.hasNext())
                     builder.append(",");
             }
             builder.append("]");
-        }else{
+        } else {
             builder.append("null");
         }
     }
@@ -149,8 +151,8 @@ public class YesonParser {
         converts.put(Date.class, new DateConvert());
     }
 
-    public void addConvert(Class type,JSONConvert convert){
-        converts.put(type,convert);
+    public void addConvert(Class type, JSONConvert convert) {
+        converts.put(type, convert);
     }
 
     public JSONObject parse(String json) {
@@ -265,7 +267,7 @@ public class YesonParser {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());
-                        if(value.equals("null"))value = null;
+                        if (value.equals("null")) value = null;
                         root.put(key, value);
                         isKey = true;
                         root.lastchar = RIGHT_CURLY_BRACE;
@@ -274,7 +276,7 @@ public class YesonParser {
                 }
                 if (root.type != 1 && ch == LEFT_SQUARE_BRACE) {
                     value = toJSONArray();
-                    if(value.equals("null"))value = null;
+                    if (value.equals("null")) value = null;
                     root.put(key, value);
                     i = index;
                     isKey = true;
@@ -291,7 +293,7 @@ public class YesonParser {
                     if (root.lastchar == COLON && root.type == 2 && !isKey) {
                         value = buff.toString();
                         buff.delete(0, buff.length());
-                        if(value.equals("null"))value = null;
+                        if (value.equals("null")) value = null;
                         root.put(key, value);
                         isKey = true;
                         root.lastchar = COMMA;

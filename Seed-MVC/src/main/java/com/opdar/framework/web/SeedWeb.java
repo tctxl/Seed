@@ -1,15 +1,14 @@
 package com.opdar.framework.web;
 
+import com.opdar.framework.aop.ResourceInvoke;
+import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.SeedWeakClassloader;
 import com.opdar.framework.aop.base.ClassBean;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.db.impl.BaseDatabase;
 import com.opdar.framework.db.impl.DaoMap;
 import com.opdar.framework.db.impl.OnDataSourceCloseListener;
-import com.opdar.framework.utils.CloseCallback;
-import com.opdar.framework.utils.ParamsUtil;
-import com.opdar.framework.utils.ThreadLocalUtils;
-import com.opdar.framework.utils.Utils;
+import com.opdar.framework.utils.*;
 import com.opdar.framework.web.anotations.Component;
 import com.opdar.framework.web.anotations.Inject;
 import com.opdar.framework.web.common.*;
@@ -46,7 +45,7 @@ import java.util.*;
  * QQ:362116120
  */
 public class SeedWeb {
-    public final HashMap<String, SeedPath> publicPaths = new HashMap<String, SeedPath>();
+    public static final String RESOURCE_PACKAGE = "com.opdar.framework.web.resource";
     //所有路由
     private final HashMap<String, ThreadLocal<Object>> threadMaps = new HashMap<String, ThreadLocal<Object>>();
     //转换器
@@ -58,7 +57,6 @@ public class SeedWeb {
     private static final String HTTP_THREAD_KEY = "HTTP_THREAD_KEY";
     private final Map<String, String> contentTypes = new HashMap<String, String>();
     public static String WEB_HTML_PATH = "";
-    public static Map<String, String> RESOURCE_MAPPING = new HashMap<String, String>();
     private static ThreadLocal<SeedResponse> sharedResponse = new ThreadLocal<SeedResponse>();
     private static ThreadLocal<SeedRequest> sharedRequest = new ThreadLocal<SeedRequest>();
 
@@ -137,19 +135,34 @@ public class SeedWeb {
         }
     }
 
-    public void scanConverts(String packageName) {
+    public void scanConverts(final String packageName) {
         converts.clear();
-        Set<Class<?>> convertsClz = ParamsUtil.getClasses(loader, packageName);
-        for (Class<?> c : convertsClz) {
-            try {
-                HttpConvert convert = (HttpConvert) c.newInstance();
-                converts.put(convert.getContentType(), convert);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+        ResourceUtils.find(new ResourceUtils.FileFinder() {
+            @Override
+            public String suffix() {
+                return ".class";
             }
-        }
+
+            @Override
+            public String getPackageName() {
+                return packageName;
+            }
+
+            @Override
+            public void call(String packageName, String file,String fullName) {
+                try {
+                    Class<?> c = loader.loadClass(packageName+file);
+                    HttpConvert convert = (HttpConvert) c.newInstance();
+                    converts.put(convert.getContentType(), convert);
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, loader);
     }
 
     public void setHttpConvert(Class<? extends HttpConvert> convertClz) {
@@ -206,15 +219,28 @@ public class SeedWeb {
     }
 
     private void invokeComponent() {
-        Set<Class<?>> components = ParamsUtil.getClasses(loader, "");
-        for (Class<?> clz : components) {
-            Component component = clz.getAnnotation(Component.class);
-            if (component != null) {
-                Class context = null;
+        ResourceUtils.find(new ResourceUtils.FileFinder() {
+            @Override
+            public String suffix() {
+                return ".class";
+            }
+
+            @Override
+            public String getPackageName() {
+                return "";
+            }
+
+            @Override
+            public void call(String packageName, String file,String fullName) {
                 try {
-                    context = loader.loadClass(Context.class.getName());
-                    Method method = context.getMethod("addComponent", Class.class);
-                    method.invoke(null, clz);
+                    Class<?> clz = loader.loadClass(packageName+file);
+                    Component component = clz.getAnnotation(Component.class);
+                    if (component != null) {
+                        Class context = null;
+                            context = loader.loadClass(Context.class.getName());
+                            Method method = context.getMethod("addComponent", Class.class);
+                            method.invoke(null, clz);
+                    }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -225,7 +251,7 @@ public class SeedWeb {
                     e.printStackTrace();
                 }
             }
-        }
+        }, loader);
     }
 
     public synchronized void execute(String routerName, SeedRequest request, final IResponse response) {
@@ -235,15 +261,9 @@ public class SeedWeb {
             sharedResponse.set(seedResponse);
             sharedRequest.set(request);
             routerName = routerName.toUpperCase();
-            SeedPath publicPath = getSeedPath(routerName);
-
             FileView.FileReadListener fileReadListener = getFileReadListener(seedResponse);
 
-            View view = null;
-            if (publicPath != null) {
-                executePublicPath(routerName, seedResponse, publicPath, fileReadListener, view);
-            } else {
-                view = executeLogic(routerName, request);
+            View view  = executeLogic(routerName, request);
                 if (view == null) {
                     //return void;
                     seedResponse.writeSuccess();
@@ -258,7 +278,6 @@ public class SeedWeb {
                         seedResponse.flush();
                     }
                 }
-            }
         } finally {
             sharedRequest.remove();
             sharedResponse.remove();
@@ -285,46 +304,6 @@ public class SeedWeb {
                 seedResponse.flush();
             }
         };
-    }
-
-    private SeedPath getSeedPath(String routerName) {
-        SeedPath publicPath = null;
-        int pNameIndex = -1;
-        if ((pNameIndex = routerName.indexOf("/", 1)) != -1) {
-            String publicPathKey = routerName.substring(0, pNameIndex);
-            if (publicPaths.containsKey(publicPathKey))
-                publicPath = publicPaths.get(publicPathKey);
-        }
-        return publicPath;
-    }
-
-    private void executePublicPath(String routerName, SeedResponse seedResponse, SeedPath publicPath, FileView.FileReadListener fileReadListener, View view) {
-        String res = Utils.testRouter(routerName.replace(publicPath.getMapping(), ""));
-        String contentType = "text/html";
-        if (contentTypes.containsKey(res)) {
-            contentType = contentTypes.get(res);
-        } else {
-            contentType = new MimetypesFileTypeMap().getContentType(res.toLowerCase());
-            contentTypes.put(res, contentType);
-        }
-        try {
-            if (view == null) {
-                if (publicPath.getPathType() == 1) {
-                    view = new FileView(publicPath.getResourceAsStream(res), contentType, fileReadListener);
-                } else {
-                    view = new FileView(publicPath.getFilePath(res), contentType, fileReadListener);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] data = view.renderView();
-        if (data == null && !(view instanceof FileView)) {
-            view = new ErrorView(HttpResponseCode.CODE_404);
-            data = view.renderView();
-            seedResponse.write(data, view.contentType(), view.getCode());
-            seedResponse.flush();
-        }
     }
 
     public View executeLogic(String routerName, SeedRequest request) {
@@ -521,7 +500,6 @@ public class SeedWeb {
 
     public void setWebHtml(String webHtml) {
         SeedWeb.WEB_HTML_PATH = webHtml.replace(".", "/");
-        RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader, webHtml));
     }
 
     public void setWebPublic(String webPublic) {
@@ -529,10 +507,12 @@ public class SeedWeb {
         for (Iterator<String> it = values.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             String value = values.get(key);
-            SeedPath path = new SeedPath(key, value, loader);
-            publicPaths.put(key.toUpperCase(), path);
-
-            RESOURCE_MAPPING.putAll(ParamsUtil.getResourceMapping(loader, path.getPath()));
+            boolean isClassPath = false;
+            if(isClassPath = Utils.isClassPath(value)){
+                value = Utils.getClassPath(value);
+            }
+            Class<?> clz = ResourceInvoke.create(key, value,isClassPath);
+            controllerInvoke.createController(clz.getName(),clz.getClassLoader(),null);
         }
     }
 

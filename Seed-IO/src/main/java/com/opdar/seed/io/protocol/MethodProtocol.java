@@ -12,6 +12,7 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -81,7 +82,17 @@ public class MethodProtocol implements Protocol<MethodProtoc.Method> {
             response.setContent(ByteString.copyFrom(content));
             response.setType(contentType);
             response.setCode(responseCode);
-            session.write(response.build().toByteArray());
+            byte[] data = response.build().toByteArray();
+//            [project,version,length,data]
+            byte[] project = new byte[]{'-','m','e','t','h','o','d','-'};
+            byte[] version = new byte[]{'0','1','0','0'};
+            byte[] length = convertLen(data.length);
+            byte[] result = new byte[data.length+project.length+version.length+length.length-1];
+            System.arraycopy(project,0,result,0,project.length);
+            System.arraycopy(version,0,result,project.length,version.length);
+            System.arraycopy(length,1,result,project.length+version.length,length.length-1);
+            System.arraycopy(data,0,result,project.length+version.length+length.length-1,data.length);
+            session.write(result);
         }
 
         @Override
@@ -90,7 +101,24 @@ public class MethodProtocol implements Protocol<MethodProtoc.Method> {
             response.setContent(ByteString.copyFrom(content));
             response.setType(contentType);
             response.setCode(responseCode);
-            session.writeAndFlush(response.build().toByteArray());
+            byte[] data = response.build().toByteArray();
+//            [project,version,length,data]
+            byte[] project = new byte[]{'-','m','e','t','h','o','d','-'};
+            byte[] version = new byte[]{'0','1','0','0'};
+            byte[] length = convertLen(data.length);
+            byte[] result = new byte[data.length+project.length+version.length+length.length-1];
+            System.arraycopy(project,0,result,0,project.length);
+            System.arraycopy(version,0,result,project.length,version.length);
+            System.arraycopy(length,1,result,project.length+version.length,length.length-1);
+            System.arraycopy(data,0,result,project.length+version.length+length.length-1,data.length);
+            session.writeAndFlush(result);
+        }
+
+        public static void main(String[] args) {
+
+            byte[] project1 = new byte[]{'-','m','e','t','h','o','d','-'};
+            byte[] project2 = new byte[]{'-','m','e','t','h','o','d','-'};
+            System.out.println(Arrays.equals(project1,project2));
         }
 
         @Override

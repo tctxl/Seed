@@ -38,210 +38,223 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
         return beanSymbols;
     }
 
+    public static void init(Class<?> clz,InputStream is) {
+        if (beanSymbols.containsKey(clz)) return;
+        if(clz.isAnonymousClass())return;
+        ClassBean cb = null;
+        beanSymbols.put(clz, cb = new ClassBean());
+        createInfo(clz, is);
+        Class<?> defineClz = definedClass(clz);
+        cb.setSeedClz(defineClz);
+    }
+
     public static void init(final Class<?> clz) {
         if (beanSymbols.containsKey(clz)) return;
         if(clz.isAnonymousClass())return;
-        ClassReader cr = null;
         ClassBean cb = null;
         beanSymbols.put(clz, cb = new ClassBean());
-        try {
-            ClassLoader loader = clz.getClassLoader();
-            String clzName = clz.getName().replace(".", "/").concat(".class");
-            InputStream is = loader.getResourceAsStream(clzName);
-            cr = new ClassReader(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        cr.accept(new ClassVisitor(Opcodes.ASM4) {
-
-            @Override
-            public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
-                beanSymbols.get(clz).setAnotation(anotationInfo);
-                anotationInfo.setDesc(desc);
-                anotationInfo.setType(Type.getType(desc));
-                return new AnnotationVisitor(ASM4) {
-                    @Override
-                    public void visit(String name, Object value) {
-                        ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
-                        value1.setName(name);
-                        value1.setValue(value);
-                        anotationInfo.setValue(value1);
-                        super.visit(name, value);
-                    }
-                };
-            }
-
-
-            @Override
-            public void visit(int version, int access, String name,
-                              String signature, String superName, String[] interfaces) {
-                beanSymbols.get(clz).setVersion(version);
-                super.visit(version, access, name, signature, superName, interfaces);
-            }
-
-            @Override
-            public MethodVisitor visitMethod(final int access,
-                                             final String name, final String desc,
-                                             final String signature, final String[] exceptions) {
-                final Type[] args = Type.getArgumentTypes(desc);
-                final ClassBean.MethodInfo methodInfo = new ClassBean.MethodInfo();
-                beanSymbols.get(clz).setMethods(methodInfo);
-                methodInfo.setName(name);
-                methodInfo.setDesc(desc);
-                methodInfo.setType(Type.getType(desc));
-                methodInfo.setArgs(args);
-                methodInfo.setAccess(access);
-                return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc,
-                        signature, exceptions)) {
-                    Map<Integer, ClassBean.AnotationInfo> paramAnnotations = new HashMap<Integer, ClassBean.AnotationInfo>();
-
-                    private Label label;
-
-                    @Override
-                    public void visitParameter(String name, int access) {
-                        super.visitParameter(name, access);
-                    }
-
-                    @Override
-                    public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-                        final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
-                        anotationInfo.setDesc(desc);
-                        anotationInfo.setType(Type.getType(desc));
-                        paramAnnotations.put(parameter, anotationInfo);
-                        return new AnnotationVisitor(ASM4) {
-                            @Override
-                            public void visit(String name, Object value) {
-                                ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
-                                value1.setName(name);
-                                value1.setValue(value);
-                                anotationInfo.setValue(value1);
-                                super.visit(name, value);
-                            }
-                        };
-                    }
-
-                    @Override
-                    public void visitLineNumber(int line, Label start) {
-                        super.visitLineNumber(line, start);
-                        if (label == null) label = start;
-                    }
-
-                    @Override
-                    public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-                        if (index > 0) {
-                            if (label != null && label == start) {
-                                ClassBean.MethodInfo.LocalVar var = new ClassBean.MethodInfo.LocalVar();
-                                var.setName(name);
-                                if (paramAnnotations.containsKey(index - 1)) {
-                                    var.setAnnotations(paramAnnotations.get(index - 1));
-                                }
-                                methodInfo.setArgsSort(name);
-                                var.setDesc(desc);
-                                final LinkedList<String> signatureTypes = new LinkedList<String>();
-                                var.setSignatureTypes(signatureTypes);
-                                if (signature != null) {
-                                    var.setSignature(signature);
-                                    SignatureReader signatureReader = new SignatureReader(signature);
-                                    signatureReader.accept(new SignatureVisitor(ASM4) {
-                                        @Override
-                                        public void visitClassType(String name) {
-                                            signatureTypes.add(0, name);
-                                            super.visitClassType(name);
-                                        }
-                                    });
-                                }
-
-                                var.setType(Type.getType(desc));
-                                var.setIndex(index);
-                                methodInfo.setLocalVars(var);
-                            }
-                        }
-                        super.visitLocalVariable(name, desc, signature, start, end, index);
-                    }
-
-                    @Override
-                    public AnnotationVisitor visitAnnotation(String desc,
-                                                             boolean visible) {
-                        // TODO Auto-generated method stub
-                        final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
-                        methodInfo.setAnotation(anotationInfo);
-                        anotationInfo.setDesc(desc);
-                        anotationInfo.setType(Type.getType(desc));
-                        return new AnnotationVisitor(ASM4) {
-                            @Override
-                            public void visit(String name, Object value) {
-                                ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
-                                value1.setName(name);
-                                value1.setValue(value);
-                                anotationInfo.setValue(value1);
-                                super.visit(name, value);
-                            }
-                        };
-                    }
-
-                };
-            }
-
-            //field读取
-            @Override
-            public FieldVisitor visitField(int access, String name,
-                                           String desc, String signature, Object value) {
-                // TODO Auto-generated method stub
-                final ClassBean.FieldInfo fieldInfo = new ClassBean.FieldInfo();
-                try {
-                    Type type = Type.getType(desc);
-
-                    if (type.getSort() > 1 && type.getSort() < 9 || type.getSort() == 10) {
-                        fieldInfo.setName(name);
-                        fieldInfo.setDesc(desc);
-                        fieldInfo.setType(type);
-                        fieldInfo.setAccess(access);
-                        fieldInfo.setDefaultValue(value);
-                        Field dField = clz.getDeclaredField(name);
-                        fieldInfo.setField(dField);
-                        beanSymbols.get(clz).setField(fieldInfo);
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-                return new FieldVisitor(ASM4) {
-                    @Override
-                    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-                        final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
-                        fieldInfo.setAnotation(anotationInfo);
-                        anotationInfo.setDesc(desc);
-                        anotationInfo.setType(Type.getType(desc));
-                        return new AnnotationVisitor(ASM4) {
-                            @Override
-                            public void visit(String name, Object value) {
-                                ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
-                                value1.setName(name);
-                                value1.setValue(value);
-                                anotationInfo.setValue(value1);
-                                super.visit(name, value);
-                            }
-                        };
-                    }
-
-                    @Override
-                    public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
-                        return super.visitTypeAnnotation(typeRef, typePath, desc, visible);
-                    }
-
-                    @Override
-                    public void visitAttribute(Attribute attr) {
-                        super.visitAttribute(attr);
-                    }
-                };
-            }
-        }, 0);
+        String clzName = clz.getName().replace(".", "/").concat(".class");
+        ClassLoader loader = clz.getClassLoader();
+        InputStream is = loader.getResourceAsStream(clzName);
+        createInfo(clz, is);
         Class<?> defineClz = definedClass(clz);
         cb.setSeedClz(defineClz);
+    }
+    public static void createInfo(final Class<?> clz, InputStream is) {
+        ClassReader cr = null;
+        try {
+            cr = new ClassReader(is);
+            cr.accept(new ClassVisitor(Opcodes.ASM4) {
+
+                @Override
+                public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+                    final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
+                    beanSymbols.get(clz).setAnotation(anotationInfo);
+                    anotationInfo.setDesc(desc);
+                    anotationInfo.setType(Type.getType(desc));
+                    return new AnnotationVisitor(ASM4) {
+                        @Override
+                        public void visit(String name, Object value) {
+                            ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
+                            value1.setName(name);
+                            value1.setValue(value);
+                            anotationInfo.setValue(value1);
+                            super.visit(name, value);
+                        }
+                    };
+                }
+
+
+                @Override
+                public void visit(int version, int access, String name,
+                                  String signature, String superName, String[] interfaces) {
+                    beanSymbols.get(clz).setVersion(version);
+                    super.visit(version, access, name, signature, superName, interfaces);
+                }
+
+                @Override
+                public MethodVisitor visitMethod(final int access,
+                                                 final String name, final String desc,
+                                                 final String signature, final String[] exceptions) {
+                    final Type[] args = Type.getArgumentTypes(desc);
+                    final ClassBean.MethodInfo methodInfo = new ClassBean.MethodInfo();
+                    beanSymbols.get(clz).setMethods(methodInfo);
+                    methodInfo.setName(name);
+                    methodInfo.setDesc(desc);
+                    methodInfo.setType(Type.getType(desc));
+                    methodInfo.setArgs(args);
+                    methodInfo.setAccess(access);
+                    return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc,
+                            signature, exceptions)) {
+                        Map<Integer, ClassBean.AnotationInfo> paramAnnotations = new HashMap<Integer, ClassBean.AnotationInfo>();
+
+                        private Label label;
+
+                        @Override
+                        public void visitParameter(String name, int access) {
+                            super.visitParameter(name, access);
+                        }
+
+                        @Override
+                        public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+                            final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
+                            anotationInfo.setDesc(desc);
+                            anotationInfo.setType(Type.getType(desc));
+                            paramAnnotations.put(parameter, anotationInfo);
+                            return new AnnotationVisitor(ASM4) {
+                                @Override
+                                public void visit(String name, Object value) {
+                                    ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
+                                    value1.setName(name);
+                                    value1.setValue(value);
+                                    anotationInfo.setValue(value1);
+                                    super.visit(name, value);
+                                }
+                            };
+                        }
+
+                        @Override
+                        public void visitLineNumber(int line, Label start) {
+                            super.visitLineNumber(line, start);
+                            if (label == null) label = start;
+                        }
+
+                        @Override
+                        public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+                            if (index > 0) {
+                                if (label != null && label == start) {
+                                    ClassBean.MethodInfo.LocalVar var = new ClassBean.MethodInfo.LocalVar();
+                                    var.setName(name);
+                                    if (paramAnnotations.containsKey(index - 1)) {
+                                        var.setAnnotations(paramAnnotations.get(index - 1));
+                                    }
+                                    methodInfo.setArgsSort(name);
+                                    var.setDesc(desc);
+                                    final LinkedList<String> signatureTypes = new LinkedList<String>();
+                                    var.setSignatureTypes(signatureTypes);
+                                    if (signature != null) {
+                                        var.setSignature(signature);
+                                        SignatureReader signatureReader = new SignatureReader(signature);
+                                        signatureReader.accept(new SignatureVisitor(ASM4) {
+                                            @Override
+                                            public void visitClassType(String name) {
+                                                signatureTypes.add(0, name);
+                                                super.visitClassType(name);
+                                            }
+                                        });
+                                    }
+
+                                    var.setType(Type.getType(desc));
+                                    var.setIndex(index);
+                                    methodInfo.setLocalVars(var);
+                                }
+                            }
+                            super.visitLocalVariable(name, desc, signature, start, end, index);
+                        }
+
+                        @Override
+                        public AnnotationVisitor visitAnnotation(String desc,
+                                                                 boolean visible) {
+                            // TODO Auto-generated method stub
+                            final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
+                            methodInfo.setAnotation(anotationInfo);
+                            anotationInfo.setDesc(desc);
+                            anotationInfo.setType(Type.getType(desc));
+                            return new AnnotationVisitor(ASM4) {
+                                @Override
+                                public void visit(String name, Object value) {
+                                    ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
+                                    value1.setName(name);
+                                    value1.setValue(value);
+                                    anotationInfo.setValue(value1);
+                                    super.visit(name, value);
+                                }
+                            };
+                        }
+
+                    };
+                }
+
+                //field读取
+                @Override
+                public FieldVisitor visitField(int access, String name,
+                                               String desc, String signature, Object value) {
+                    // TODO Auto-generated method stub
+                    final ClassBean.FieldInfo fieldInfo = new ClassBean.FieldInfo();
+                    try {
+                        Type type = Type.getType(desc);
+
+                        if (type.getSort() > 1 && type.getSort() < 9 || type.getSort() == 10) {
+                            fieldInfo.setName(name);
+                            fieldInfo.setDesc(desc);
+                            fieldInfo.setType(type);
+                            fieldInfo.setAccess(access);
+                            fieldInfo.setDefaultValue(value);
+                            Field dField = clz.getDeclaredField(name);
+                            fieldInfo.setField(dField);
+                            beanSymbols.get(clz).setField(fieldInfo);
+                        }
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                    return new FieldVisitor(ASM4) {
+                        @Override
+                        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+                            final ClassBean.AnotationInfo anotationInfo = new ClassBean.AnotationInfo();
+                            fieldInfo.setAnotation(anotationInfo);
+                            anotationInfo.setDesc(desc);
+                            anotationInfo.setType(Type.getType(desc));
+                            return new AnnotationVisitor(ASM4) {
+                                @Override
+                                public void visit(String name, Object value) {
+                                    ClassBean.AnotationInfo.AnotationValue value1 = new ClassBean.AnotationInfo.AnotationValue();
+                                    value1.setName(name);
+                                    value1.setValue(value);
+                                    anotationInfo.setValue(value1);
+                                    super.visit(name, value);
+                                }
+                            };
+                        }
+
+                        @Override
+                        public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+                            return super.visitTypeAnnotation(typeRef, typePath, desc, visible);
+                        }
+
+                        @Override
+                        public void visitAttribute(Attribute attr) {
+                            super.visitAttribute(attr);
+                        }
+                    };
+                }
+            }, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Class<?> definedClass(Class<?> clazz) {
@@ -398,6 +411,21 @@ public class SeedInvoke extends URLClassLoader implements Opcodes {
             }
         }
         return seedClass;
+    }
+
+    public static Class<?> define(String className,byte[] code){
+        Class seedClass = null;
+        synchronized (SeedInvoke.class) {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                seedClass = (Class) DEFINECLASS1.invoke(classLoader,new Object[]{className.replace("/", "."), code, 0, code.length});
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            return seedClass;
+        }
     }
 
     public static SeedExcuteItrf buildObject(Class clazz) throws Exception {

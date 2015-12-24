@@ -97,8 +97,6 @@ public class BaseTemplate implements Template {
         }
     }
 
-    int pi = 0;
-
     public void findString(CharBuffer contentBuffer) {
         contentBuilder.append("printf(").append(contentBuffer.toString()).append(");");
     }
