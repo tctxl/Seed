@@ -36,6 +36,6 @@ public class JSONConvert implements HttpConvert {
                 }
             }
         }
-        return parser.parseObject(new String(buffer), (Class<Object>) type);
+        return parser.parseObject(new String(buffer), type);
     }
 }

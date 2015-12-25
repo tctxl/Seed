@@ -1,10 +1,15 @@
 package com.opdar.framework.utils.yeson;
 
+import com.opdar.framework.aop.base.TypeReference;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.utils.yeson.annotations.JSONField;
 import com.opdar.framework.utils.yeson.convert.*;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -34,8 +39,8 @@ public class YesonParser {
 
     public static void main(String[] args) {
         YesonParser parser = new YesonParser();
-        List<Test> o = parser.parseArray("[{\"a\":\"3321\"},{\"a\":\"222\"}]", Test.class);
-        System.out.println(o);
+        Test2 test2 = parser.parseObject("{\"t3\":{\"a\":\"a\"},\"t4\":{\"time\":123456}}",new TypeReference<Test2<Test,STAT>>(){}._type);
+        System.out.println(test2);
     }
 
     public String toJSONString(Object o) {
@@ -171,10 +176,15 @@ public class YesonParser {
         return toJSONArray();
     }
 
-    public <T> T parseObject(String json, Class<T> clz) {
+    public <T> T parseType(String s, TypeReference<T> typeReference) {
+        Type type = typeReference._type;
+        return parseObject(s, type);
+    }
+
+    public <T> T parseObject(String json, java.lang.reflect.Type classType) {
         try {
             JSONObject object = parse(json);
-            return object.getObject(clz);
+            return object.getObject(classType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,9 +192,9 @@ public class YesonParser {
         return null;
     }
 
-    public <T> List<T> parseArray(String s, Class<T> clz) {
+    public <T> List<T> parseArray(String s, Type classType) {
         JSONArray array = parseArray(s);
-        return array.getArray(clz);
+        return array.getArray(classType);
     }
 
     private JSONArray toJSONArray() {

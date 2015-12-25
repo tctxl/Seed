@@ -1,0 +1,4 @@
+namespace "com.UsersEntity"{
+     *findById="SELECT *FROM USERS WHERE ID='${id}'";
+     *findByAll="SELECT *FROM USERS WHERE ID='${id}'";
+}

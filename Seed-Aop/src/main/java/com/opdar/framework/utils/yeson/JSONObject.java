@@ -3,10 +3,12 @@ package com.opdar.framework.utils.yeson;
 import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.utils.Utils;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.text.NumberFormat;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.*;
 
 public class JSONObject implements Map<String,Object> {
@@ -69,16 +71,26 @@ public class JSONObject implements Map<String,Object> {
 		return map.values();
 	}
 
-	public <T> T getObject(Class<T> clz){
+	public <T> T getObject(Type type){
 		try {
-			return invokeObject(this,clz);
+			return invokeObject(this,type);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private <T> T invokeObject(JSONObject object, Class<T> clz) throws Exception {
+	private <T> T invokeObject(JSONObject object, Type classType) throws Exception {
+		Class<T> clz = null;
+		Type[] types = null;
+		List<TypeVariable<Class<T>>> varsType = null;
+        if(classType instanceof ParameterizedTypeImpl){
+			clz = (Class<T>) ((ParameterizedTypeImpl) classType).getRawType();
+            types = ((ParameterizedTypeImpl) classType).getActualTypeArguments();
+			varsType = Arrays.asList(clz.getTypeParameters());
+        }else if (classType instanceof Class){
+			clz = (Class) classType;
+        }
 		SeedExcuteItrf execute = SeedInvoke.buildObject(clz);
 		for (Iterator<String> it = object.keySet().iterator(); it.hasNext(); ) {
 			String key = it.next();
@@ -103,14 +115,22 @@ public class JSONObject implements Map<String,Object> {
 			} else {
 				if(o != null){
 					Class<?> type = field.getType();
+					if(varsType!=null && field.getGenericType() !=null && varsType.contains(field.getGenericType())){
+						type = (Class<?>) types[varsType.indexOf(field.getGenericType())];
+					}
 					if(Integer.class.isAssignableFrom(type)){
 						o = Integer.valueOf(o.toString());
-					}
+					}else
 					if(Float.class.isAssignableFrom(type)){
 						o = Float.valueOf(o.toString());
-					}
+					}else
 					if(Double.class.isAssignableFrom(type)){
 						o = Double.valueOf(o.toString());
+					}else
+					if(Long.class.isAssignableFrom(type)){
+						o = Long.valueOf(o.toString());
+					}else if (o instanceof JSONObject){
+						o = ((JSONObject) o).getObject(type);
 					}
 				}
 				execute.invokeMethod("set" + Utils.testField(key), o);

@@ -1,0 +1,191 @@
+options
+{
+  JDK_VERSION = "1.5";
+  UNICODE_INPUT = true;
+  STATIC = false;
+}
+PARSER_BEGIN(MapperParser)
+package com.opdar.framework.db.parser;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+/** Simple brace matcher. */
+public class MapperParser {
+  /** Main entry point. */
+  private MapperCallback mapperCallback;
+  private Callback callback = new Callback() {
+      @Override
+      public void call(Object[] vars) {
+          String sql = vars[2].toString();
+          int end = 0;
+          Mapper mapper = new Mapper();
+          mapper.namespace = vars[0].toString();
+          mapper.method = vars[1].toString();
+          mapper.prototype = sql;
+          while (true){
+              if(end == sql.length())break;
+              int start = sql.indexOf("${",end);
+              if(start < 0){
+                  if(end != sql.length()){
+                      start = sql.length();
+                  }
+              }
+              String string = sql.substring(end,start);
+              mapper.add(string);
+              if(start == sql.length())break;
+              int start2 = sql.indexOf("}",end);
+              String key = sql.substring(start+2,start2);
+              com.opdar.framework.db.parser.Mapper.Parameter p = new com.opdar.framework.db.parser.Mapper.Parameter();
+              p.key = key;
+              mapper.add(p);
+              end = start2+1;
+          }
+          if(mapperCallback != null)mapperCallback.call(mapper);
+      }
+  };
+
+
+  public void setMapperCallback(MapperCallback mapperCallback) {
+      this.mapperCallback = mapperCallback;
+  }
+
+  public void setCallback(Callback callback) {
+      this.callback = callback;
+  }
+
+  public static void main(String args[]) throws ParseException {
+      try {
+          FileInputStream fileInputStream = new FileInputStream(new File("E:\\OSWorkspace\\Seed\\Seed-Database\\src\\main\\resources\\test.mapper"));
+          MapperParser parser = new MapperParser(fileInputStream);
+
+          parser.parse();
+      } catch (FileNotFoundException e) {
+          e.printStackTrace();
+      }
+  }
+}
+
+PARSER_END(MapperParser)
+
+SKIP :
+{
+  " "
+}
+SKIP :
+{
+"\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :{
+<VAR:"var ">
+|<NAMESPACE : "namespace ">
+}
+TOKEN :
+{
+  <LBRACE: "{">
+| <RBRACE: "}">
+| <ASTERISK: "*">
+| <EQUALS: "=">
+| <LBRACKET: "(">
+| <RBRACKET: ")">
+|<DOLLER: (~["\""]|("\\\""))+"$" >
+| <SHARP: "#">
+| <COLON: ":">
+| <COMMA: ",">
+| <#QUOTES:"\"">
+| <IDENTIFIER: <LETTER>(<LETTER>|<DIGIT>)* >
+| <LETTER:["_","a"-"z","A"-"Z"]>
+| <SEMICOLON:";">
+|<QUOTED_STRING: <QUOTES>(~["\""]|("\\\""))+<QUOTES> >
+|<DOUBLE_QUOTED: "\"\"" >
+}
+TOKEN :{
+ < CONSTANT: ( <DIGIT> )+ > |
+ < #DIGIT: ["0" - "9"] >
+}
+
+void parse() :
+{}
+{
+    {
+        while(token(null) != null){}
+    }
+
+}
+
+void cache() :
+{}
+{
+    {
+        while(cacheToken() != null){}
+    }
+}
+
+Object cacheToken() :
+{}
+{{Token name = null;}[name = <IDENTIFIER>]{System.out.println(name);}<DOLLER><LBRACE>[name = <IDENTIFIER>]<RBRACE>{System.out.println(name);return "";}
+  |{Token name = null;}<SHARP><LBRACE>[name = <IDENTIFIER>]<RBRACE>{System.out.println(name);return "";}
+  |<EOF>{return null;}
+}
+
+Object token(Token name) :{
+    Object token = null;
+    Token namespace = name;}
+{
+   <VAR>vars(namespace)<SEMICOLON>{ return ""; }
+  |
+  {Token _namespace = null;}
+  <NAMESPACE>[_namespace =<QUOTED_STRING>]
+    {
+    trimQuoted(_namespace);
+    if(namespace != null){
+        _namespace.image = namespace.image+"."+_namespace.image;
+    }
+    }
+    <LBRACE>
+        {
+            while(!token(_namespace).equals("RBRACE")){
+            }
+        }
+  { return ""; }
+  |
+    <RBRACE>{return "RBRACE";}
+  |
+  {Token asteriskKey = null;Token asteriskValue = null;}
+  <ASTERISK>[asteriskKey = <IDENTIFIER>]<EQUALS>[asteriskValue = <QUOTED_STRING>]{trimQuoted(asteriskValue);}<SEMICOLON>
+  {
+  try{
+  callback.call(name,asteriskKey,asteriskValue);}catch(Exception ignore){}
+  }
+  { return ""; }
+  |<EOF>{return null;}
+}
+
+Object vars(Token name) :{
+    Token namespace = name;}
+{
+    {Token varName = null;Token varValue = null;}
+    [varName = <IDENTIFIER>]<EQUALS>{varValue = values(name);}
+    {System.out.println(varName+"="+varValue);}
+  { return ""; }
+}
+
+Token values(Token name) :{
+    Token namespace = name;Token value = null;}
+{
+[value = <CONSTANT>|value = <QUOTED_STRING>{trimQuoted(value);}|value = <DOUBLE_QUOTED>{trimQuoted(value);}]
+  {
+    return value;
+  }
+}
+
+void trimQuoted(Token quotedString) :
+{Token value = null;}
+{
+    {
+        quotedString.image = quotedString.image.substring(1,quotedString.image.length() - 1);
+        quotedString.image = quotedString.image.replaceAll("\\\\\"","\"");
+    }
+}

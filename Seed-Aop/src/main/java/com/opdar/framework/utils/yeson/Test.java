@@ -5,9 +5,10 @@ import java.util.List;
 /**
  * Created by 俊帆 on 2015/8/14.
  */
-public class Test {
+public class Test<T,V> {
     String a;
     private List<Test> list;
+    T t2;
 
     public String getA() {
         return a;
@@ -23,6 +24,14 @@ public class Test {
 
     public void setList(List<Test> list) {
         this.list = list;
+    }
+
+    public T getT2() {
+        return t2;
+    }
+
+    public void setT2(T t2) {
+        this.t2 = t2;
     }
 
     @Override

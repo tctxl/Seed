@@ -1,5 +1,6 @@
 package com.opdar.framework.utils.yeson;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class JSONArray extends AbstractList<Object> {
@@ -127,11 +128,11 @@ public class JSONArray extends AbstractList<Object> {
 	}
 
 
-	public <T> List<T> getArray(Class<T> clz) {
+	public <T> List<T> getArray(Type classType) {
 		List<T> list = new ArrayList<T>();
 		for(int i=0;i<size();i++){
 			JSONObject object = getJSONObject(i);
-			list.add(object.getObject(clz));
+			list.add(object.<T>getObject(classType));
 		}
 		return list;
 	}
