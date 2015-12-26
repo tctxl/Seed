@@ -74,7 +74,6 @@ public class TemplateUtil {
                 }else if(((Expression) o).getName().equals("if")){
                     HashMap map = new HashMap();
                     map.putAll(vars);
-
                     if(Boolean.parseBoolean(polish.execute(getExp(o,vars,((Expression) o).getCondition()).toString()))){
                         part(((Expression) o).getProgram(), object, sw, open, close, loader, map,template);
                     }

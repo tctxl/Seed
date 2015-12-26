@@ -70,38 +70,54 @@ public class YesonParser {
                     }
                     exeObjectResult(builder, key, fieldResult, fieldType);
                 }
-            } else {
-                Field[] fields = clz.getDeclaredFields();
-                for (Field field : fields) {
-                    field.setAccessible(true);
-
-                    try {
-                        String key = field.getName();
-                        JSONField jsonField = field.getAnnotation(JSONField.class);
-                        if(jsonField != null){
-                            key = jsonField.value();
-                            if(!jsonField.serializable())continue;
-                        }
-                        Object fieldResult = field.get(o);
-                        Class<?> fieldType = Void.class;
-                        if (fieldResult != null) {
-                            fieldType = fieldResult.getClass();
-                        }
-                        exeObjectResult(builder, key, fieldResult, fieldType);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                if (builder.length() > 0) {
+                    builder.delete(builder.length() - 1, builder.length());
+                    builder.insert(0, "{");
+                    builder.append("}");
+                } else {
+                    builder.append("null");
                 }
-            }
-            if (builder.length() > 0) {
-                builder.delete(builder.length() - 1, builder.length());
-                builder.insert(0, "{");
-                builder.append("}");
             } else {
-                builder.append("null");
+                refectObject(o, clz, builder);
             }
         }
         return builder.toString();
+    }
+
+    private void refectObject(Object o, Class clz, StringBuilder builder) {
+        StringBuilder b2 = new StringBuilder();
+        Field[] fields = clz.getDeclaredFields();
+        if(SeedExcuteItrf.class.isAssignableFrom(clz)){
+            fields = clz.getSuperclass().getDeclaredFields();
+        }
+        for (Field field : fields) {
+            field.setAccessible(true);
+
+            try {
+                String key = field.getName();
+                JSONField jsonField = field.getAnnotation(JSONField.class);
+                if(jsonField != null){
+                    key = jsonField.value();
+                    if(!jsonField.serializable())continue;
+                }
+                Object fieldResult = field.get(o);
+                Class<?> fieldType = Void.class;
+                if (fieldResult != null) {
+                    fieldType = fieldResult.getClass();
+                }
+                exeObjectResult(b2, key, fieldResult, fieldType);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        if (b2.length() > 0) {
+            b2.delete(b2.length() - 1, b2.length());
+            b2.insert(0, "{");
+            b2.append("}");
+        } else {
+            b2.append("null");
+        }
+        builder.append(b2);
     }
 
     private void exeObjectResult(StringBuilder builder, String key, Object fieldResult, Class<?> fieldType) {
@@ -115,8 +131,10 @@ public class YesonParser {
             JSONConvert convert = converts.get(fieldType);
             Object result = convert.convert(fieldResult);
             builder.append(result);
-        } else {
+        } else if(Void.class.isAssignableFrom(fieldType)){
             builder.append("null");
+        } else {
+            refectObject(fieldResult,fieldType,builder);
         }
         builder.append(",");
     }

@@ -278,7 +278,11 @@ public class SeedWeb {
                         seedResponse.flush();
                     }
                 }
-        } finally {
+        }catch (Exception e){
+            ErrorView view = new ErrorView(HttpResponseCode.CODE_500);
+            seedResponse.write(e.toString(), view.contentType(), view.getCode());
+            seedResponse.flush();
+        }finally {
             sharedRequest.remove();
             sharedResponse.remove();
             sharedRequest.set(null);

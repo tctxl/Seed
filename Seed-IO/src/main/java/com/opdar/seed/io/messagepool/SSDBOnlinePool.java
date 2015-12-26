@@ -22,14 +22,14 @@ public class SSDBOnlinePool implements MessagePool<OnlineProtoc.Online> {
 
     @Override
     public boolean set(OnlineProtoc.Online online) {
-        CacheUtils.hashCache(HASH_KEY,online.getUserId(), online.toByteArray());
+        CacheUtils.getInstance().hashCache(HASH_KEY,online.getUserId(), online.toByteArray());
         return true;
     }
 
     @Override
     public OnlineProtoc.Online get(String userId) {
         try {
-            return OnlineProtoc.Online.parseFrom(CacheUtils.hashGet(HASH_KEY, userId).datas.get(0));
+            return OnlineProtoc.Online.parseFrom(CacheUtils.getInstance().hashGet(HASH_KEY, userId).datas.get(0));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
@@ -38,6 +38,6 @@ public class SSDBOnlinePool implements MessagePool<OnlineProtoc.Online> {
 
     @Override
     public boolean del(String id) {
-        return CacheUtils.hashDel(HASH_KEY,id);
+        return CacheUtils.getInstance().hashDel(HASH_KEY,id);
     }
 }

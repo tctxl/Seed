@@ -20,14 +20,14 @@ public class SSDBMessagePool implements MessagePool<ClusterProtoc.Message> {
 
     @Override
     public boolean set(ClusterProtoc.Message message) {
-        CacheUtils.cache(message.getMessageId(), message.toByteArray(), -1);
+        CacheUtils.getInstance().cache(message.getMessageId(), message.toByteArray(), -1);
         return true;
     }
 
     @Override
     public ClusterProtoc.Message get(String messageId) {
         try {
-            return ClusterProtoc.Message.parseFrom(CacheUtils.getCache(messageId).datas.get(0));
+            return ClusterProtoc.Message.parseFrom(CacheUtils.getInstance().getCache(messageId).datas.get(0));
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
@@ -36,6 +36,6 @@ public class SSDBMessagePool implements MessagePool<ClusterProtoc.Message> {
 
     @Override
     public boolean del(String id) {
-        return CacheUtils.del(id).ok();
+        return CacheUtils.getInstance().del(id).ok();
     }
 }
