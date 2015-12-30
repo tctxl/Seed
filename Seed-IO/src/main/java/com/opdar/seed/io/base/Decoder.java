@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,8 +38,7 @@ public class Decoder extends ChannelInboundHandlerAdapter {
     private byte[] lengthBytes = null;
     int length = 0;
     List<Object> objects = new LinkedList<Object>();
-
-    @Override
+   @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
     }

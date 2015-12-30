@@ -12,14 +12,17 @@ import java.lang.reflect.TypeVariable;
 import java.util.*;
 
 public class JSONObject implements Map<String,Object> {
+	private YesonParser yesonParser;
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return map.toString();
 	}
-	public JSONObject() {
+	public JSONObject(YesonParser yesonParser) {
 		// TODO Auto-generated constructor stub
 		map = new HashMap<String, Object>();
+		this.yesonParser = yesonParser;
 	}
 	private Map<String, Object> map;
 	/**
@@ -97,8 +100,19 @@ public class JSONObject implements Map<String,Object> {
 			Field field = clz.getDeclaredField(key);
 			Object o = object.get(key);
 			if (o instanceof JSONArray) {
-				Class cls = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-				Class rawType = (Class) ((ParameterizedType) field.getGenericType()).getRawType();
+				Class cls = null;
+				Class rawType = null;
+				if(varsType!=null && field.getGenericType() !=null && varsType.contains(field.getGenericType())){
+					Object c = types[varsType.indexOf(field.getGenericType())];
+					if(c instanceof ParameterizedTypeImpl){
+						cls = (Class) ((ParameterizedTypeImpl) c).getActualTypeArguments()[0];
+						rawType = ((ParameterizedTypeImpl) c).getRawType();
+					}
+				}else{
+					rawType = (Class) ((ParameterizedType) field.getGenericType()).getRawType();
+
+					cls = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+				}
 				Collection collection = null;
 				if (rawType.isInterface()) {
 					collection = new ArrayList();
@@ -118,19 +132,14 @@ public class JSONObject implements Map<String,Object> {
 					if(varsType!=null && field.getGenericType() !=null && varsType.contains(field.getGenericType())){
 						type = (Class<?>) types[varsType.indexOf(field.getGenericType())];
 					}
-					if(Integer.class.isAssignableFrom(type)){
-						o = Integer.valueOf(o.toString());
-					}else
-					if(Float.class.isAssignableFrom(type)){
-						o = Float.valueOf(o.toString());
-					}else
-					if(Double.class.isAssignableFrom(type)){
-						o = Double.valueOf(o.toString());
-					}else
-					if(Long.class.isAssignableFrom(type)){
-						o = Long.valueOf(o.toString());
-					}else if (o instanceof JSONObject){
+					if (o instanceof JSONObject){
 						o = ((JSONObject) o).getObject(type);
+					}else{
+						if(yesonParser.converts.get(type) != null) {
+							o = yesonParser.converts.get(type).reconvert(o);
+						}else{
+							o = null;
+						}
 					}
 				}
 				execute.invokeMethod("set" + Utils.testField(key), o);

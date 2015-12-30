@@ -13,4 +13,9 @@ public class DateConvert implements JSONConvert<Date> {
         return o.getTime();
     }
 
+    @Override
+    public Date reconvert(Object o) {
+        return new Date(Long.parseLong(o.toString()));
+    }
+
 }

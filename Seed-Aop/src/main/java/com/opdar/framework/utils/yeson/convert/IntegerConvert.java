@@ -11,4 +11,9 @@ public class IntegerConvert implements JSONConvert<Integer> {
         return o;
     }
 
+    @Override
+    public Integer reconvert(Object o) {
+        return Integer.parseInt(o.toString());
+    }
+
 }

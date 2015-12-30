@@ -11,4 +11,9 @@ public class LongConvert implements JSONConvert<Long> {
         return o;
     }
 
+    @Override
+    public Long reconvert(Object o) {
+        return Long.valueOf(o.toString());
+    }
+
 }

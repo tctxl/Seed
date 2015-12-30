@@ -1,8 +1,5 @@
 package com.opdar.seed.io.p2p;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.*;
 
@@ -113,7 +110,7 @@ public class P2pClient {
             socket.close();
     }
 
-    protected static final Logger logger = LoggerFactory.getLogger(P2pClient.class);
+//    protected static final Logger logger = LoggerFactory.getLogger(P2pClient.class);
 
 //    public static void main(String[] args) throws Exception {
 //        String ClientName = "CLIENT-1";

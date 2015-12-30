@@ -11,6 +11,11 @@ public class StringConvert implements JSONConvert<String> {
         return "\"".concat(o.replaceAll("\"","\\\\\\\"")).concat("\"");
     }
 
+    @Override
+    public String reconvert(Object o) {
+        return o.toString();
+    }
+
     public static void main(String[] args) {
         System.out.println(new StringConvert().convert("\"a"));;
     }

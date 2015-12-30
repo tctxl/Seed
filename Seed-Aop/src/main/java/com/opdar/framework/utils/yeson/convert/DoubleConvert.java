@@ -11,4 +11,9 @@ public class DoubleConvert implements JSONConvert<Double> {
         return o;
     }
 
+    @Override
+    public Double reconvert(Object o) {
+        return Double.parseDouble(o.toString());
+    }
+
 }

@@ -13,4 +13,9 @@ public class TimestapConvert implements JSONConvert<Timestamp> {
         return o.getTime();
     }
 
+    @Override
+    public Timestamp reconvert(Object o) {
+        return new Timestamp(Long.valueOf(o.toString()));
+    }
+
 }

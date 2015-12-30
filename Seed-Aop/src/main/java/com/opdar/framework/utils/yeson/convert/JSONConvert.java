@@ -5,4 +5,5 @@ package com.opdar.framework.utils.yeson.convert;
  */
 public interface JSONConvert<T> {
     Object convert(T o);
+    T reconvert(Object o);
 }

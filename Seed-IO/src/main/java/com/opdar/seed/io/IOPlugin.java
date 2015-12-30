@@ -9,6 +9,7 @@ import com.opdar.seed.io.base.Initializer;
 import com.opdar.seed.io.base.IoSession;
 import com.opdar.seed.io.base.SessionStateCallback;
 import com.opdar.seed.io.cluster.ClusterPool;
+import com.opdar.seed.io.flash.FlashPolicyServer;
 import com.opdar.seed.io.messagepool.MessagePool;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
 import com.opdar.seed.io.messagepool.SSDBOnlinePool;
@@ -37,11 +38,17 @@ public class IOPlugin extends DefaultSupport implements Plugin {
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     private String serverName;
     private SessionStateCallback sessionStateCallback;
+    private FlashPolicyServer flashPolicyServer = new FlashPolicyServer();
+    private boolean isOpenFlashPolicy = false;
 
     public interface MessageCallback {
         void callback(MessageProtoc.Action.Type type, String messageId, IoSession session);
 
         void otherMessage(Object o, IoSession session);
+    }
+
+    public void setFlashPolicy(boolean isOpenFlashPolicy) {
+        this.isOpenFlashPolicy = isOpenFlashPolicy;
     }
 
     private MessageCallback callback;
@@ -131,6 +138,9 @@ public class IOPlugin extends DefaultSupport implements Plugin {
         } else if (!TokenUtil.contains('c')) {
             ClusterPool.join(IOPlugin.CLUSTER_HOST, IOPlugin.CLUSTER_PORT, getServerName(), initializer.setIsClient(true));
         }
+        if(isOpenFlashPolicy){
+            flashPolicyServer.start();
+        }
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -157,6 +167,9 @@ public class IOPlugin extends DefaultSupport implements Plugin {
         }
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
+        if(isOpenFlashPolicy){
+            flashPolicyServer.shutdown();
+        }
         return true;
     }
 

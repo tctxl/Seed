@@ -11,4 +11,9 @@ public class FloatConvert implements JSONConvert<Float> {
         return o;
     }
 
+    @Override
+    public Float reconvert(Object o) {
+        return Float.valueOf(o.toString());
+    }
+
 }

@@ -11,4 +11,9 @@ public class ByteConvert implements JSONConvert<Byte> {
         return o;
     }
 
+    @Override
+    public Byte reconvert(Object o) {
+        return Byte.valueOf(o.toString());
+    }
+
 }

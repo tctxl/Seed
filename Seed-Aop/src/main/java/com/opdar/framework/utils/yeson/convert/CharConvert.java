@@ -11,4 +11,9 @@ public class CharConvert implements JSONConvert<Character> {
         return o;
     }
 
+    @Override
+    public Character reconvert(Object o) {
+        return Character.valueOf((Character) o);
+    }
+
 }

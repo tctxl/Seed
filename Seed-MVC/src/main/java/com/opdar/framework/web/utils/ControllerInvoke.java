@@ -68,6 +68,7 @@ public class ControllerInvoke {
                         continue;
                     }
                     if (isController) {
+                        controllerAop(loader, controllerAfter, controllerBefore, act);
                         List<ClassBean.AnotationInfo.AnotationValue> anotations = anotationInfo.getValue();
                         String controllerRouter = "";
                         if (anotations.size() > 0) {
@@ -86,7 +87,6 @@ public class ControllerInvoke {
                         scanRouter(perfix, loader, classBean, controllerRouter, prefixName, methods ,act);
                     }
                 }
-                controllerAop(loader, controllerAfter, controllerBefore, act);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

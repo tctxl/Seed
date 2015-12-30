@@ -35,7 +35,7 @@ public class YesonParser {
     boolean isParseArray = false;
     boolean isInit = true;
 
-    private HashMap<Class, JSONConvert> converts = new HashMap<Class, JSONConvert>();
+    protected HashMap<Class, JSONConvert> converts = new HashMap<Class, JSONConvert>();
 
     public static void main(String[] args) {
         YesonParser parser = new YesonParser();
@@ -237,7 +237,7 @@ public class YesonParser {
 
     private JSONObject toJSONObject() {
         isParseArray = false;
-        JSONObject root = new JSONObject();
+        JSONObject root = new JSONObject(this);
         String key = null;
         Object value = null;
 
