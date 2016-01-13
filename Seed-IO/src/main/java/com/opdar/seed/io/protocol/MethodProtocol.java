@@ -25,6 +25,16 @@ public class MethodProtocol implements Protocol<MethodProtoc.Method> {
     public MethodProtocol() {
     }
 
+    public static byte[] createResponse(String name, String params, String type) {
+        MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();
+        method.setName(name);
+        method.setParams(params);
+        method.setType(type);
+
+        byte[] result = method.build().toByteArray();
+        return Utils.byteMerger(convertLen(result.length), result);
+    }
+
     public static byte[] create(String name, String params, String type) {
         MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();
         method.setName(name);

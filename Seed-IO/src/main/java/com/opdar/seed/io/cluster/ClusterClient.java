@@ -78,13 +78,20 @@ public class ClusterClient implements Callback<Object, Object> {
                     ch.writeAndFlush(data).addListener(new ChannelFutureListener() {
                         @Override
                         public void operationComplete(ChannelFuture future) throws Exception {
-                            logger.debug("msg result : [{}]", future.toString());
-                            if (!future.isSuccess()) {
-                                logger.debug("发送失败，正在重试！");
-                                ret = false;
+                            try {
+                                logger.debug("msg result : [{}]", future.toString());
+                                if (!future.isSuccess()) {
+                                    logger.debug("发送失败，正在重试！");
+                                    ret = false;
+                                }else{
+                                    ret = true;
+                                    logger.debug("Open :{} ,State: 发送成功！",ch.isOpen());
+                                }
                                 synchronized (lock) {
                                     lock.notify();
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });

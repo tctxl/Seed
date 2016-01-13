@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class FailureMessageScanRunnable implements Runnable {
     public static final long OUTTIME = 30;
-    public static final TimeUnit TIMEUNIT = TimeUnit.MINUTES;
+    public static final TimeUnit TIMEUNIT = TimeUnit.SECONDS;
     private IOPlugin ioPlugin;
     private static final Logger logger = LoggerFactory.getLogger(FailureMessageScanRunnable.class);
     private static final LinkedList<ClusterProtoc.Message> executes = new LinkedList<ClusterProtoc.Message>();

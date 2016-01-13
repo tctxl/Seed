@@ -3,6 +3,7 @@ package com.opdar.framework.utils.yeson;
 import com.opdar.framework.aop.SeedInvoke;
 import com.opdar.framework.aop.interfaces.SeedExcuteItrf;
 import com.opdar.framework.utils.Utils;
+import com.opdar.framework.utils.yeson.annotations.JSONField;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.Field;
@@ -98,6 +99,8 @@ public class JSONObject implements Map<String,Object> {
 		for (Iterator<String> it = object.keySet().iterator(); it.hasNext(); ) {
 			String key = it.next();
 			Field field = clz.getDeclaredField(key);
+			JSONField field1 = field.getAnnotation(JSONField.class);
+			if(field1 != null && !field1.serializable())continue;
 			Object o = object.get(key);
 			if (o instanceof JSONArray) {
 				Class cls = null;

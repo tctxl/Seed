@@ -16,14 +16,14 @@ import static io.netty.buffer.Unpooled.wrappedBuffer;
 public class FlashDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     private byte[] xmlsocket = new byte[]{60, 112, 111, 108, 105, 99, 121, 45, 102, 105, 108, 101, 45, 114, 101, 113, 117, 101, 115, 116, 47, 62, 0};
-    private String xml = "<?xml version=\"1.0\"?><cross-domain-policy><site-control permitted-cross-domain-policies=\"all\"/><allow-access-from domain=\"*\" to-ports=\"*\"/></cross-domain-policy>\0";
+    private byte[] xml = "<?xml version=\"1.0\"?><cross-domain-policy><site-control permitted-cross-domain-policies=\"all\"/><allow-access-from domain=\"*\" to-ports=\"*\"/></cross-domain-policy>\0".getBytes();
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
         if (Arrays.equals(bytes, xmlsocket)) {
-            channelHandlerContext.writeAndFlush(wrappedBuffer(xml.getBytes()));
+            channelHandlerContext.writeAndFlush(wrappedBuffer(xml));
         }
     }
 }

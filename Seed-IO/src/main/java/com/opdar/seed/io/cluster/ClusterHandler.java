@@ -1,6 +1,8 @@
 package com.opdar.seed.io.cluster;
 
+import com.google.protobuf.ByteString;
 import com.opdar.seed.io.IOPlugin;
+import com.opdar.seed.io.base.IoSession;
 import com.opdar.seed.io.base.Result;
 import com.opdar.seed.io.messagepool.SSDBMessagePool;
 import com.opdar.seed.io.protocol.*;
@@ -67,6 +69,7 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
     protected void channelRead0(ChannelHandlerContext ctx, Result result) throws Exception {
         Object object = result.get();
         Cluster cluster = ctx.attr(SESSION_FLAG).get();
+        logger.info("client : "+cluster);
         if (object instanceof ClusterProtoc.Message) {
             if (cluster != null) cluster.clearHeartbeat();
             switch (((ClusterProtoc.Message) object).getAct()) {
@@ -90,10 +93,15 @@ public class ClusterHandler extends SimpleChannelInboundHandler<Result> {
                     //use id to get a message from message pool
                     ClusterProtoc.Message message = IOPlugin.getMsgPool().get(messageId);
                     if (IOPlugin.isP2P()) {
-                        dispatcher.doIt(message);
+                        try {
+                            MethodProtoc.Response response = dispatcher.doIt(message);
+                            new MethodProtocol.MethodResponse(new IoSession(ctx)).write(response.getContent().toByteArray(),response.getType(),response.getCode());
+                        }catch (Exception e){
+                            logger.debug(e.toString());
+                            new MethodProtocol.MethodResponse(new IoSession(ctx)).write(ByteString.copyFrom("发送消息失败".getBytes()).toByteArray(), "normal", 0);
+                        }
                     } else {
                         String to = message.getTo();
-
                         //
                         byte[] notifyMsg = ActionProtocol.create(MessageProtoc.Action.newBuilder().setType(MessageProtoc.Action.Type.MSG).setMessageId(messageId).build());
 

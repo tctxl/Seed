@@ -1,5 +1,7 @@
 package com.opdar.seed.io.p2p;
 
+import com.opdar.framework.utils.yeson.annotations.JSONField;
+
 import java.io.IOException;
 import java.net.*;
 
@@ -12,6 +14,8 @@ public class P2pClient {
     private String name;
     private Callback callback;
     private Integer timeOut = 0;
+    @JSONField(value = "", serializable = false)
+    DatagramSocket socket;
 
     public String getHost() {
         return host;
@@ -60,7 +64,6 @@ public class P2pClient {
     public P2pClient() {
     }
 
-    DatagramSocket socket;
 
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
