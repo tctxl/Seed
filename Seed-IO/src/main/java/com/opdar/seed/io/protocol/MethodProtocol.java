@@ -4,26 +4,25 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.opdar.framework.utils.Utils;
 import com.opdar.framework.web.common.IResponse;
-import com.opdar.seed.extra.utils.crypto.Base64;
 import com.opdar.seed.io.base.IoSession;
+import com.opdar.seed.io.token.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Map;
 
 /**
  * Created by 俊帆 on 2015/8/28.
  */
-public class MethodProtocol implements Protocol<MethodProtoc.Method> {
+public class MethodProtocol extends BaseProtocol<MethodProtoc.Method> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodProtocol.class);
 
-    public MethodProtocol() {
+    public MethodProtocol(Token token) {
+        super(token);
     }
+
 
     public static byte[] createResponse(String name, String params, String type) {
         MethodProtoc.Method.Builder method = MethodProtoc.Method.newBuilder();

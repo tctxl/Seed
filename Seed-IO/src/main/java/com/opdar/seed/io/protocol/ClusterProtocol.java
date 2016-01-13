@@ -2,11 +2,16 @@ package com.opdar.seed.io.protocol;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.opdar.framework.utils.Utils;
+import com.opdar.seed.io.token.Token;
 
 /**
  * Created by 俊帆 on 2015/8/31.
  */
-public class ClusterProtocol implements Protocol<ClusterProtoc.Message> {
+public class ClusterProtocol extends BaseProtocol<ClusterProtoc.Message> {
+    public ClusterProtocol(Token token) {
+        super(token);
+    }
+
     @Override
     public ClusterProtoc.Message execute(byte[] buf) {
         if (buf != null) {

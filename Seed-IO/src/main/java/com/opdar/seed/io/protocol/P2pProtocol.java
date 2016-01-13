@@ -1,12 +1,17 @@
 package com.opdar.seed.io.protocol;
 
 import com.opdar.framework.utils.Utils;
+import com.opdar.seed.io.token.Token;
 
 /**
  * 36进制解码
  * Created by 俊帆 on 2015/8/28.
  */
-public class P2pProtocol implements Protocol<Command> {
+public class P2pProtocol extends BaseProtocol<Command> {
+
+    public P2pProtocol(Token token) {
+        super(token);
+    }
 
     @Override
     public Command execute(byte[] buf) {

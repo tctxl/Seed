@@ -7,16 +7,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="abb2bb81-bf14-46c4-bdbc-e166198f6541" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Client.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterClient.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterHandler.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/FailureMessageScanRunnable.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/FailureMessageScanRunnable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/IoSession.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/IoSession.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/JSONObject.java" afterPath="$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/JSONObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/MessageDispatcher.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/MessageDispatcher.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/BaseProtocol.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayCompare.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayStartWithCompare.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ActionProtocol.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ActionProtocol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ActionToken.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ActionToken.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ClusterToken.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ClusterToken.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Initializer.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Initializer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pClient.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/UdpIoSession.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/UdpIoSession.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/MethodToken.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/MethodToken.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/P2pProtocol.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/P2pProtocol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pServer.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pServer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/P2pToken.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/P2pToken.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/Protocol.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/Protocol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/Token.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/Token.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/TokenUtil.java" afterPath="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/TokenUtil.java" />
     </list>
     <list id="6044808a-45eb-4696-90f2-eccff687ddbd" name="Failed commit: Default" comment="增加静态资源渲染路径&#10;增加html渲染路径" />
     <list id="ebc53550-cccd-42d4-8727-405acb8aa604" name="Failed commit: Default (2)" comment="实现优雅关闭，解决程序终止时的memory leak" />
@@ -70,108 +78,119 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ClusterHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="100" column="86" selection-start-line="100" selection-start-column="86" selection-end-line="100" selection-end-column="86" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MethodProtocol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="128" column="72" selection-start-line="128" selection-start-column="41" selection-end-line="128" selection-end-column="72" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Client.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Client.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="62" column="35" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UdpIoSession.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/UdpIoSession.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42881355">
-              <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
-              <folding>
-                <element signature="e#650#651#0" expanded="true" />
-                <element signature="e#678#679#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClusterProtocol.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="31" selection-start-line="0" selection-start-column="31" selection-end-line="0" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MessageProtoc.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MessageProtoc.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MethodProtoc.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtoc.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1377" column="62" selection-start-line="1377" selection-start-column="52" selection-end-line="1377" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MessageDispatcher.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/MessageDispatcher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="20" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#834#835#0" expanded="false" />
-                <element signature="e#874#875#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="BaseProtocol.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/BaseProtocol.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#319#320#0" expanded="true" />
+                <element signature="e#357#358#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Decoder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Heartbeat.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Heartbeat.java">
+      <file leaf-file-name="Protocol.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/Protocol.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="20" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
+              <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Token.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/Token.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TokenUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/TokenUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-15.5">
+              <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
+              <folding>
+                <element signature="e#698#699#0" expanded="true" />
+                <element signature="e#773#774#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClusterToken.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ClusterToken.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.3542373">
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding>
+                <element signature="e#355#356#0" expanded="true" />
+                <element signature="e#403#404#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="P2pToken.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/P2pToken.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+              <folding>
+                <element signature="e#346#347#0" expanded="true" />
+                <element signature="e#390#391#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActionToken.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ActionToken.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
+              <folding>
+                <element signature="e#403#404#0" expanded="true" />
+                <element signature="e#450#451#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ByteArrayCompare.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayCompare.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.233333">
+              <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ByteArrayStartWithCompare.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayStartWithCompare.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.4333334">
+              <caret line="10" column="31" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -201,21 +220,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/MapperCache.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/SQLMapper.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/Callback.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/MapperCallback.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/Mapper.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/MapperParser.java" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/java/com/opdar/framework/db/parser/MapperParser.jj" />
-        <option value="$PROJECT_DIR$/Seed-Database/src/main/resources/test.mapper" />
-        <option value="$PROJECT_DIR$/Seed-Template/src/main/java/com/opdar/framework/template/utils/TemplateUtil.java" />
-        <option value="$PROJECT_DIR$/Seed-Template/src/main/java/com/opdar/framework/template/parser/TemplateCache.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/SeedServlet.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/ICookie.java" />
-        <option value="$PROJECT_DIR$/Seed-MVC-Support/src/main/java/com/opdar/framework/server/supports/servlet/ServletCookie.java" />
-        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/StringCompare.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/messagepool/SSDBOnlinePool.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/messagepool/SSDBMessagePool.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/messagepool/CassandraMessagePool.java" />
@@ -233,12 +237,10 @@
         <option value="$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/StringConvert.java" />
         <option value="$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/TimestapConvert.java" />
         <option value="$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/utils/ControllerInvoke.java" />
-        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/FlashPolicy.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/FlashPolicyServer.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/flash/FlashInitializer.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/flash/FlashPolicyServer.java" />
-        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/FlashDecoder.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pClient.java" />
         <option value="$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/JSONObject.java" />
@@ -249,9 +251,26 @@
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Heartbeat.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/Cluster.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/IoSession.java" />
-        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterHandler.java" />
         <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/UdpIoSession.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Initializer.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pServer.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/P2pProtocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ActionProtocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ActionToken.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/MethodToken.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/P2pToken.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/Protocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/BaseProtocol.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/Token.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayCompare.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayStartWithCompare.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/TokenUtil.java" />
+        <option value="$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ClusterToken.java" />
       </list>
     </option>
   </component>
@@ -578,6 +597,74 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed-IO" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="io" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="token" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seed-IO" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="io" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="protocol" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -683,74 +770,14 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.opdar.seed.io.utils" />
+      <recent name="com.opdar.seed.io.protocol" />
       <recent name="com.opdar.seed.io.base" />
       <recent name="com.opdar.framework.utils" />
       <recent name="com.opdar.framework.utils.yeson" />
-      <recent name="com.opdar.framework.utils.yeson.annotations" />
-      <recent name="com.opdar.seed.io.protocol" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CacheUtils">
-    <configuration default="false" name="ResourceInvoke" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.opdar.framework.aop.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="com.opdar.framework.aop.ResourceInvoke" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="seed-aop" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="YesonParser" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.opdar.framework.utils.yeson.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="com.opdar.framework.utils.yeson.YesonParser" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="seed-aop" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="MapperParser" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.opdar.framework.db.parser.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="com.opdar.framework.db.parser.MapperParser" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="seed-database" />
-      <envs />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Application.TokenUtil">
     <configuration default="false" name="TemplateCache" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -779,6 +806,66 @@
         </pattern>
       </extension>
       <option name="MAIN_CLASS_NAME" value="com.opdar.seed.io.utils.CacheUtils" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Seed-IO" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="P2pToken" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.opdar.seed.io.token.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.opdar.seed.io.token.P2pToken" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Seed-IO" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="ByteArrayCompare" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.opdar.seed.io.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.opdar.seed.io.utils.ByteArrayCompare" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Seed-IO" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="TokenUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.opdar.seed.io.token.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="com.opdar.seed.io.token.TokenUtil" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -1248,19 +1335,19 @@
       <item index="2" class="java.lang.String" itemvalue="Application.Decoder" />
       <item index="3" class="java.lang.String" itemvalue="Maven.Unnamed" />
       <item index="4" class="java.lang.String" itemvalue="Tomcat Server.Seed" />
-      <item index="5" class="java.lang.String" itemvalue="Application.ResourceInvoke" />
-      <item index="6" class="java.lang.String" itemvalue="Application.YesonParser" />
-      <item index="7" class="java.lang.String" itemvalue="Application.MapperParser" />
-      <item index="8" class="java.lang.String" itemvalue="Application.TemplateCache" />
-      <item index="9" class="java.lang.String" itemvalue="Application.CacheUtils" />
+      <item index="5" class="java.lang.String" itemvalue="Application.TemplateCache" />
+      <item index="6" class="java.lang.String" itemvalue="Application.CacheUtils" />
+      <item index="7" class="java.lang.String" itemvalue="Application.P2pToken" />
+      <item index="8" class="java.lang.String" itemvalue="Application.ByteArrayCompare" />
+      <item index="9" class="java.lang.String" itemvalue="Application.TokenUtil" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.CacheUtils" />
-        <item index="1" class="java.lang.String" itemvalue="Application.TemplateCache" />
-        <item index="2" class="java.lang.String" itemvalue="Application.MapperParser" />
-        <item index="3" class="java.lang.String" itemvalue="Application.YesonParser" />
-        <item index="4" class="java.lang.String" itemvalue="Application.ResourceInvoke" />
+        <item index="0" class="java.lang.String" itemvalue="Application.TokenUtil" />
+        <item index="1" class="java.lang.String" itemvalue="Application.ByteArrayCompare" />
+        <item index="2" class="java.lang.String" itemvalue="Application.P2pToken" />
+        <item index="3" class="java.lang.String" itemvalue="Application.CacheUtils" />
+        <item index="4" class="java.lang.String" itemvalue="Application.TemplateCache" />
       </list>
     </recent_temporary>
   </component>
@@ -1479,7 +1566,7 @@
       <workItem from="1452245697671" duration="646000" />
       <workItem from="1452321528376" duration="5008000" />
       <workItem from="1452491527888" duration="1302000" />
-      <workItem from="1452615867901" duration="1732000" />
+      <workItem from="1452615867901" duration="11159000" />
     </task>
     <task id="LOCAL-00001" summary="中文编码问题">
       <created>1429184229559</created>
@@ -1599,7 +1686,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1274512000" />
+    <option name="totallyTimeSpent" value="1283939000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1611,17 +1698,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1924" height="1056" extended-state="1" />
+    <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32900432" sideWeight="0.4978678" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31709957" sideWeight="0.30170986" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3409091" sideWeight="0.6008584" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32900432" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12821889" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2099567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3300866" sideWeight="0.39914164" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3300866" sideWeight="0.39914164" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26623377" sideWeight="0.4082618" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2805794" sideWeight="0.47885403" order="0" side_tool="false" content_ui="combo" />
@@ -1638,7 +1726,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31709957" sideWeight="0.30170986" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39935064" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
@@ -1713,153 +1800,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/FloatConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63171357">
-          <caret line="15" column="41" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/DoubleConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63171357">
-          <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/DateConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.72122765">
-          <caret line="17" column="51" selection-start-line="17" selection-start-column="51" selection-end-line="17" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/CharConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63171357">
-          <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/ByteConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63171357">
-          <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/Test2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22931035">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/ControllerAct.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="19" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/utils/ControllerInvoke.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39310345">
-          <caret line="82" column="29" selection-start-line="82" selection-start-column="29" selection-end-line="82" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/common/SeedRouter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.09827586">
-          <caret line="91" column="21" selection-start-line="91" selection-start-column="21" selection-end-line="91" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-MVC/src/main/java/com/opdar/framework/web/SeedWeb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="345" column="37" selection-start-line="345" selection-start-column="35" selection-end-line="345" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-Aop/src/main/java/com/opdar/framework/utils/yeson/convert/JSONConvert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19655173">
-          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/buffer/ByteBuf.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34371397">
-          <caret line="205" column="28" selection-start-line="205" selection-start-column="28" selection-end-line="205" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/channel/SimpleChannelInboundHandler.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13148789">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/channel/ChannelInboundHandlerAdapter.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/bootstrap/ServerBootstrap.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.379015">
-          <caret line="106" column="27" selection-start-line="106" selection-start-column="27" selection-end-line="106" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/buffer/Unpooled.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35331905">
-          <caret line="58" column="26" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/SessionStateCallback.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23030303">
-          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://E:/maven/Repository/io/netty/netty-all/4.0.32.Final/netty-all-4.0.32.Final.jar!/io/netty/util/concurrent/DefaultPromise.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33190578">
-          <caret line="32" column="32" selection-start-line="32" selection-start-column="32" selection-end-line="32" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/FlashDecoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40335196">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/flash/FlashPolicyServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.56384504">
-          <caret line="31" column="54" selection-start-line="31" selection-start-column="54" selection-end-line="31" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Encoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46341464">
-          <caret line="25" column="47" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/flash/FlashInitializer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.38163558">
@@ -1867,25 +1807,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Initializer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="45" selection-start-line="45" selection-start-column="45" selection-end-line="45" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Seed-IO/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="56" column="16" selection-start-line="56" selection-start-column="16" selection-end-line="56" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="195" column="29" selection-start-line="195" selection-start-column="29" selection-end-line="195" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1928,31 +1853,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="58" selection-start-line="51" selection-start-column="58" selection-end-line="51" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="106" column="64" selection-start-line="106" selection-start-column="64" selection-end-line="106" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/FailureMessageScanRunnable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.4333334">
           <caret line="47" column="46" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2087,14 +1991,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="31" selection-start-line="0" selection-start-column="31" selection-end-line="0" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MessageProtoc.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2119,29 +2015,282 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java">
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="128" column="72" selection-start-line="128" selection-start-column="41" selection-end-line="128" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="35" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.16101696">
+          <caret line="5" column="31" selection-start-line="5" selection-start-column="31" selection-end-line="5" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/UdpIoSession.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42881355">
-          <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.45254236">
+          <caret line="42" column="23" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="23" />
           <folding>
             <element signature="e#650#651#0" expanded="true" />
             <element signature="e#678#679#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6830509">
+          <caret line="62" column="35" selection-start-line="62" selection-start-column="35" selection-end-line="62" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_79/src.zip!/java/util/HashMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="461" column="23" selection-start-line="461" selection-start-column="23" selection-end-line="461" selection-end-column="23" />
+          <folding>
+            <element signature="e#16454#16455#0" expanded="false" />
+            <element signature="e#16498#16499#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/StringCompare.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="39" selection-start-line="19" selection-start-column="39" selection-end-line="28" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_79/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3322034">
+          <caret line="142" column="12" selection-start-line="142" selection-start-column="12" selection-end-line="142" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/cluster/ClusterPool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38813558">
+          <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Initializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/p2p/P2pServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="48" selection-start-line="50" selection-start-column="48" selection-end-line="50" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/IOPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="137" column="53" selection-start-line="137" selection-start-column="53" selection-end-line="137" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-Base/src/main/java/com/opdar/framework/utils/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3322034">
+          <caret line="216" column="25" selection-start-line="216" selection-start-column="25" selection-end-line="216" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/maven/Repository/org/codehaus/jackson/jackson-mapper-asl/1.9.2/jackson-mapper-asl-1.9.2.jar!/org/codehaus/jackson/map/util/ArrayBuilders.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.4021351">
+          <caret line="226" column="30" selection-start-line="226" selection-start-column="30" selection-end-line="226" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_79/src.zip!/java/io/ByteArrayOutputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="189" column="29" selection-start-line="189" selection-start-column="29" selection-end-line="189" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_79/src.zip!/java/nio/ByteBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3322034">
+          <caret line="956" column="24" selection-start-line="956" selection-start-column="24" selection-end-line="956" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/MethodToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+          <folding>
+            <element signature="e#258#259#0" expanded="false" />
+            <element signature="e#296#297#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/P2pProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#259#260#0" expanded="true" />
+            <element signature="e#287#288#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ClusterProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+          <folding>
+            <element signature="e#329#330#0" expanded="true" />
+            <element signature="e#357#358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/ActionProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
+          <folding>
+            <element signature="e#337#338#0" expanded="true" />
+            <element signature="e#365#366#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/MethodProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+          <folding>
+            <element signature="e#649#650#0" expanded="true" />
+            <element signature="e#677#678#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/protoc/ClusterProtoc.proto">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/Protocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/protocol/BaseProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#319#320#0" expanded="true" />
+            <element signature="e#357#358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayStartWithCompare.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.4333334">
+          <caret line="10" column="31" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/utils/ByteArrayCompare.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.233333">
+          <caret line="13" column="31" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/P2pToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+          <folding>
+            <element signature="e#346#347#0" expanded="true" />
+            <element signature="e#390#391#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ActionToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
+          <folding>
+            <element signature="e#403#404#0" expanded="true" />
+            <element signature="e#450#451#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/TokenUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.5">
+          <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
+          <folding>
+            <element signature="e#698#699#0" expanded="true" />
+            <element signature="e#773#774#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/Token.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/base/Decoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Seed-IO/src/main/java/com/opdar/seed/io/token/ClusterToken.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3542373">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#355#356#0" expanded="true" />
+            <element signature="e#403#404#0" expanded="true" />
           </folding>
         </state>
       </provider>

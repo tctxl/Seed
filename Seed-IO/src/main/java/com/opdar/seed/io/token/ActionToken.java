@@ -1,6 +1,6 @@
 package com.opdar.seed.io.token;
 
-import com.opdar.seed.io.protocol.Protocol;
+import com.opdar.seed.io.protocol.BaseProtocol;
 import com.opdar.seed.io.protocol.ActionProtocol;
 
 /**
@@ -13,12 +13,12 @@ public class ActionToken implements Token{
      * @return
      */
     @Override
-    public Long getToken() {
-        return 45l;
+    public byte[] getToken() {
+        return new byte[]{'-'};
     }
 
     @Override
-    public Protocol getProtocol() {
-        return new ActionProtocol();
+    public BaseProtocol getProtocol() {
+        return new ActionProtocol(this);
     }
 }

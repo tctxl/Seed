@@ -45,7 +45,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("decoder", DECODER);
         pipeline.addLast("encoder", ENCODER);
         pipeline.addLast("handler", HANDLER.setIOPlugin(ioPlugin));
-        if (TokenUtil.contains('c') || isClient) {
+        if (TokenUtil.contains(new byte[]{'c'}) || isClient) {
             pipeline.addLast("clusters", CLUSTER_HANDLER.setIOPlugin(ioPlugin));
         }
     }

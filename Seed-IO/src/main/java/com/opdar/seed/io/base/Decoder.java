@@ -15,12 +15,8 @@ import io.netty.util.ReferenceCountUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by 俊帆 on 2015/8/27.
@@ -37,8 +33,10 @@ public class Decoder extends ChannelInboundHandlerAdapter {
     private byte[] merge = null;
     private byte[] lengthBytes = null;
     int length = 0;
-    List<Object> objects = new LinkedList<Object>();
-   @Override
+
+    private byte[] header = new byte[0];
+
+    @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
     }
@@ -49,15 +47,15 @@ public class Decoder extends ChannelInboundHandlerAdapter {
         try {
             ByteBuf cast = null;
             SocketAddress address = null;
-            if(msg instanceof DatagramPacket){
+            if (msg instanceof DatagramPacket) {
                 cast = ((DatagramPacket) msg).copy().content();
                 address = ((DatagramPacket) msg).sender();
-            }else{
-                cast= (ByteBuf) msg;
+            } else {
+                cast = (ByteBuf) msg;
                 address = ctx.channel().remoteAddress();
             }
             try {
-                decode(ctx, cast,address);
+                decode(ctx, cast, address);
             } finally {
                 ReferenceCountUtil.release(cast);
             }
@@ -73,12 +71,16 @@ public class Decoder extends ChannelInboundHandlerAdapter {
             if (!HAS_PARSER) {
                 if (lengthBytes == null && token == null) {
                     while (byteBuf.isReadable()) {
-                        int i = byteBuf.readByte();
-                        if (TokenUtil.contains(i)) {
-                            token = TokenUtil.get(i);
-                            break;
+                        byte b = byteBuf.readByte();
+                        header = Utils.byteMerger(header, new byte[]{b});
+                        if(TokenUtil.startWith(header)){
+                            if (TokenUtil.contains(header)) {
+                                token = TokenUtil.get(header);
+                                break;
+                            }
                         }
                     }
+                    header = new byte[0];
                 }
                 if (token != null) {
                     length = getLength(byteBuf);
@@ -110,7 +112,7 @@ public class Decoder extends ChannelInboundHandlerAdapter {
                 try {
                     Object content = protocol.execute(merge);
                     if (content != null) {
-                        Result result = new Result(content,address);
+                        Result result = new Result(content, address);
                         channelHandlerContext.fireChannelRead(result);
                     }
                 } catch (Exception e) {
@@ -171,7 +173,7 @@ public class Decoder extends ChannelInboundHandlerAdapter {
             String type = "application/x-www-form-urlencoded";
             socket.getOutputStream().write(MethodProtocol.create(name, params, type));
             socket.getOutputStream().flush();
-            while (socket.getInputStream().available() >= 0){
+            while (socket.getInputStream().available() >= 0) {
                 InputStream in = socket.getInputStream();
                 String result = new String(Utils.is2byte(in));
                 System.out.println(result);

@@ -135,7 +135,7 @@ public class IOPlugin extends DefaultSupport implements Plugin {
         Initializer initializer = new Initializer(web).setIOPlugin(this);
         if (isP2P) {
             new P2pServer(port, this).start();
-        } else if (!TokenUtil.contains('c')) {
+        } else if (!TokenUtil.contains(new byte[]{'c'})) {
             ClusterPool.join(IOPlugin.CLUSTER_HOST, IOPlugin.CLUSTER_PORT, getServerName(), initializer.setIsClient(true));
         }
         if(isOpenFlashPolicy){

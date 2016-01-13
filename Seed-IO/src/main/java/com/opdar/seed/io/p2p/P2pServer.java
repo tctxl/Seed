@@ -48,7 +48,7 @@ public class P2pServer implements Runnable {
                     ((DefaultDatagramChannelConfig) config).setRecvByteBufAllocator(new FixedRecvByteBufAllocator(UDP_BUFFER_SIZE));
                 }
             }
-            if(TokenUtil.contains('c')){
+            if(TokenUtil.contains(new byte[]{'c'})){
                 channel.eventLoop().schedule(new FailureMessageScanRunnable(ioPlugin,channel),FailureMessageScanRunnable.OUTTIME, FailureMessageScanRunnable.TIMEUNIT);
             }
 //            ZookeeperUtils.createPath(zk, "/seed", "");

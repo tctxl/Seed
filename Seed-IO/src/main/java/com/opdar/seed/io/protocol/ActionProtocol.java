@@ -2,15 +2,17 @@ package com.opdar.seed.io.protocol;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.opdar.framework.utils.Utils;
-import sun.misc.BASE64Decoder;
-
-import java.io.IOException;
+import com.opdar.seed.io.token.Token;
 
 /**
  * 36进制解码
  * Created by 俊帆 on 2015/8/28.
  */
-public class ActionProtocol implements Protocol<MessageProtoc.Action> {
+public class ActionProtocol extends BaseProtocol<MessageProtoc.Action> {
+
+    public ActionProtocol(Token token) {
+        super(token);
+    }
 
     @Override
     public MessageProtoc.Action execute(byte[] buf) {
@@ -27,27 +29,7 @@ public class ActionProtocol implements Protocol<MessageProtoc.Action> {
 
     public static byte[] create(MessageProtoc.Action act) {
         byte[] result = act.toByteArray();
-        return Utils.byteMerger(convertLen(result.length), result);
-    }
-
-    public static byte[] convertLen(int i) {
-        int radix = 36;
-        byte buf[] = new byte[]{'-', '0', '0', '0', '0'};
-        boolean negative = (i < 0);
-        int charPos = 4;
-        if (!negative) {
-            i = -i;
-        }
-        while (i <= -radix) {
-            buf[charPos--] = (byte) digits[-(i % radix)];
-            i = i / radix;
-        }
-        buf[charPos] = (byte) digits[-i];
-
-        if (negative) {
-            buf[--charPos] = '-';
-        }
-        return buf;
+        return Utils.byteMerger(convertLen(new byte[]{'-'},result.length), result);
     }
 
 }
