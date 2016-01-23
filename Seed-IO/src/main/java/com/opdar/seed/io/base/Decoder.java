@@ -23,18 +23,11 @@ import java.net.SocketAddress;
  */
 @ChannelHandler.Sharable
 public class Decoder extends ChannelInboundHandlerAdapter {
+    private Token token = null;
+    private int length = -1;
 
     public Decoder() {
     }
-
-    private Token token = null;
-    private boolean HAS_PARSER = false;
-    private static int remain = 0;
-    private byte[] merge = null;
-    private byte[] lengthBytes = null;
-    int length = 0;
-
-    private byte[] header = new byte[0];
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
@@ -68,102 +61,54 @@ public class Decoder extends ChannelInboundHandlerAdapter {
 
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, SocketAddress address) throws Exception {
         while (byteBuf.readableBytes() != 0) {
-            if (!HAS_PARSER) {
-                if (lengthBytes == null && token == null) {
-                    while (byteBuf.isReadable()) {
-                        byte b = byteBuf.readByte();
-                        header = Utils.byteMerger(header, new byte[]{b});
-                        if(TokenUtil.startWith(header)){
-                            if (TokenUtil.contains(header)) {
-                                token = TokenUtil.get(header);
-                                break;
-                            }
+            if(token == null){
+                byte[] header = new byte[0];
+                while (byteBuf.isReadable()) {
+                    byte b = byteBuf.readByte();
+                    byte[] _header = Utils.byteMerger(header, new byte[]{b});
+                    if(TokenUtil.startWith(_header)){
+                        header = _header;
+                        if (TokenUtil.contains(header)) {
+                            token = TokenUtil.get(header);
+                            break;
                         }
                     }
-                    header = new byte[0];
                 }
-                if (token != null) {
-                    length = getLength(byteBuf);
-                    if (length == -1) break;
-                    HAS_PARSER = true;
-                    int readableLen = byteBuf.readableBytes();
-                    if (length < readableLen) readableLen = length;
-                    remain = length - readableLen;
-                    byte[] tempBuf = new byte[readableLen];
-                    byteBuf.readBytes(tempBuf);
-
-                    if (merge == null) merge = tempBuf;
-                    else merge = Utils.byteMerger(merge, tempBuf);
+            }else {
+                if(length == -1){
+                    byteBuf.markReaderIndex();
+                    byte[] bytes = new byte[4];
+                    if(byteBuf.readableBytes() < bytes.length){
+                        byteBuf.resetReaderIndex();
+                        break;
+                    }
+                    byteBuf.readBytes(bytes);
+                    String header0 = new String(bytes);
+                    length = Integer.parseInt(header0, 36);
                 }
-            } else {
-                int canread = remain;
-                if (canread > byteBuf.readableBytes()) {
-                    canread = byteBuf.readableBytes();
+                if(byteBuf.readableBytes() < length){
+                    byteBuf.resetReaderIndex();
+                    break;
                 }
-                byte[] tempBuf = new byte[canread];
-                byteBuf.readBytes(tempBuf);
-                merge = Utils.byteMerger(merge, tempBuf);
-                remain = remain - tempBuf.length;
-            }
-
-            if (remain == 0 && token != null && merge != null) {
-
+                byte[] data = new byte[length];
+                byteBuf.readBytes(data);
                 Protocol protocol = token.getProtocol();
                 try {
-                    Object content = protocol.execute(merge);
+                    Object content = protocol.execute(data);
                     if (content != null) {
                         Result result = new Result(content, address);
                         channelHandlerContext.fireChannelRead(result);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    HAS_PARSER = false;
-                    merge = null;
+                }finally {
                     token = null;
+                    length = -1;
                 }
             }
         }
     }
 
-
-    /**
-     * 36进制
-     *
-     * @param buf
-     * @return
-     */
-    private int getLength(ByteBuf buf) {
-        if (lengthBytes != null) {
-            int i = 4 - lengthBytes.length;
-            if (buf.readableBytes() > i) {
-                byte[] remain = new byte[i];
-                try {
-                    buf.readBytes(remain);
-                    lengthBytes = Utils.byteMerger(lengthBytes, remain);
-                    String header = new String(lengthBytes);
-                    return Integer.parseInt(header, 36);
-                } finally {
-                    lengthBytes = null;
-                }
-            } else {
-                byte[] remain = new byte[buf.readableBytes()];
-                lengthBytes = Utils.byteMerger(lengthBytes, remain);
-                return -1;
-            }
-        } else {
-            if (buf.readableBytes() > 4) {
-                byte[] bytes = new byte[4];
-                buf.readBytes(bytes);
-                String header = new String(bytes);
-                return Integer.parseInt(header, 36);
-            } else if (buf.readableBytes() > 0) {
-                lengthBytes = new byte[buf.readableBytes()];
-                buf.readBytes(lengthBytes);
-            }
-        }
-        return -1;
-    }
 
     public static void main(String[] args) {
         try {

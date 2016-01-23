@@ -19,8 +19,12 @@ public class IoSession {
     private String id;
     private Heartbeat heartbeat;
 
-    public void addAttribute(String key,String name) {
-        this.attr = attr;
+    public void addAttribute(String key,Object value) {
+        this.attr.put(key,value);
+    }
+
+    public Object getAttribute(String key) {
+        return this.attr.get(key);
     }
 
     public IoSession(ChannelHandlerContext ctx) {
