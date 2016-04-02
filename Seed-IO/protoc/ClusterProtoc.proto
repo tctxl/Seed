@@ -5,6 +5,7 @@ message Message {
   optional string messageId = 2;
   optional string to = 3;
   required Act act = 4;
+  optional string extra = 5;
   enum Act{
     JOIN=0;
     HEARTBEAT=1;

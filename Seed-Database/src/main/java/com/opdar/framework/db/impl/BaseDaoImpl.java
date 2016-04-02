@@ -202,6 +202,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 String fieldName = entry.getKey();
                 FieldModel model = entry.getValue();
                 String dbFieldName = model.getMapping();
+                if(dbFieldName == null)continue;
                 Class<?> fieldType = model.getType();
                 java.lang.reflect.Field field = model.getField();
                 try {
@@ -210,7 +211,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                         sqlBuilder.append("`").append(dbFieldName).append("`");
                         sqlBuilder.append(",");
                         valueBuilder.append("'");
-                        valueBuilder.append(value);
+                        valueBuilder.append(value.toString().replaceAll("\\\\","\\\\\\\\").replaceAll("'","''"));
                         valueBuilder.append("'");
                         valueBuilder.append(",");
                     }
@@ -252,11 +253,13 @@ public class BaseDaoImpl<T> implements IDao<T> {
                 Map.Entry<String, FieldModel> entry = it.next();
                 FieldModel model = entry.getValue();
                 String dbFieldName = model.getMapping();
+                if(dbFieldName == null)continue;
                 java.lang.reflect.Field field = model.getField();
                 try {
                     Object value = field.get(o);
-                    if(value != null)
-                        values.append(dbFieldName).append("=").append("'").append(value).append("'").append(",");
+                    if(value != null){
+                        values.append(dbFieldName).append("=").append("'").append(value.toString().replaceAll("\\\\","\\\\\\\\").replaceAll("'","''")).append("'").append(",");
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -304,6 +307,7 @@ public class BaseDaoImpl<T> implements IDao<T> {
                     Map.Entry<String, FieldModel> entry = it.next();
                     FieldModel model = entry.getValue();
                     String dbFieldName = model.getMapping();
+                    if(dbFieldName == null)continue;
                     if(filter!=null && filter.getFilter().contains(dbFieldName.toUpperCase()))continue;
                     String complateName = simpleTableName + dbFieldName;
                     if(filter!=null && filter.getRedefinItionField().containsKey(dbFieldName.toUpperCase())){

@@ -23,8 +23,6 @@ import java.net.SocketAddress;
  */
 @ChannelHandler.Sharable
 public class Decoder extends ChannelInboundHandlerAdapter {
-    private Token token = null;
-    private int length = -1;
 
     public Decoder() {
     }
@@ -61,31 +59,30 @@ public class Decoder extends ChannelInboundHandlerAdapter {
 
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, SocketAddress address) throws Exception {
         while (byteBuf.readableBytes() != 0) {
-            if(token == null){
-                byte[] header = new byte[0];
-                while (byteBuf.isReadable()) {
-                    byte b = byteBuf.readByte();
-                    byte[] _header = Utils.byteMerger(header, new byte[]{b});
-                    if(TokenUtil.startWith(_header)){
-                        header = _header;
-                        if (TokenUtil.contains(header)) {
-                            token = TokenUtil.get(header);
-                            break;
-                        }
-                    }
-                }
-            }else {
-                if(length == -1){
-                    byteBuf.markReaderIndex();
-                    byte[] bytes = new byte[4];
-                    if(byteBuf.readableBytes() < bytes.length){
-                        byteBuf.resetReaderIndex();
+            Token token = null;
+            byte[] header = new byte[0];
+            while (byteBuf.isReadable()) {
+                byte b = byteBuf.readByte();
+                byte[] _header = Utils.byteMerger(header, new byte[]{b});
+                if(TokenUtil.startWith(_header)){
+                    header = _header;
+                    if (TokenUtil.contains(header)) {
+                        token = TokenUtil.get(header);
                         break;
                     }
-                    byteBuf.readBytes(bytes);
-                    String header0 = new String(bytes);
-                    length = Integer.parseInt(header0, 36);
+                }else{
+                    byteBuf.markReaderIndex();
                 }
+            }
+            if(token != null){
+                byte[] bytes = new byte[4];
+                if(byteBuf.readableBytes() < bytes.length){
+                    byteBuf.resetReaderIndex();
+                    break;
+                }
+                byteBuf.readBytes(bytes);
+                String header0 = new String(bytes);
+                int length = Integer.parseInt(header0, 36);
                 if(byteBuf.readableBytes() < length){
                     byteBuf.resetReaderIndex();
                     break;
@@ -101,9 +98,6 @@ public class Decoder extends ChannelInboundHandlerAdapter {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }finally {
-                    token = null;
-                    length = -1;
                 }
             }
         }

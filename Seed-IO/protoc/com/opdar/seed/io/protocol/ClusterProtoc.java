@@ -62,6 +62,20 @@ public final class ClusterProtoc {
      * <code>required .com.opdar.seed.io.protocol.Message.Act act = 4;</code>
      */
     com.opdar.seed.io.protocol.ClusterProtoc.Message.Act getAct();
+
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    boolean hasExtra();
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    java.lang.String getExtra();
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getExtraBytes();
   }
   /**
    * Protobuf type {@code com.opdar.seed.io.protocol.Message}
@@ -142,6 +156,12 @@ public final class ClusterProtoc {
                 bitField0_ |= 0x00000008;
                 act_ = value;
               }
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              extra_ = bs;
               break;
             }
           }
@@ -443,11 +463,54 @@ public final class ClusterProtoc {
       return act_;
     }
 
+    public static final int EXTRA_FIELD_NUMBER = 5;
+    private java.lang.Object extra_;
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    public boolean hasExtra() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    public java.lang.String getExtra() {
+      java.lang.Object ref = extra_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          extra_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string extra = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExtraBytes() {
+      java.lang.Object ref = extra_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        extra_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       from_ = "";
       messageId_ = "";
       to_ = "";
       act_ = com.opdar.seed.io.protocol.ClusterProtoc.Message.Act.JOIN;
+      extra_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -478,6 +541,9 @@ public final class ClusterProtoc {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(4, act_.getNumber());
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getExtraBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -502,6 +568,10 @@ public final class ClusterProtoc {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, act_.getNumber());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getExtraBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -628,6 +698,8 @@ public final class ClusterProtoc {
         bitField0_ = (bitField0_ & ~0x00000004);
         act_ = com.opdar.seed.io.protocol.ClusterProtoc.Message.Act.JOIN;
         bitField0_ = (bitField0_ & ~0x00000008);
+        extra_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -672,6 +744,10 @@ public final class ClusterProtoc {
           to_bitField0_ |= 0x00000008;
         }
         result.act_ = act_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.extra_ = extra_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -705,6 +781,11 @@ public final class ClusterProtoc {
         }
         if (other.hasAct()) {
           setAct(other.getAct());
+        }
+        if (other.hasExtra()) {
+          bitField0_ |= 0x00000010;
+          extra_ = other.extra_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1000,6 +1081,82 @@ public final class ClusterProtoc {
         return this;
       }
 
+      private java.lang.Object extra_ = "";
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public boolean hasExtra() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public java.lang.String getExtra() {
+        java.lang.Object ref = extra_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            extra_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExtraBytes() {
+        java.lang.Object ref = extra_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          extra_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public Builder setExtra(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        extra_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public Builder clearExtra() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        extra_ = getDefaultInstance().getExtra();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string extra = 5;</code>
+       */
+      public Builder setExtraBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        extra_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:com.opdar.seed.io.protocol.Message)
     }
 
@@ -1026,12 +1183,12 @@ public final class ClusterProtoc {
   static {
     java.lang.String[] descriptorData = {
       "\n\023ClusterProtoc.proto\022\032com.opdar.seed.io" +
-      ".protocol\"\305\001\n\007Message\022\014\n\004from\030\001 \001(\t\022\021\n\tm" +
+      ".protocol\"\324\001\n\007Message\022\014\n\004from\030\001 \001(\t\022\021\n\tm" +
       "essageId\030\002 \001(\t\022\n\n\002to\030\003 \001(\t\0224\n\003act\030\004 \002(\0162" +
       "\'.com.opdar.seed.io.protocol.Message.Act" +
-      "\"W\n\003Act\022\010\n\004JOIN\020\000\022\r\n\tHEARTBEAT\020\001\022\023\n\017REPL" +
-      "Y_HEARTBEAT\020\002\022\013\n\007MESSAGE\020\003\022\013\n\007REACHER\020\004\022" +
-      "\010\n\004EXIT\020\005"
+      "\022\r\n\005extra\030\005 \001(\t\"W\n\003Act\022\010\n\004JOIN\020\000\022\r\n\tHEAR" +
+      "TBEAT\020\001\022\023\n\017REPLY_HEARTBEAT\020\002\022\013\n\007MESSAGE\020" +
+      "\003\022\013\n\007REACHER\020\004\022\010\n\004EXIT\020\005"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1050,7 +1207,7 @@ public final class ClusterProtoc {
     internal_static_com_opdar_seed_io_protocol_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_opdar_seed_io_protocol_Message_descriptor,
-        new java.lang.String[] { "From", "MessageId", "To", "Act", });
+        new java.lang.String[] { "From", "MessageId", "To", "Act", "Extra", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

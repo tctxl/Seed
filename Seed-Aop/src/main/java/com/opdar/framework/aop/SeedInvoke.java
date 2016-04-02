@@ -28,7 +28,18 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class SeedInvoke extends URLClassLoader implements Opcodes {
     private static String _iter = SeedExcuteItrf.class.getName().replaceAll("\\.", "/");
-    private static HashMap<Class<?>, ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>();
+    private static HashMap<Class<?>, ClassBean> beanSymbols = new HashMap<Class<?>, ClassBean>(){
+        {
+            put(int.class,null);
+            put(Integer.class,null);
+            put(long.class,null);
+            put(Long.class,null);
+            put(Float.class,null);
+            put(float.class,null);
+            put(Double.class,null);
+            put(double.class,null);
+        }
+    };
 
     public SeedInvoke() {
         super(new URL[]{}, Thread.currentThread().getContextClassLoader());
